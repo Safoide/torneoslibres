@@ -1,0 +1,118 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap');
+
+
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', Arial, sans-serif;
+    text-align: center;
+    color: #fff;
+}
+
+body,
+html {
+    width: 100%;
+    height: 100%;
+    background-color: rgb(32,33,36);
+}
+
+table {
+    border-collapse: collapse;
+}
+
+thead {
+    background-color: rgba(255, 255, 255, .1);
+}
+
+th {
+    padding: 20px;
+    border: 1px solid black;
+    
+}
+
+th a {
+    text-decoration: none;
+}
+
+.primary-text {
+    color: #fff;
+}
+
+.secondary-text {
+    color: #9AA0A6;
+}
+
+.partidosContainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 60px;
+}
+
+.equipoPartido {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid rgba(255, 255, 255, .6);
+    border-radius: 7px;
+    width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    gap: 25px;
+    transition: all .2s ease 0s;
+}
+
+.equipoPartido:hover {
+    background-color: #303134;
+}
+
+.partidoFecha {
+    text-transform: capitalize;
+    display: flex;
+    justify-content: space-between;
+    font-weight: 600;
+}
+
+.editPartido {
+    display: inline-block;
+    height: 25px;
+    width: 25px;
+}
+
+.partidoContainer {
+    display: flex;
+    justify-content: space-around;
+}
+
+.equipoDiv {
+    display: flex;
+    width: 200px;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 15px;
+    text-decoration: none;
+    color: #000;
+}
+
+.equipoDiv img {
+    width: 75px;
+}
+
+.equipoDiv:hover {
+    text-decoration: underline;
+}
+
+.golesContainer {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    font-weight: 600;
+    width: 35%;
+}
+
+.golesContainer span {
+    font-size: 2rem;
+    width: 50px;
+}
