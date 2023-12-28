@@ -24,8 +24,9 @@ const Partidos = () => {
 
     let initialDate = nextSunday().set({hour: 9, minute: 0, second: 0});
 
-    const matchExists = (homeId, awayId) => partidos?.some(partido => 
-        (partido.home_id === homeId && partido.away_id === awayId) || (partido.home_id === awayId && partido.away_id === homeId));
+    const checkMatch = (homeId, awayId) => partidos?.some(partido => 
+        (partido.home_id === homeId && partido.away_id === awayId) || (partido.home_id === awayId && partido.away_id === homeId)) ||
+        (homeId === awayId);
 
     const crearPartidos = async () => {
         
@@ -35,16 +36,18 @@ const Partidos = () => {
 
         for(let i = 0; i < initialLength / 2; i++) {
             let randomTeam1 = equipos[ Math.floor(Math.random() * equipos.length) ].id;
-            equipos = equipos.filter((equipo) => equipo.id !== randomTeam1);
-
             let randomTeam2 = equipos[ Math.floor(Math.random() * equipos.length) ].id;
-            equipos = equipos.filter((equipo) => equipo.id !== randomTeam2);
+
+            if(partidos.length === 6) break;
 
             if(partidos.length)
-                if(matchExists(randomTeam1, randomTeam2)) {
+                if(checkMatch(randomTeam1, randomTeam2)) {
                     i--;
                     continue;
                 }
+            
+            equipos = equipos.filter((equipo) => equipo.id !== randomTeam1);
+            equipos = equipos.filter((equipo) => equipo.id !== randomTeam2);
 
             let partidoObj = {
                 tor_id: torneo,

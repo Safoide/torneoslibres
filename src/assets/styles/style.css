@@ -1,118 +1,189 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap');
-
-
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap");
 * {
-    padding: 0;
-    margin: 0;
-    box-sizing: border-box;
-    font-family: 'Poppins', Arial, sans-serif;
-    text-align: center;
-    color: #fff;
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  font-family: "Poppins", Arial, sans-serif;
+  text-align: center;
+  color: #fff;
 }
 
 body,
 html {
-    width: 100%;
-    height: 100%;
-    background-color: rgb(32,33,36);
-}
-
-table {
-    border-collapse: collapse;
-}
-
-thead {
-    background-color: rgba(255, 255, 255, .1);
-}
-
-th {
-    padding: 20px;
-    border: 1px solid black;
-    
-}
-
-th a {
-    text-decoration: none;
+  width: 100%;
+  height: 100%;
+  background-color: #202124;
 }
 
 .primary-text {
-    color: #fff;
+  color: #fff;
 }
 
 .secondary-text {
-    color: #9AA0A6;
+  color: #9AA0A6;
 }
 
 .partidosContainer {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 60px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 60px;
 }
 
 .equipoPartido {
-    display: flex;
-    flex-direction: column;
-    border: 1px solid rgba(255, 255, 255, .6);
-    border-radius: 7px;
-    width: 600px;
-    margin: 0 auto;
-    padding: 20px;
-    gap: 25px;
-    transition: all .2s ease 0s;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  border-radius: 7px;
+  width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+  gap: 25px;
+  transition: all 0.2s ease 0s;
 }
 
 .equipoPartido:hover {
-    background-color: #303134;
+  background-color: #303134;
 }
 
 .partidoFecha {
-    text-transform: capitalize;
-    display: flex;
-    justify-content: space-between;
-    font-weight: 600;
+  text-transform: capitalize;
+  display: flex;
+  justify-content: space-between;
+  font-weight: 600;
 }
 
 .editPartido {
-    display: inline-block;
-    height: 25px;
-    width: 25px;
+  display: inline-block;
+  height: 25px;
+  width: 25px;
 }
 
 .partidoContainer {
-    display: flex;
-    justify-content: space-around;
+  display: flex;
+  justify-content: space-around;
 }
 
 .equipoDiv {
-    display: flex;
-    width: 200px;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    gap: 15px;
-    text-decoration: none;
-    color: #000;
+  display: flex;
+  width: 200px;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 15px;
+  text-decoration: none;
+  color: #000;
 }
 
 .equipoDiv img {
-    width: 75px;
+  width: 75px;
 }
 
 .equipoDiv:hover {
-    text-decoration: underline;
+  text-decoration: underline;
 }
 
 .golesContainer {
-    display: flex;
-    justify-content: space-evenly;
-    align-items: center;
-    font-weight: 600;
-    width: 35%;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  font-weight: 600;
+  width: 35%;
 }
 
 .golesContainer span {
-    font-size: 2rem;
-    width: 50px;
+  font-size: 2rem;
+  width: 50px;
 }
+
+table {
+  border-collapse: collapse;
+}
+
+thead {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+tbody {
+  background-color: #414141;
+}
+
+th {
+  padding: 20px;
+  border: 1px solid black;
+}
+
+th a {
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.equipoContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  gap: 60px;
+}
+
+.equipoInfo {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+}
+
+.equipoLogo {
+  display: flex;
+  position: relative;
+}
+
+.equipoEditar {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  display: flex;
+  padding: 5px;
+  background-color: rgba(0, 0, 0, 0.6);
+  cursor: pointer;
+}
+
+.tabsContainer {
+  max-width: 1000px;
+  width: 100%;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 30px;
+}
+
+.tabsList {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 30px;
+  list-style-type: none;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.6);
+  padding: 0 0 15px;
+}
+
+.tabButton {
+  font-size: 1.15em;
+  cursor: pointer;
+  border-bottom: 3px rgba(0, 0, 0, 0) solid;
+  transition: all 0.3s ease;
+  font-weight: 600;
+}
+.tabButton-select {
+  border-bottom-color: rgb(30, 115, 190);
+}
+
+.tabPanel:not(.tabPanel-select) {
+  display: none;
+}/*# sourceMappingURL=style.css.map */

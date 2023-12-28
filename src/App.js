@@ -6,11 +6,13 @@ import Partidos from './components/pages/Partidos';
 import Equipo from './components/pages/Equipo';
 import EditarEquipo from './components/pages/EditarEquipo';
 import EditarPartido from './components/pages/EditarPartido';
+import 'boxicons';
 
 function App() {
     return (
         <BrowserRouter>
             <Routes>
+                <Route path='/' element={<Torneos />} />
                 <Route path='/torneos' element={<Torneos />} />
                 <Route path='/torneos/:torneo' element={<Torneo />} />
                 <Route path='/torneos/:torneo/partidos' element={<Partidos />} />

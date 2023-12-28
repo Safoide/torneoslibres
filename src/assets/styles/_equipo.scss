@@ -1,0 +1,69 @@
+.equipoContainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    gap: 60px;
+}
+
+.equipoInfo {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+}
+
+.equipoLogo {
+    display: flex;
+    position: relative;
+}
+
+.equipoEditar {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    display: flex;
+    padding: 5px;
+    background-color: #00000099;
+    cursor: pointer;
+}
+
+.tabsContainer {
+    max-width: 1000px;
+    width: 100%;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 30px;
+}
+
+.tabsList {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 30px;
+    list-style-type: none;
+    border-bottom: 1px solid #FFFFFF99;
+    padding: 0 0 15px;
+}
+
+.tabButton {
+    font-size: 1.15em;
+    cursor: pointer;
+    border-bottom: 3px rgba(0,0,0,0) solid;
+    transition: all .3s ease;
+    font-weight: 600;
+
+    &-select {
+        border-bottom-color: rgb(30, 115, 190);
+    }
+}
+
+.tabPanel:not(.tabPanel-select) {
+    display: none;
+}

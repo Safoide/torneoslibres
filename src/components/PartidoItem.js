@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Link, useParams } from 'react-router-dom';
-import 'boxicons';
-import '../assets/styles/style.css';
+import { Link } from 'react-router-dom';
 import { getEquipoById } from '../assets/endPoints/equipos';
 
 const PartidoItem = ({ partido, deleteMatch }) => {

@@ -1,0 +1,21 @@
+table {
+    border-collapse: collapse;
+}
+
+thead {
+    background-color: rgba(255, 255, 255, .1);
+}
+
+tbody {
+    background-color: #414141;
+}
+
+th {
+    padding: 20px;
+    border: 1px solid black;
+}
+
+th a {
+    text-decoration: none;
+    cursor: pointer;
+}
