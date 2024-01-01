@@ -23,6 +23,44 @@ html {
   color: #9AA0A6;
 }
 
+.header {
+  background-color: #1a1a1a;
+  height: 80px;
+  position: sticky;
+  top: 0;
+  z-index: 99;
+  padding: 0 10px;
+}
+.header a {
+  text-decoration: none;
+  font-weight: 600;
+}
+.header .headerContainer {
+  width: 100%;
+  max-width: 1140px;
+  margin: 0 auto;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.header .userInfo {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+}
+.header .userInfo .userImage {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.header .userInfo .userImage .userLogo {
+  width: 50px;
+  height: 50px;
+}
+
 .partidosContainer {
   display: flex;
   flex-direction: column;
@@ -140,6 +178,9 @@ th a {
 .equipoLogo {
   display: flex;
   position: relative;
+}
+.equipoLogo img {
+  width: 250px;
 }
 
 .equipoEditar {

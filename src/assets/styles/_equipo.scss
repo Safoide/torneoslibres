@@ -19,6 +19,10 @@
 .equipoLogo {
     display: flex;
     position: relative;
+
+    img {
+        width: 250px;
+    }
 }
 
 .equipoEditar {

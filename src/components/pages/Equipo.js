@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import PartidoItem from '../PartidoItem';
 import { getEquipoById } from '../../assets/endPoints/equipos';
 import { deleteMatch, getPartidosByTeam } from '../../assets/endPoints/partidos';
@@ -78,17 +78,18 @@ const Equipo = () => {
                             </thead>
                             <tbody>
                                 {
-                                    jugadores.map((jugador, orden) => (
-                                        <tr key={jugador.id}>
-                                            <th className='secondary-text'>{orden+1}</th>
-                                            <th className='secondary-text'>{jugador.full_name}</th>
-                                            <th className='secondary-text'>{jugador.played}</th>
-                                            <th className='secondary-text'>{jugador.goals}</th>
-                                            <th className='secondary-text'>{jugador.yellow_cards}</th>
-                                            <th className='secondary-text'>{jugador.red_cards}</th>
-                                            <th className='secondary-text'>{jugador.mvp}</th>
-                                        </tr>
-                                    ))
+                                    jugadores &&
+                                        jugadores.map((jugador, orden) => (
+                                            <tr key={jugador.id}>
+                                                <th className='secondary-text'>{orden+1}</th>
+                                                <th className='secondary-text'>{jugador.full_name}</th>
+                                                <th className='secondary-text'>{jugador.played}</th>
+                                                <th className='secondary-text'>{jugador.goals}</th>
+                                                <th className='secondary-text'>{jugador.yellow_cards}</th>
+                                                <th className='secondary-text'>{jugador.red_cards}</th>
+                                                <th className='secondary-text'>{jugador.mvp}</th>
+                                            </tr>
+                                        ))
                                 }
                             </tbody>
                         </table>
@@ -98,9 +99,12 @@ const Equipo = () => {
                     <div className='partidosContainer'>
                         <h3>PARTIDOS JUGADOS</h3>
                         {
-                            partidos.map((partido, i) => (
-                                <PartidoItem partido={partido} deleteMatch={deleteM} />
-                            ))
+                            partidos.length ?
+                                partidos.map((partido, i) => (
+                                    <PartidoItem partido={partido} deleteMatch={deleteM} />
+                                ))
+                            :
+                                <h4>{partidos.error}</h4>
                         }
                     </div>
                 </TabPanel>

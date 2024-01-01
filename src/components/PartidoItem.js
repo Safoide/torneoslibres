@@ -25,7 +25,7 @@ const PartidoItem = ({ partido, deleteMatch }) => {
             .then((data) => {
                 setAwayTeam(data);
             })   
-    }, [])
+    }, [partido])
 
     return (
         <>

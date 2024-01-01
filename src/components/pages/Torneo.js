@@ -55,8 +55,8 @@ const Torneo = () => {
                 </tbody>
             </table>
 
-            <PartidosBtn to={'./partidos'}>VER PARTIDOS A JUGAR</PartidosBtn>
-            <PartidosBtn to={'/'}>ELEGIR OTRO TORNEO</PartidosBtn>
+            <PartidosBtn to={`/partidos/${torneo}`}>VER PARTIDOS A JUGAR</PartidosBtn>
+            <PartidosBtn to={'/torneos'}>ELEGIR OTRO TORNEO</PartidosBtn>
         </PageContainer>
     )
 }

@@ -26,6 +26,8 @@ html {
     color: $secondary_font;
 }
 
+@import 'header';
+
 @import 'partidos';
 @import 'tablas';
 @import 'equipo';
