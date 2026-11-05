@@ -1,0 +1,91 @@
+/* Barra superior (reemplaza a _header.scss) */
+
+.header {
+    position: sticky;
+    top: 0;
+    z-index: 99;
+    height: var(--header-h);
+    padding: 0 20px;
+    background: rgba(13, 17, 23, .82);
+    -webkit-backdrop-filter: blur(14px);
+    backdrop-filter: blur(14px);
+    border-bottom: 1px solid var(--border);
+}
+
+.headerContainer {
+    width: 100%;
+    max-width: 1140px;
+    padding: 0 16px;
+    height: 100%;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.headerLogo { font-size: 1rem; font-weight: 800; letter-spacing: .05em; white-space: nowrap; }
+
+.navBar { margin-right: auto; margin-left: 20px; display: flex; gap: 4px; }
+
+.navBar a {
+    padding: 8px 12px;
+    border-radius: var(--radius-sm);
+    color: var(--muted);
+    font-size: .78rem;
+    font-weight: 700;
+    letter-spacing: .06em;
+    transition: color var(--ease), background var(--ease);
+}
+
+.navBar a:hover { color: var(--text); background: rgba(255, 255, 255, .06); }
+
+.userInfo { display: flex; align-items: center; gap: 10px; }
+
+.userInfo > span {
+    max-width: 140px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: .85rem;
+    color: var(--muted);
+}
+
+/* Links de la derecha: "Registrarse" / "Crear equipo" salen como botón con borde,
+   y el último (Iniciar sesión) como botón verde */
+.userInfo > a {
+    padding: 8px 14px;
+    border: 1px solid var(--border-strong);
+    border-radius: 999px;
+    font-size: .75rem;
+    font-weight: 700;
+    letter-spacing: .06em;
+    white-space: nowrap;
+    transition: background var(--ease), border-color var(--ease);
+}
+
+.userInfo > a:hover { background: rgba(255, 255, 255, .06); }
+
+.userInfo > a:last-child { background: var(--accent); border-color: var(--accent); color: var(--accent-contrast); }
+.userInfo > a:last-child:hover { background: var(--accent-hover); border-color: var(--accent-hover); }
+
+.logoutBtn {
+    padding: 8px 14px;
+    border: 1px solid var(--border-strong);
+    border-radius: 999px;
+    background: none;
+    font-size: .75rem;
+    font-weight: 700;
+    letter-spacing: .06em;
+    transition: background var(--ease), color var(--ease), border-color var(--ease);
+}
+
+.logoutBtn:hover { background: var(--danger-soft); border-color: transparent; color: var(--danger); }
+
+@media (max-width: 760px) {
+    .header { padding: 0 14px; }
+    .headerLogo { font-size: .85rem; }
+    .navBar, .userInfo > span { display: none; }
+    .headerContainer { justify-content: space-between; }
+    .userInfo { gap: 8px; }
+    .userInfo > a, .logoutBtn { padding: 7px 11px; font-size: .7rem; }
+}

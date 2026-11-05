@@ -1,12 +1,29 @@
 import { apiGET, apiPOST, apiPUT, apiDELETE } from '../fetchMethods.js';
 
-const API_BASEURL = 'http://localhost:4000/torneos';
+const API_BASEURL = (process.env.REACT_APP_API_URL || 'http://localhost:4000') + '/torneos';
 
 // GET
 
-const getTorneos = () => apiGET(API_BASEURL + '/');
+// filters: { q, modalidad: ['f5','f7'], zona: ['Palermo'], categoria, estado, precioMax, desde, hasta, orden }
+const getTorneos = (filters = {}) => {
+    const params = new URLSearchParams();
 
-const getTorneoById = (torId) => apiGET(API_BASEURL + '/torneo/' + torId);
+    Object.entries(filters).forEach(([key, value]) => {
+        if (Array.isArray(value)) {
+            if (value.length) params.set(key, value.join(','));
+        } else if (value !== undefined && value !== null && value !== '') {
+            params.set(key, value);
+        }
+    });
+
+    const query = params.toString();
+
+    return apiGET(API_BASEURL + '/' + (query ? '?' + query : ''));
+};
+
+const getFiltros = () => apiGET(API_BASEURL + '/filtros');
+
+const getTorneoById = (torId) => apiGET(API_BASEURL + '/' + torId);
 
 
 // POST
@@ -24,4 +41,4 @@ const editTor = (torId, modifiedTor) => apiPUT(API_BASEURL + '/' + torId, modifi
 const deleteTor = (torId) => apiDELETE(API_BASEURL + '/' + torId);
 
 
-export { getTorneos, getTorneoById, addTor, editTor, deleteTor };
+export { getTorneos, getFiltros, getTorneoById, addTor, editTor, deleteTor };

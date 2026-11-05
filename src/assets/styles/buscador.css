@@ -1,0 +1,143 @@
+/* Buscador de torneos: portada, filtros y tarjetas */
+
+.buscador { width: 100%; max-width: 1140px; margin: 0 auto; padding: 0 20px 80px; }
+
+.buscador__hero { padding: 56px 0 28px; }
+
+.buscador__hero h1 {
+    max-width: 22ch;
+    text-wrap: balance;
+    font-size: clamp(2.1rem, 5.5vw, 3.4rem);
+    font-weight: 800;
+    letter-spacing: -.035em;
+    line-height: 1.05;
+}
+
+.buscador__hero p { margin-top: 14px; max-width: 48ch; font-size: 1.1rem; color: var(--muted); }
+
+.buscador__mensaje { margin: 48px 0; text-align: center; color: var(--muted); }
+
+/* ---------- Filtros ---------- */
+.filtros {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 20px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+}
+
+.filtros__busqueda {
+    padding: 13px 14px 13px 44px;
+    font-size: 1rem;
+    background-image: var(--search-icon);
+    background-repeat: no-repeat;
+    background-position: 15px center;
+}
+
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+
+.chip {
+    padding: 7px 20px;
+    border: 1px solid var(--border-strong);
+    border-radius: 999px;
+    background: transparent;
+    font-size: .9rem;
+    font-weight: 700;
+    color: var(--text-soft);
+    transition: background var(--ease), border-color var(--ease), color var(--ease);
+}
+
+.chip:hover { border-color: var(--accent); color: var(--text); }
+.chip--activo { background: var(--accent); border-color: var(--accent); color: var(--accent-contrast); }
+.chip--activo:hover { color: var(--accent-contrast); }
+
+.filtros__selects { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; }
+
+.campo { display: flex; flex-direction: column; gap: 6px; }
+.campo label { font-size: .75rem; font-weight: 600; color: var(--muted); }
+
+.filtros__barra { display: flex; justify-content: space-between; align-items: center; font-size: .9rem; color: var(--muted); }
+
+.link-btn { border: none; background: none; font-size: .9rem; font-weight: 600; color: var(--link); cursor: pointer; }
+.link-btn:hover { text-decoration: underline; }
+
+/* ---------- Tarjetas ---------- */
+.torneos-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 330px), 1fr));
+    gap: 20px;
+    margin-top: 28px;
+}
+
+.card-torneo {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 20px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    transition: transform var(--ease), border-color var(--ease), box-shadow var(--ease);
+}
+
+.card-torneo:hover { transform: translateY(-3px); border-color: var(--border-strong); box-shadow: var(--shadow); }
+
+.card-torneo__top { display: flex; justify-content: space-between; align-items: center; }
+.card-torneo__top .estado { font-size: .75rem; }
+
+.card-torneo__titulo { margin-top: 4px; font-size: 1.15rem; line-height: 1.25; }
+
+/* El ::after estira el link del título para que toda la tarjeta sea clickeable */
+.card-torneo__link:hover { color: var(--accent); }
+.card-torneo__link::after { content: ''; position: absolute; inset: 0; border-radius: var(--radius-lg); }
+
+/* position + z-index lo ponen por encima del link que cubre la tarjeta */
+.card-torneo__org {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: fit-content;
+    font-size: .85rem;
+    font-weight: 500;
+    color: var(--muted);
+    transition: color var(--ease);
+}
+
+.card-torneo__org:hover { color: var(--text); }
+
+.card-torneo__info { display: flex; flex-direction: column; gap: 6px; margin: 6px 0 4px; }
+.card-torneo__info li { font-size: .9rem; color: var(--text-soft); }
+
+.card-torneo__pie {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-top: auto;
+    padding-top: 14px;
+    border-top: 1px solid var(--border);
+}
+
+.card-torneo__precio { display: block; font-size: 1.4rem; font-weight: 800; letter-spacing: -.02em; }
+
+.cupos {
+    padding: 4px 11px;
+    border-radius: 999px;
+    background: var(--accent-soft);
+    color: var(--accent);
+    font-size: .78rem;
+    font-weight: 700;
+}
+
+.cupos--bajo { background: var(--danger-soft); color: var(--danger); }
+
+@media (max-width: 560px) {
+    .buscador { padding: 0 16px 60px; }
+    .buscador__hero { padding: 36px 0 22px; }
+    .filtros { padding: 16px; }
+    .filtros__selects { grid-template-columns: 1fr 1fr; }
+}

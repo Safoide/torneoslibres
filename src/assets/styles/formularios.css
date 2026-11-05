@@ -1,0 +1,82 @@
+/* Login, registro, organización, torneo, equipo e inscripción */
+
+.form-page {
+    width: 100%;
+    max-width: 520px;
+    margin: 0 auto;
+    padding: 44px 20px 80px;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.form-page--ancho { max-width: 780px; }
+
+.form-page h1 { font-size: 1.9rem; font-weight: 800; letter-spacing: -.03em; }
+.form-page > p { color: var(--muted); }
+.form-page a:not(.btn):not(.back-link) { color: var(--link); }
+.form-page a:not(.btn):not(.back-link):hover { text-decoration: underline; }
+.form-page .box p { color: var(--text-soft); }
+
+/* ---------- Formulario ---------- */
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 24px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+}
+
+.form label { margin-top: 6px; font-size: .8rem; font-weight: 600; color: var(--muted); }
+.form label:first-child { margin-top: 0; }
+
+.form .box { background: var(--surface-2); }
+
+/* Opciones tipo tarjeta (tipo de cuenta, método de pago, modo prueba) */
+.form .opcion {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 0;
+    padding: 13px 14px;
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius);
+    font-size: .95rem;
+    font-weight: 400;
+    color: var(--text);
+    cursor: pointer;
+    transition: border-color var(--ease), background var(--ease);
+}
+
+.form .opcion:hover { border-color: var(--muted); }
+.form .opcion:has(input:checked) { border-color: var(--accent); background: var(--accent-soft); }
+.form .opcion input { flex-shrink: 0; width: 18px; height: 18px; accent-color: var(--accent); }
+.form .opcion span { line-height: 1.4; }
+.form .opcion strong { color: var(--text); }
+
+.form .btn { margin-top: 12px; }
+
+.form__nota { font-size: .8rem; color: var(--amber); }
+
+.form__error {
+    padding: 10px 14px;
+    border-radius: 10px;
+    background: var(--danger-soft);
+    color: var(--danger);
+    font-size: .9rem;
+}
+
+.total { margin-top: 4px; font-size: 1.3rem; font-weight: 800; letter-spacing: -.02em; color: var(--text); }
+
+/* Formulario de torneo: grilla de campos */
+.form__grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 8px 16px; }
+.form__campo { display: flex; flex-direction: column; gap: 6px; }
+.form__campo--completo { grid-column: 1 / -1; }
+.form__campo label { margin-top: 6px; }
+
+@media (max-width: 560px) {
+    .form-page { padding: 28px 16px 60px; }
+    .form { padding: 18px; }
+}

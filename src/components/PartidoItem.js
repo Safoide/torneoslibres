@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom';
 import { getEquipoById } from '../assets/endPoints/equipos';
+import { logoSrc } from '../assets/torneosUtils.js';
 
 const PartidoItem = ({ partido, deleteMatch }) => {
 
@@ -46,7 +47,7 @@ const PartidoItem = ({ partido, deleteMatch }) => {
                     </h4>
                     <div className='partidoContainer'>
                         <Link className='equipoDiv' to={`/equipo/${partido.home_id}`}>
-                            <img src={ require(`../assets/imgs/${homeTeam.logo}`) } alt={partido.home_id} />
+                            {logoSrc(homeTeam.logo) && <img src={logoSrc(homeTeam.logo)} alt={partido.home_id} />}
                             <span>{homeTeam.name}</span>
                         </Link>
                         <div className='golesContainer'>
@@ -58,7 +59,7 @@ const PartidoItem = ({ partido, deleteMatch }) => {
                             <span className='secondary-text'>{partido.away_goals}</span>
                         </div>
                         <Link className='equipoDiv' to={`/equipo/${partido.away_id}`}>
-                            <img src={ require(`../assets/imgs/${awayTeam.logo}`) } alt={partido.away_id} />
+                            {logoSrc(awayTeam.logo) && <img src={logoSrc(awayTeam.logo)} alt={partido.away_id} />}
                             <span>{awayTeam.name}</span>
                         </Link>
                     </div>

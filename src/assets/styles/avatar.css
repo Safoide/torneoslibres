@@ -1,0 +1,17 @@
+.avatar {
+    flex-shrink: 0;
+    border-radius: 50%;
+    object-fit: cover;
+    background: var(--surface-2);
+    box-shadow: 0 0 0 1px var(--border-strong);
+}
+
+/* Sin logo: la inicial sobre un degradé suave */
+.avatar--fallback {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    color: var(--accent);
+    background: linear-gradient(135deg, var(--accent-soft), var(--surface-2));
+}

@@ -1,0 +1,47 @@
+/* Formulario de equipo: logo y plantel */
+
+.logo-upload {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+    padding: 14px;
+    background: var(--bg-elev);
+    border: 1px dashed var(--border-strong);
+    border-radius: var(--radius);
+}
+
+.logo-upload input[type=file] { flex: 1; min-width: 0; font-size: .85rem; color: var(--muted); }
+
+.logo-upload input[type=file]::file-selector-button {
+    margin-right: 12px;
+    padding: 8px 14px;
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius-sm);
+    background: var(--surface-2);
+    color: var(--text);
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.jugadores { display: flex; flex-direction: column; gap: 8px; }
+
+.jugador-fila { display: grid; grid-template-columns: 1fr 1fr 110px 84px auto; gap: 8px; align-items: center; }
+.jugador-fila input { min-width: 0; }
+
+.btn-quitar {
+    width: 40px;
+    height: 40px;
+    border: 1px solid var(--border-strong);
+    border-radius: 10px;
+    background: none;
+    color: var(--danger);
+    transition: background var(--ease), border-color var(--ease);
+}
+
+.btn-quitar:hover { background: var(--danger-soft); border-color: transparent; }
+
+@media (max-width: 700px) {
+    .jugador-fila { grid-template-columns: 1fr 1fr; padding: 12px; background: var(--bg-elev); border-radius: var(--radius); }
+    .btn-quitar { width: 100%; }
+}

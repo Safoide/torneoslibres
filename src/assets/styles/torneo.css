@@ -1,0 +1,83 @@
+/* Detalle de torneo: datos, equipos / posiciones y botones */
+
+.torneo {
+    width: 100%;
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 28px 20px 80px;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.torneo > p { color: var(--text-soft); }
+
+.torneo__titulo { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+.torneo__titulo h1 { font-size: clamp(1.7rem, 4.5vw, 2.5rem); font-weight: 800; letter-spacing: -.03em; line-height: 1.1; }
+
+.torneo > p.torneo__organizador { color: var(--muted); }
+.torneo__organizador a { color: var(--text); font-weight: 600; border-bottom: 1px solid var(--border-strong); transition: color var(--ease), border-color var(--ease); }
+.torneo__organizador a:hover { color: var(--accent); border-color: var(--accent); }
+
+/* ---------- Lista de datos ---------- */
+.detalles {
+    padding: 6px 22px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+}
+
+.detalles__fila { display: grid; grid-template-columns: 150px 1fr; gap: 16px; padding: 14px 0; border-bottom: 1px solid var(--border); }
+.detalles__fila:last-child { border-bottom: none; }
+.detalles__fila dt { font-size: .9rem; color: var(--muted); }
+.detalles__fila dd { font-weight: 500; }
+.detalles__fila a { color: var(--link); }
+.detalles__fila a:hover { text-decoration: underline; }
+
+/* ---------- Equipos inscriptos / tabla de posiciones ---------- */
+.seccion {
+    padding: 22px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+}
+
+.seccion h2 { margin-bottom: 14px; font-size: 1.05rem; }
+.seccion p { color: var(--muted); }
+.seccion p a { color: var(--link); }
+.seccion p a:hover { text-decoration: underline; }
+
+.equipos-lista { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 10px; }
+
+.equipos-lista li {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 12px;
+    background: var(--surface-2);
+    border-radius: 10px;
+    font-weight: 600;
+    transition: background var(--ease);
+}
+
+.equipos-lista li:hover { background: #262d3b; }
+.equipos-lista a:hover { color: var(--accent); }
+
+.tabla-wrap { overflow-x: auto; margin: 0 -8px; }
+.tabla-wrap table { width: 100%; min-width: 520px; }
+.tabla-wrap th, .tabla-wrap td { padding: 11px 8px; font-size: .9rem; font-variant-numeric: tabular-nums; }
+.tabla-wrap tbody tr { transition: background var(--ease); }
+.tabla-wrap tbody tr:hover { background: rgba(255, 255, 255, .03); }
+.tabla-wrap tbody td:first-child { color: var(--muted); font-weight: 700; }
+.tabla-wrap tbody tr:first-child td:first-child { color: var(--accent); }
+.tabla-wrap .izq { text-align: left; }
+.tabla-wrap a:hover { color: var(--accent); }
+
+.equipo-celda { display: flex; align-items: center; gap: 10px; font-weight: 600; }
+
+@media (max-width: 560px) {
+    .torneo { padding: 20px 16px 60px; }
+    .detalles { padding: 4px 16px; }
+    .detalles__fila { grid-template-columns: 1fr; gap: 2px; padding: 12px 0; }
+    .seccion { padding: 18px 16px; }
+}

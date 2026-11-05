@@ -1,0 +1,89 @@
+/* Dropdown "Mi cuenta" */
+
+.cuenta { position: relative; }
+
+.cuenta__btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 4px 12px 4px 4px;
+    border: 1px solid var(--border-strong);
+    border-radius: 999px;
+    background: var(--surface);
+    font-size: .85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background var(--ease), border-color var(--ease);
+}
+
+.cuenta__btn:hover,
+.cuenta__btn[aria-expanded='true'] { background: var(--surface-2); border-color: var(--muted); }
+
+.cuenta__inicial {
+    width: 30px;
+    height: 30px;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background: var(--accent-soft);
+    color: var(--accent);
+    font-weight: 800;
+}
+
+.cuenta__flecha { color: var(--muted); font-size: .75rem; }
+
+.cuenta__panel {
+    position: absolute;
+    right: 0;
+    top: calc(100% + 10px);
+    z-index: 100;
+    min-width: 250px;
+    padding: 6px;
+    background: var(--surface);
+    border: 1px solid var(--border-strong);
+    border-radius: 14px;
+    box-shadow: var(--shadow);
+}
+
+.cuenta__quien {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    padding: 10px 12px 12px;
+    margin-bottom: 6px;
+    border-bottom: 1px solid var(--border);
+}
+
+.cuenta__quien span { font-size: .8rem; color: var(--muted); overflow: hidden; text-overflow: ellipsis; }
+.cuenta__quien em { margin-top: 4px; font-style: normal; font-size: .7rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--accent); }
+
+.cuenta__item {
+    display: block;
+    width: 100%;
+    padding: 10px 12px;
+    border: none;
+    border-radius: var(--radius-sm);
+    background: none;
+    font-size: .9rem;
+    font-weight: 600;
+    text-align: left;
+    cursor: pointer;
+    transition: background var(--ease);
+}
+
+.cuenta__item:hover { background: rgba(255, 255, 255, .07); }
+
+.cuenta__item--peligro {
+    margin-top: 6px;
+    padding-top: 12px;
+    border-top: 1px solid var(--border);
+    border-radius: 0 0 var(--radius-sm) var(--radius-sm);
+    color: var(--danger);
+}
+
+.cuenta__item--peligro:hover { background: var(--danger-soft); }
+
+@media (max-width: 760px) {
+    .cuenta__texto { display: none; }
+    .cuenta__btn { padding-right: 10px; }
+}

@@ -1,0 +1,67 @@
+/* Dropdown del header (organización o equipo) */
+
+.orgmenu { position: relative; }
+
+.orgmenu__btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 4px 12px 4px 4px;
+    border: 1px solid var(--border-strong);
+    border-radius: 999px;
+    background: var(--surface);
+    font-size: .85rem;
+    font-weight: 600;
+    transition: background var(--ease), border-color var(--ease);
+}
+
+.orgmenu__btn:hover,
+.orgmenu__btn[aria-expanded='true'] { background: var(--surface-2); border-color: var(--muted); }
+
+.orgmenu__btn > span:nth-last-child(2) { max-width: 150px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.orgmenu__btn > span:last-child { color: var(--muted); font-size: .75rem; }
+
+.orgmenu__lista {
+    position: absolute;
+    right: 0;
+    top: calc(100% + 10px);
+    z-index: 100;
+    min-width: 230px;
+    padding: 6px;
+    background: var(--surface);
+    border: 1px solid var(--border-strong);
+    border-radius: 14px;
+    box-shadow: var(--shadow);
+}
+
+.orgmenu__item {
+    display: block;
+    width: 100%;
+    padding: 10px 12px;
+    border: none;
+    border-radius: var(--radius-sm);
+    background: none;
+    font-size: .9rem;
+    font-weight: 600;
+    text-align: left;
+    cursor: pointer;
+    transition: background var(--ease);
+}
+
+.orgmenu__item:hover { background: rgba(255, 255, 255, .07); }
+
+.orgmenu__item--peligro {
+    margin-top: 6px;
+    padding-top: 12px;
+    border-top: 1px solid var(--border);
+    border-radius: 0 0 var(--radius-sm) var(--radius-sm);
+    color: var(--danger);
+}
+
+.orgmenu__item--peligro:hover { background: var(--danger-soft); }
+
+@media (max-width: 760px) {
+    /* en pantallas chicas solo el logo y la flechita */
+    .orgmenu__btn > span:nth-last-child(2) { display: none; }
+    .orgmenu__btn { padding-right: 10px; }
+}

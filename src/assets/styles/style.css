@@ -1,230 +1,219 @@
-@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap");
-* {
-  padding: 0;
-  margin: 0;
-  box-sizing: border-box;
-  font-family: "Poppins", Arial, sans-serif;
-  text-align: center;
-  color: #fff;
+/* ============================================================
+   Base global + pantallas heredadas (partidos, equipo, edición).
+   Reemplaza a style.scss y sus parciales: ya no hace falta compilar Sass.
+   ============================================================ */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+/* ---------- Reset ---------- */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { background: var(--bg); -webkit-text-size-adjust: 100%; }
+
+body {
+    min-height: 100vh;
+    font-family: var(--font);
+    font-size: 16px;
+    line-height: 1.55;
+    color: var(--text);
+    /* brillo verde muy sutil arriba, como luz de cancha */
+    background: radial-gradient(900px 340px at 50% -140px, rgba(47, 210, 122, .11), transparent 70%) no-repeat var(--bg);
+    -webkit-font-smoothing: antialiased;
 }
 
-body,
-html {
-  width: 100%;
-  height: 100%;
-  background-color: #202124;
+h1, h2, h3, h4 { line-height: 1.2; letter-spacing: -.01em; font-weight: 700; }
+a { color: inherit; text-decoration: none; }
+img { display: block; max-width: 100%; }
+ul { list-style: none; }
+button, input, select, textarea { font: inherit; color: inherit; }
+button { cursor: pointer; }
+input::placeholder, textarea::placeholder { color: var(--muted); opacity: .85; }
+
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+.primary-text { color: var(--text); }
+.secondary-text { color: var(--muted); }
+
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { transition: none !important; animation: none !important; }
 }
 
-.primary-text {
-  color: #fff;
-}
+/* ---------- Tablas (base) ---------- */
+table { border-collapse: collapse; }
+th, td { padding: 12px 14px; text-align: center; }
+thead th { color: var(--muted); font-size: .72rem; font-weight: 600; text-transform: uppercase; letter-spacing: .07em; }
+tbody th { font-weight: 500; }
+tbody tr { border-top: 1px solid var(--border); }
 
-.secondary-text {
-  color: #9AA0A6;
-}
-
-.header {
-  background-color: #1a1a1a;
-  height: 80px;
-  position: sticky;
-  top: 0;
-  z-index: 99;
-  padding: 0 10px;
-}
-.header a {
-  text-decoration: none;
-  font-weight: 600;
-}
-.header .headerContainer {
-  width: 100%;
-  max-width: 1140px;
-  margin: 0 auto;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-.header .userInfo {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  gap: 20px;
-}
-.header .userInfo .userImage {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-.header .userInfo .userImage .userLogo {
-  width: 50px;
-  height: 50px;
-}
-
+/* ---------- Partidos ---------- */
 .partidosContainer {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  gap: 60px;
+    width: 100%;
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 32px 16px 60px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 18px;
+}
+
+.partidosContainer h3 { font-size: 1.1rem; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); }
+
+.partidosContainer > button {
+    padding: 11px 20px;
+    border-radius: 12px;
+    border: 1px solid transparent;
+    background: var(--accent);
+    color: var(--accent-contrast);
+    font-weight: 700;
+    transition: background var(--ease);
+}
+
+.partidosContainer > button:hover { background: var(--accent-hover); }
+
+.partidosContainer table {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
 }
 
 .equipoPartido {
-  display: flex;
-  flex-direction: column;
-  border: 1px solid rgba(255, 255, 255, 0.6);
-  border-radius: 7px;
-  width: 600px;
-  margin: 0 auto;
-  padding: 20px;
-  gap: 25px;
-  transition: all 0.2s ease 0s;
+    width: 100%;
+    max-width: 640px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    transition: border-color var(--ease), transform var(--ease);
 }
 
-.equipoPartido:hover {
-  background-color: #303134;
-}
+.equipoPartido:hover { border-color: var(--border-strong); transform: translateY(-1px); }
 
 .partidoFecha {
-  text-transform: capitalize;
-  display: flex;
-  justify-content: space-between;
-  font-weight: 600;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: .85rem;
+    font-weight: 600;
+    text-transform: capitalize;
 }
 
-.editPartido {
-  display: inline-block;
-  height: 25px;
-  width: 25px;
-}
+.editPartido { display: inline-block; width: 25px; height: 25px; cursor: pointer; opacity: .8; transition: opacity var(--ease); }
+.editPartido:hover { opacity: 1; }
 
-.partidoContainer {
-  display: flex;
-  justify-content: space-around;
-}
+.partidoContainer { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
 
 .equipoDiv {
-  display: flex;
-  width: 200px;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  gap: 15px;
-  text-decoration: none;
-  color: #000;
+    width: 36%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    font-weight: 600;
+    text-align: center;
+    transition: color var(--ease);
 }
 
-.equipoDiv img {
-  width: 75px;
-}
+.equipoDiv:hover { color: var(--accent); }
+.equipoDiv img { width: 64px; height: 64px; border-radius: 50%; object-fit: cover; box-shadow: 0 0 0 1px var(--border-strong); }
 
-.equipoDiv:hover {
-  text-decoration: underline;
-}
+.golesContainer { display: flex; align-items: center; justify-content: center; gap: 12px; font-weight: 800; }
+.golesContainer span { min-width: 1.4ch; font-size: 1.9rem; text-align: center; font-variant-numeric: tabular-nums; }
+.golesContainer h4 { font-size: .85rem; letter-spacing: .1em; }
 
-.golesContainer {
-  display: flex;
-  justify-content: space-evenly;
-  align-items: center;
-  font-weight: 600;
-  width: 35%;
-}
-
-.golesContainer span {
-  font-size: 2rem;
-  width: 50px;
-}
-
-table {
-  border-collapse: collapse;
-}
-
-thead {
-  background-color: rgba(255, 255, 255, 0.1);
-}
-
-tbody {
-  background-color: #414141;
-}
-
-th {
-  padding: 20px;
-  border: 1px solid black;
-}
-
-th a {
-  text-decoration: none;
-  cursor: pointer;
-}
-
+/* ---------- Equipo (perfil con pestañas) ---------- */
 .equipoContainer {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 20px;
-  gap: 60px;
+    width: 100%;
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 36px 16px 70px;
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
 }
 
-.equipoInfo {
-  display: flex;
-  justify-content: center;
-  flex-direction: column;
-  align-items: center;
-  gap: 15px;
-}
+.equipoInfo { display: flex; flex-direction: column; align-items: center; gap: 14px; }
+.equipoInfo h2 { font-size: 1.8rem; font-weight: 800; letter-spacing: -.02em; }
 
-.equipoLogo {
-  display: flex;
-  position: relative;
-}
-.equipoLogo img {
-  width: 250px;
-}
+.equipoLogo { position: relative; }
+.equipoLogo img { width: 160px; height: 160px; border-radius: 50%; object-fit: cover; box-shadow: 0 0 0 3px var(--border-strong), var(--shadow); }
 
 .equipoEditar {
-  position: absolute;
-  bottom: 0;
-  right: 0;
-  display: flex;
-  padding: 5px;
-  background-color: rgba(0, 0, 0, 0.6);
-  cursor: pointer;
+    position: absolute;
+    right: 4px;
+    bottom: 4px;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, .7);
+    border-radius: 50%;
+    cursor: pointer;
+    transition: background var(--ease);
 }
 
-.tabsContainer {
-  max-width: 1000px;
-  width: 100%;
-  margin: 0 auto;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  gap: 30px;
-}
+.equipoEditar:hover { background: var(--accent); }
 
-.tabsList {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  gap: 30px;
-  list-style-type: none;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.6);
-  padding: 0 0 15px;
-}
+.tabsContainer { width: 100%; display: flex; flex-direction: column; gap: 24px; }
+
+.tabsList { display: flex; justify-content: center; gap: 6px; border-bottom: 1px solid var(--border); }
 
 .tabButton {
-  font-size: 1.15em;
-  cursor: pointer;
-  border-bottom: 3px rgba(0, 0, 0, 0) solid;
-  transition: all 0.3s ease;
-  font-weight: 600;
-}
-.tabButton-select {
-  border-bottom-color: rgb(30, 115, 190);
+    padding: 10px 20px;
+    margin-bottom: -1px;
+    font-weight: 600;
+    color: var(--muted);
+    border-bottom: 2px solid transparent;
+    cursor: pointer;
+    transition: color var(--ease), border-color var(--ease);
 }
 
-.tabPanel:not(.tabPanel-select) {
-  display: none;
-}/*# sourceMappingURL=style.css.map */
+.tabButton:hover { color: var(--text); }
+.tabButton-select { color: var(--text); border-bottom-color: var(--accent); }
+
+.tabPanel:not(.tabPanel-select) { display: none; }
+
+/* ---------- Formularios de edición heredados (sin clase) ---------- */
+form:not(.form) {
+    width: 100%;
+    max-width: 520px;
+    margin: 32px auto;
+    padding: 24px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+form:not(.form) > div { display: flex; flex-direction: column; gap: 6px; }
+form:not(.form) label { font-size: .8rem; font-weight: 600; color: var(--muted); }
+
+form:not(.form) input {
+    padding: 11px 13px;
+    background: var(--bg-elev);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    /* !important: esas pantallas ponen color:black inline y sobre fondo oscuro no se leería */
+    color: var(--text) !important;
+}
+
+form:not(.form) input:disabled { opacity: .55; }
+
+form:not(.form) button {
+    align-self: flex-start;
+    padding: 11px 20px;
+    border: none;
+    border-radius: 12px;
+    background: var(--accent);
+    color: var(--accent-contrast);
+    font-weight: 700;
+}
+
+@media (max-width: 560px) {
+    .equipoPartido { padding: 16px; }
+    .golesContainer span { font-size: 1.5rem; }
+    .equipoDiv img { width: 52px; height: 52px; }
+    .equipoLogo img { width: 130px; height: 130px; }
+}

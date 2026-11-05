@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import PartidoItem from '../PartidoItem';
 import { getEquipoById } from '../../assets/endPoints/equipos';
 import { deleteMatch, getPartidosByTeam } from '../../assets/endPoints/partidos';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import { getJugadoresByTeam } from '../../assets/endPoints/jugadores';
+import { logoSrc } from '../../assets/torneosUtils.js';
 
 const Equipo = () => {
 
@@ -47,7 +48,7 @@ const Equipo = () => {
                         <>
                             <div className='equipoInfo'>
                                 <div className='equipoLogo'>
-                                    <img src={ require(`../../assets/imgs/${equipo.logo}`) } alt={equipo.name}/>
+                                    {logoSrc(equipo.logo) && <img src={logoSrc(equipo.logo)} alt={equipo.name}/>}
                                     <div className='equipoEditar' onClick={handleButton}><box-icon color='#fff' type='solid' name='edit'></box-icon></div>
                                 </div>
                                 <h2 key={equipo.id}>{equipo.name}</h2>

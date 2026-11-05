@@ -1,0 +1,49 @@
+/* ============================================================
+   Sistema de diseño: todas las variables viven acá.
+   Para cambiar la identidad de la app (color, radios, etc.) se toca solo este archivo.
+   ============================================================ */
+:root {
+    color-scheme: dark;
+
+    --font: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+
+    /* Superficies */
+    --bg: #0d1117;
+    --bg-elev: #12171f;      /* inputs y fondos hundidos */
+    --surface: #171c25;      /* tarjetas */
+    --surface-2: #1f2531;    /* elementos sobre tarjetas */
+    --border: #262d3a;
+    --border-strong: #374152;
+
+    /* Texto */
+    --text: #eef1f6;
+    --text-soft: #c5ccd8;
+    --muted: #8b95a5;
+    --link: #7db8ff;
+
+    /* Acento (verde cancha) */
+    --accent: #2fd27a;
+    --accent-hover: #55e093;
+    --accent-contrast: #05200f;
+    --accent-soft: rgba(47, 210, 122, .14);
+
+    /* Estados */
+    --amber: #f5b83d;
+    --blue: #5ea3ff;
+    --gray: #7d8798;
+    --danger: #ff7070;
+    --danger-soft: rgba(255, 112, 112, .14);
+    --whatsapp: #25d366;
+
+    /* Forma */
+    --radius-sm: 8px;
+    --radius: 12px;
+    --radius-lg: 18px;
+    --shadow: 0 10px 30px rgba(0, 0, 0, .38);
+    --header-h: 64px;
+    --ease: .18s ease;
+
+    /* Iconos (SVG embebidos) */
+    --chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%238b95a5' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+    --search-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='%238b95a5' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='11' cy='11' r='7'/%3E%3Cpath d='m21 21-4.3-4.3'/%3E%3C/svg%3E");
+}

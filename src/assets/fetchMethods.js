@@ -1,74 +1,44 @@
-const apiGET = async (url) => {
+const authHeaders = () => {
+    let token = null;
+    try { token = localStorage.getItem('token'); } catch {}
+
+    return { 'Content-Type': 'application/json', ...(token ? { Authorization: `Bearer ${token}` } : {}) };
+};
+
+const request = async (method, url, body) => {
     try {
-        let response = await fetch(url, { 
-            headers: { 
-                'Content-Type': 'application/json' 
-            }, 
-            method: 'GET'
-        })
+        const response = await fetch(url, {
+            method,
+            headers: authHeaders(),
+            ...(body !== undefined && { body: JSON.stringify(body) }),
+        });
 
-        let data = await response.json();
-
-        return data;
+        return await response.json();
     } catch (error) {
         console.error(error);
     }
-}
+};
 
-const apiPOST = async (url, body) => {
-
+// Sube un archivo (multipart). No se pone Content-Type: el navegador lo arma solo
+const apiUpload = async (url, campo, archivo) => {
     try {
-        let response = await fetch(url, { 
-            headers: { 
-                'Content-Type': 'application/json' 
-            }, 
-            method: 'POST',
-            body: JSON.stringify(body),
-        })
-    
-        let data = await response.json();
-    
-        return data;
+        let token = null;
+        try { token = localStorage.getItem('token'); } catch {}
+
+        const body = new FormData();
+        body.append(campo, archivo);
+
+        const response = await fetch(url, { method: 'POST', headers: token ? { Authorization: `Bearer ${token}` } : {}, body });
+
+        return await response.json();
     } catch (error) {
         console.error(error);
     }
-}
+};
 
-const apiPUT = async (url, body) => {
+const apiGET = (url) => request('GET', url);
+const apiPOST = (url, body) => request('POST', url, body);
+const apiPUT = (url, body) => request('PUT', url, body);
+const apiDELETE = (url) => request('DELETE', url);
 
-    try {
-        let response = await fetch(url, { 
-            headers: { 
-                'Content-Type': 'application/json' 
-            }, 
-            method: 'PUT',
-            body: JSON.stringify(body),
-        })
-    
-        let data = await response.json();
-    
-        return data;
-    } catch (error) {
-        console.error(error);
-    }
-}
-
-const apiDELETE = async (url) => {
-    try {
-        let response = await fetch(url, {
-            eaders: { 
-                'Content-Type': 'application/json' 
-            }, 
-            method: 'DELETE',
-        })
-
-        let data = await response.json();
-
-        return data;
-    } catch (error) {
-        console.error(error);
-    }
-}
-
-
-export { apiGET, apiPOST, apiPUT, apiDELETE };
+export { apiGET, apiPOST, apiPUT, apiDELETE, apiUpload };

@@ -1,0 +1,121 @@
+/* Piezas que se repiten en varias pantallas: botones, badges, estados, cajas y controles de formulario */
+
+/* ---------- Links de vuelta ---------- */
+.back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    width: fit-content;
+    font-size: .9rem;
+    color: var(--muted);
+    transition: color var(--ease);
+}
+
+.back-link:hover { color: var(--text); }
+
+/* ---------- Caja de resumen ---------- */
+.box {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 18px 20px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+}
+
+.box strong { font-weight: 700; }
+
+/* ---------- Badge de modalidad (F5, F7...) ---------- */
+.badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 3px 10px;
+    border-radius: var(--radius-sm);
+    background: var(--accent-soft);
+    color: var(--accent);
+    font-size: .8rem;
+    font-weight: 800;
+    letter-spacing: .05em;
+}
+
+.muted { display: block; font-size: .8rem; color: var(--muted); }
+
+/* ---------- Estado del torneo (con puntito) ---------- */
+.estado { display: inline-flex; align-items: center; gap: 6px; font-weight: 600; }
+.estado::before { content: ''; width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
+
+.estado--inscripcion-abierta { color: var(--accent); }
+.estado--proximamente { color: var(--amber); }
+.estado--en-curso { color: var(--blue); }
+.estado--finalizado { color: var(--gray); }
+
+/* ---------- Botones (sirven para <button>, <a> y <Link>) ---------- */
+.btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 14px 20px;
+    border: 1px solid transparent;
+    border-radius: var(--radius);
+    background: var(--surface-2);
+    color: var(--text);
+    font-size: .95rem;
+    font-weight: 700;
+    text-align: center;
+    cursor: pointer;
+    transition: background var(--ease), border-color var(--ease), box-shadow var(--ease);
+}
+
+.btn:disabled { opacity: .5; cursor: not-allowed; }
+
+.btn--primary { background: var(--accent); color: var(--accent-contrast); box-shadow: 0 8px 22px rgba(47, 210, 122, .22); }
+.btn--primary:hover:not(:disabled) { background: var(--accent-hover); }
+
+.btn--secundario { background: transparent; border-color: var(--border-strong); }
+.btn--secundario:hover:not(:disabled) { background: var(--surface-2); }
+
+.btn--whatsapp { background: transparent; border-color: rgba(37, 211, 102, .45); color: var(--whatsapp); }
+.btn--whatsapp:hover { background: rgba(37, 211, 102, .1); }
+
+.btn--chico { display: inline-flex; padding: 9px 16px; font-size: .85rem; border-radius: 10px; box-shadow: none; }
+
+/* ---------- Controles de formulario (filtros y formularios comparten el mismo estilo) ---------- */
+.filtros__busqueda,
+.campo input,
+.campo select,
+.form input:not([type=radio]):not([type=checkbox]):not([type=file]),
+.form select,
+.form textarea {
+    width: 100%;
+    padding: 11px 13px;
+    background-color: var(--bg-elev);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    color: var(--text);
+    font-size: .95rem;
+    transition: border-color var(--ease), box-shadow var(--ease);
+}
+
+.filtros__busqueda:focus,
+.campo input:focus,
+.campo select:focus,
+.form input:focus,
+.form select:focus,
+.form textarea:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-soft);
+}
+
+.campo select,
+.form select {
+    appearance: none;
+    padding-right: 36px;
+    background-image: var(--chevron);
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+}
+
+.form textarea { resize: vertical; min-height: 84px; }
