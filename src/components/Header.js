@@ -95,7 +95,7 @@ const Header = () => {
                         </>
                     ) : (
                         <>
-                            <Link to='/registro'>REGISTRARSE</Link>
+                            <Link to='/registro' className='headerRegistro'>REGISTRARSE</Link>
                             <Link to='/login'>INICIAR SESIÓN</Link>
                         </>
                     )}

@@ -1,16 +1,19 @@
 import React, { useState } from 'react'
-import { Link, Navigate, useLocation } from 'react-router-dom';
+import { Link, Navigate, useLocation, useSearchParams } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import '../../assets/styles/formularios.css';
 
 const Auth = ({ modo }) => {
     const { user, login, registro } = useAuth();
     const location = useLocation();
+    const [params] = useSearchParams();
     const esRegistro = modo === 'registro';
     const porRol = user?.rol === 'capitan' ? '/equipos/nuevo' : '/organizaciones/nueva';
     const destino = location.state?.from || (esRegistro ? porRol : '/'); // '/' manda a cada uno a su inicio (el organizador, a su panel)
 
-    const [form, setForm] = useState({ nombre: '', email: '', password: '', rol: '' });
+    // /registro?rol=capitan (o organizador) llega con el tipo de cuenta ya elegido, por ejemplo desde la landing
+    const rolInicial = ['capitan', 'organizador'].includes(params.get('rol')) ? params.get('rol') : '';
+    const [form, setForm] = useState({ nombre: '', email: '', password: '', rol: rolInicial });
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
 

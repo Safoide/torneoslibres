@@ -122,3 +122,8 @@
     .userInfo { gap: 8px; }
     .userInfo > a, .logoutBtn { padding: 7px 11px; font-size: .7rem; }
 }
+
+/* En pantallas muy angostas no entran los dos botones: queda "Iniciar sesión" (el registro está a un click desde ahí) */
+@media (max-width: 480px) {
+    .headerRegistro { display: none; }
+}

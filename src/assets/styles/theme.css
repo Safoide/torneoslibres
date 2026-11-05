@@ -44,6 +44,12 @@
     --accent-shadow: rgba(47, 210, 122, .22);
     --amber-soft: rgba(255, 193, 77, .15);
 
+    /* Texto sobre fotos (landing): igual en los dos temas, porque la foto siempre va oscurecida */
+    --on-photo: #ffffff;
+    --on-photo-soft: rgba(255, 255, 255, .82);
+    --photo-scrim: rgba(6, 10, 14, .62);
+    --photo-scrim-strong: rgba(6, 10, 14, .9);
+
     /* Forma */
     --radius-sm: 8px;
     --radius: 12px;
