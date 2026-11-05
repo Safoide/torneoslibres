@@ -10,3 +10,5 @@ const editarOrganizador = (orgId, body) => apiPUT(API_BASEURL + '/' + orgId, bod
 const eliminarOrganizador = (orgId) => apiDELETE(API_BASEURL + '/' + orgId);
 
 export { getOrganizadores, getOrganizadorById, getMiOrganizacion, crearOrganizador, editarOrganizador, eliminarOrganizador };
+// Panel de mi organizacion: estadisticas, plata y torneos
+export const getMiDashboard = () => apiGET(API_BASEURL + '/mia/dashboard');

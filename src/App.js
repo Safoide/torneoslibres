@@ -4,6 +4,7 @@ import './assets/styles/theme.css';
 import './assets/styles/comun.css';
 import { AuthProvider } from './context/AuthContext';
 import Torneos from './components/pages/Torneos';
+import Inicio from './components/pages/Inicio';
 import Torneo from './components/pages/Torneo';
 import Inscripcion from './components/pages/Inscripcion';
 import Organizador from './components/pages/Organizador';
@@ -25,7 +26,7 @@ function App() {
             <BrowserRouter>
                 <Header />
                 <Routes>
-                    <Route path='/' element={<Torneos />} />
+                    <Route path='/' element={<Inicio />} />
                     <Route path='/torneos' element={<Torneos />} />
                     <Route path='/torneos/:torneo' element={<Torneo />} />
                     <Route path='/torneos/:torneo/inscripcion' element={<Inscripcion />} />

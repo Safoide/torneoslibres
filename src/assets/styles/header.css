@@ -27,17 +27,44 @@
 
 .navBar { margin-right: auto; margin-left: 20px; display: flex; gap: 4px; }
 
-.navBar a {
-    padding: 8px 12px;
-    border-radius: var(--radius-sm);
+/* Links de navegacion (Mi panel / Mi equipo, Explorar torneos): icono + texto,
+   y la seccion actual se marca con una barra verde pegada al borde de abajo del header */
+.navBar { align-self: stretch; }
+
+.navLink {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    height: 100%;
+    padding: 0 14px;
     color: var(--muted);
-    font-size: .78rem;
-    font-weight: 700;
-    letter-spacing: .06em;
-    transition: color var(--ease), background var(--ease);
+    font-size: .88rem;
+    font-weight: 600;
+    white-space: nowrap;
+    transition: color var(--ease);
 }
 
-.navBar a:hover { color: var(--text); background: var(--hover); }
+.navLink::after {
+    content: '';
+    position: absolute;
+    left: 10px;
+    right: 10px;
+    bottom: -1px;
+    height: 2px;
+    border-radius: 2px 2px 0 0;
+    background: transparent;
+    transition: background var(--ease);
+}
+
+.navLink__icono { flex-shrink: 0; }
+.navLink:hover { color: var(--text); }
+.navLink:hover::after { background: var(--border-strong); }
+.navLink:focus-visible { outline: none; color: var(--text); }
+.navLink:focus-visible .navLink__texto { text-decoration: underline; text-underline-offset: 4px; }
+.navLink.active { color: var(--text); }
+.navLink.active .navLink__icono { color: var(--accent); }
+.navLink.active::after { background: var(--accent); }
 
 .userInfo { display: flex; align-items: center; gap: 10px; }
 
@@ -84,8 +111,14 @@
 @media (max-width: 760px) {
     .header { padding: 0 14px; }
     .headerLogo { font-size: .85rem; }
-    .navBar, .userInfo > span { display: none; }
-    .headerContainer { justify-content: space-between; }
+    .userInfo > span { display: none; }
+    .headerContainer { justify-content: space-between; gap: 8px; }
+    .headerLogo { margin-right: auto; }
+    .navBar { margin: 0; }
+    /* En el celu quedan solo los iconos */
+    .navLink { padding: 0 9px; }
+    .navLink::after { left: 4px; right: 4px; }
+    .navLink__texto { display: none; }
     .userInfo { gap: 8px; }
     .userInfo > a, .logoutBtn { padding: 7px 11px; font-size: .7rem; }
 }

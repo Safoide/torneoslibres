@@ -4,7 +4,7 @@ import { getTorneos, getFiltros } from '../assets/endPoints/torneos.js';
 import { getOrganizadores } from '../assets/endPoints/organizadores.js';
 import {
     MODALIDAD_LABEL, ESTADO_LABEL, CATEGORIA_LABEL,
-    formatPrecio, formatFecha, cupos, diaPlural,
+    formatPrecio, formatMonto, formatFecha, cupos, diaPlural,
     logoSrc,
 } from '../assets/torneosUtils.js';
 import Avatar from './Avatar';
@@ -15,8 +15,9 @@ const EMPTY_FILTERS = {
     q: '', modalidad: [], zona: '', categoria: '', estado: '', precioMax: '', desde: '', orden: 'fecha',
 };
 
-// Si recibe organizadorId, solo muestra los torneos de ese organizador (mismos filtros)
-const BuscadorTorneos = ({ organizadorId }) => {
+// Si recibe organizadorId, solo muestra los torneos de ese organizador (mismos filtros).
+// ganancias ({ [torId]: { ingresos, inscripciones, fechas } }) solo llega cuando el organizador mira su propio perfil
+const BuscadorTorneos = ({ organizadorId, ganancias }) => {
 
     const [filters, setFilters] = useState(EMPTY_FILTERS);
     const [opciones, setOpciones] = useState({ zonas: [], categorias: [], estados: [] });
@@ -186,6 +187,19 @@ const BuscadorTorneos = ({ organizadorId }) => {
                                 </span>
                             )}
                         </div>
+
+                        {ganancias?.[tor.id] && (
+                            <div className='card-torneo__ganado'>
+                                <div>
+                                    <span className='muted'>Ganado</span>
+                                    <strong>{formatMonto(ganancias[tor.id].ingresos)}</strong>
+                                </div>
+                                <span className='muted'>
+                                    {formatMonto(ganancias[tor.id].inscripciones)} inscripciones
+                                    {ganancias[tor.id].fechas > 0 && <> · {formatMonto(ganancias[tor.id].fechas)} fechas</>}
+                                </span>
+                            </div>
+                        )}
                     </article>
                 ))}
             </div>

@@ -46,3 +46,14 @@
     .org-top { padding: 20px 16px 0; }
     .org-head { padding: 20px; gap: 16px; }
 }
+
+/* Pestañas del perfil propio (Resumen / Torneos publicados) */
+.org-tabs { max-width: 1140px; margin: 8px auto 0; }
+.org-tabs > .tabsList { justify-content: flex-start; margin: 0 20px; }
+.org-tabs > .tabPanel:not(.org-tabs__buscador) { padding: 0 20px 80px; }
+.org-tabs__buscador .buscador { padding-top: 0; }
+
+@media (max-width: 560px) {
+    .org-tabs > .tabsList { margin: 0 16px; }
+    .org-tabs > .tabPanel:not(.org-tabs__buscador) { padding: 0 16px 60px; }
+}

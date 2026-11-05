@@ -1,0 +1,161 @@
+/* Panel del organizador: pestaña "Resumen" (numeros, ingresos por mes, proximas fechas y mis torneos) */
+
+.dash { display: flex; flex-direction: column; gap: 20px; }
+.dash-cargando { padding: 12px 0; }
+
+/* ---------- Aviso de resultados sin cargar ---------- */
+.dash-aviso {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    padding: 14px 18px;
+    background: var(--amber-soft);
+    border: 1px solid color-mix(in srgb, var(--amber) 40%, transparent);
+    border-radius: var(--radius);
+    color: var(--text);
+}
+
+.dash-aviso span { color: var(--text-soft); font-size: .9rem; }
+
+/* ---------- Numeros principales ---------- */
+.dash-stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+
+.dash-stat {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0;
+    padding: 18px 20px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+}
+
+.dash-stat--destacado { border-color: color-mix(in srgb, var(--accent) 45%, var(--border)); background: linear-gradient(180deg, var(--accent-soft), var(--surface) 75%); }
+
+.dash-stat__label {
+    font-size: .75rem;
+    font-weight: 700;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: var(--muted);
+}
+
+.dash-stat__valor { font-size: 1.7rem; font-weight: 800; letter-spacing: -.02em; font-variant-numeric: tabular-nums; color: var(--text); overflow-wrap: anywhere; }
+.dash-stat__detalle { font-size: .8rem; color: var(--muted); }
+
+/* ---------- Fila: grafico + proximas fechas ---------- */
+.dash-fila { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); gap: 20px; }
+
+.dash-grafico__head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 14px;
+}
+
+.dash-grafico__head h2 { margin-bottom: 0; }
+
+/* Barras: una sola serie, ancho fino, punta redondeada y separacion entre columnas */
+.dash-barras {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(0, 1fr);
+    gap: 2px;
+    height: 200px;
+    padding-top: 8px;
+}
+
+.dash-barras__col {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+    border-radius: var(--radius-sm);
+    outline: none;
+}
+
+.dash-barras__pista {
+    flex: 1;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    width: 100%;
+    border-bottom: 1px solid var(--border-strong);
+}
+
+.dash-barras__barra {
+    width: min(36px, 60%);
+    background: var(--accent);
+    border-radius: 4px 4px 0 0;
+    transition: background var(--ease);
+}
+
+.dash-barras__col:hover .dash-barras__pista,
+.dash-barras__col:focus-visible .dash-barras__pista { background: var(--hover); }
+.dash-barras__col:hover .dash-barras__barra,
+.dash-barras__col:focus-visible .dash-barras__barra { background: var(--accent-hover); }
+.dash-barras__col:focus-visible { box-shadow: 0 0 0 2px var(--link); }
+
+.dash-barras__mes { font-size: .8rem; color: var(--muted); text-transform: capitalize; }
+
+.dash-barras__tip {
+    position: absolute;
+    bottom: calc(100% - 4px);
+    left: 50%;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    padding: 8px 12px;
+    white-space: nowrap;
+    font-size: .8rem;
+    color: var(--text-soft);
+    background: var(--surface-2);
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius-sm);
+    box-shadow: var(--shadow);
+    transform: translateX(-50%);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--ease);
+}
+
+.dash-barras__tip strong { font-size: .95rem; color: var(--text); font-variant-numeric: tabular-nums; }
+.dash-barras__col:first-child .dash-barras__tip { left: 0; transform: none; }
+.dash-barras__col:last-child .dash-barras__tip { left: auto; right: 0; transform: none; }
+.dash-barras__col:hover .dash-barras__tip,
+.dash-barras__col:focus-visible .dash-barras__tip { opacity: 1; }
+
+/* ---------- Proximas fechas ---------- */
+.dash-lista { display: flex; flex-direction: column; list-style: none; padding: 0; }
+
+.dash-lista li {
+    display: flex;
+    gap: 14px;
+    padding: 12px 0;
+    border-top: 1px solid var(--border);
+}
+
+.dash-lista li:first-child { border-top: 0; padding-top: 0; }
+.dash-lista__dia { display: flex; flex-direction: column; gap: 2px; flex-shrink: 0; width: 120px; }
+.dash-lista__dia strong { text-transform: capitalize; }
+.dash-lista__info { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.dash-lista__info a { font-weight: 700; color: var(--text); }
+.dash-lista__info a:hover { color: var(--link); }
+
+@media (max-width: 860px) {
+    .dash-fila { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 560px) {
+    .dash-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+    .dash-stat { padding: 14px; }
+    .dash-stat__valor { font-size: 1.3rem; }
+    .dash-barras { height: 160px; }
+    .dash-lista__dia { width: 96px; }
+}

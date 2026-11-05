@@ -16,7 +16,10 @@ export const CATEGORIA_LABEL = { masculino: 'Masculino', femenino: 'Femenino', m
 export const formatPrecio = (n) =>
     n === 0 ? 'Gratis' : new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS', maximumFractionDigits: 0 }).format(n);
 
-// "2026-11-14" -> "sáb 14 nov 2026". Se arma con la fecha local para evitar desfases de zona horaria.
+// Para plata cobrada o ganada: 0 es "$ 0", no "Gratis"
+export const formatMonto = (n) => new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS', maximumFractionDigits: 0 }).format(n || 0);
+
+// "2026-11-14" ->"sáb 14 nov 2026". Se arma con la fecha local para evitar desfases de zona horaria.
 export const formatFecha = (iso) => {
     const [y, m, d] = iso.split('-').map(Number);
 

@@ -135,6 +135,20 @@
 
 .cupos--bajo { background: var(--danger-soft); color: var(--danger); }
 
+/* Lo ganado con el torneo: solo lo ve su organizador en "Torneos publicados" */
+.card-torneo__ganado {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 12px 14px;
+    background: var(--accent-soft);
+    border-radius: var(--radius-sm);
+}
+
+.card-torneo__ganado > div { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; }
+.card-torneo__ganado strong { font-size: 1.1rem; font-weight: 800; font-variant-numeric: tabular-nums; color: var(--text); }
+.card-torneo__ganado .muted { color: var(--text-soft); }
+
 @media (max-width: 560px) {
     .buscador { padding: 0 16px 60px; }
     .buscador__hero { padding: 36px 0 22px; }

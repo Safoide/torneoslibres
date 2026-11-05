@@ -8,7 +8,7 @@ const Auth = ({ modo }) => {
     const location = useLocation();
     const esRegistro = modo === 'registro';
     const porRol = user?.rol === 'capitan' ? '/equipos/nuevo' : '/organizaciones/nueva';
-    const destino = location.state?.from || (esRegistro ? porRol : '/torneos');
+    const destino = location.state?.from || (esRegistro ? porRol : '/'); // '/' manda a cada uno a su inicio (el organizador, a su panel)
 
     const [form, setForm] = useState({ nombre: '', email: '', password: '', rol: '' });
     const [error, setError] = useState('');
