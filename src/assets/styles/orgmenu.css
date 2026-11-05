@@ -48,7 +48,7 @@
     transition: background var(--ease);
 }
 
-.orgmenu__item:hover { background: rgba(255, 255, 255, .07); }
+.orgmenu__item:hover { background: var(--hover-strong); }
 
 .orgmenu__item--peligro {
     margin-top: 6px;

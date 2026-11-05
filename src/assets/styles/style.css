@@ -9,14 +9,22 @@
 
 html { background: var(--bg); -webkit-text-size-adjust: 100%; }
 
+/* Ajustes de la cuenta: tamaño de texto y animaciones */
+html[data-texto='grande'] { font-size: 112.5%; }
+html[data-movimiento='reducido'] *, html[data-movimiento='reducido'] *::before, html[data-movimiento='reducido'] *::after {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+}
+
 body {
     min-height: 100vh;
     font-family: var(--font);
-    font-size: 16px;
+    font-size: 1rem;
     line-height: 1.55;
     color: var(--text);
     /* brillo verde muy sutil arriba, como luz de cancha */
-    background: radial-gradient(900px 340px at 50% -140px, rgba(47, 210, 122, .11), transparent 70%) no-repeat var(--bg);
+    background: radial-gradient(900px 340px at 50% -140px, var(--glow), transparent 70%) no-repeat var(--bg);
     -webkit-font-smoothing: antialiased;
 }
 
@@ -176,44 +184,8 @@ tbody tr { border-top: 1px solid var(--border); }
 
 .tabPanel:not(.tabPanel-select) { display: none; }
 
-/* ---------- Formularios de edición heredados (sin clase) ---------- */
-form:not(.form) {
-    width: 100%;
-    max-width: 520px;
-    margin: 32px auto;
-    padding: 24px 16px;
-    display: flex;
-    flex-direction: column;
-    gap: 14px;
-}
-
-form:not(.form) > div { display: flex; flex-direction: column; gap: 6px; }
-form:not(.form) label { font-size: .8rem; font-weight: 600; color: var(--muted); }
-
-form:not(.form) input {
-    padding: 11px 13px;
-    background: var(--bg-elev);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    /* !important: esas pantallas ponen color:black inline y sobre fondo oscuro no se leería */
-    color: var(--text) !important;
-}
-
-form:not(.form) input:disabled { opacity: .55; }
-
-form:not(.form) button {
-    align-self: flex-start;
-    padding: 11px 20px;
-    border: none;
-    border-radius: 12px;
-    background: var(--accent);
-    color: var(--accent-contrast);
-    font-weight: 700;
-}
-
 @media (max-width: 560px) {
     .equipoPartido { padding: 16px; }
     .golesContainer span { font-size: 1.5rem; }
-    .equipoDiv img { width: 52px; height: 52px; }
     .equipoLogo img { width: 130px; height: 130px; }
 }

@@ -6,7 +6,7 @@
     z-index: 99;
     height: var(--header-h);
     padding: 0 20px;
-    background: rgba(13, 17, 23, .82);
+    background: var(--header-bg);
     -webkit-backdrop-filter: blur(14px);
     backdrop-filter: blur(14px);
     border-bottom: 1px solid var(--border);
@@ -37,7 +37,7 @@
     transition: color var(--ease), background var(--ease);
 }
 
-.navBar a:hover { color: var(--text); background: rgba(255, 255, 255, .06); }
+.navBar a:hover { color: var(--text); background: var(--hover); }
 
 .userInfo { display: flex; align-items: center; gap: 10px; }
 
@@ -63,7 +63,7 @@
     transition: background var(--ease), border-color var(--ease);
 }
 
-.userInfo > a:hover { background: rgba(255, 255, 255, .06); }
+.userInfo > a:hover { background: var(--hover); }
 
 .userInfo > a:last-child { background: var(--accent); border-color: var(--accent); color: var(--accent-contrast); }
 .userInfo > a:last-child:hover { background: var(--accent-hover); border-color: var(--accent-hover); }

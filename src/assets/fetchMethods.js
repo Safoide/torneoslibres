@@ -39,6 +39,6 @@ const apiUpload = async (url, campo, archivo) => {
 const apiGET = (url) => request('GET', url);
 const apiPOST = (url, body) => request('POST', url, body);
 const apiPUT = (url, body) => request('PUT', url, body);
-const apiDELETE = (url) => request('DELETE', url);
+const apiDELETE = (url, body) => request('DELETE', url, body);
 
 export { apiGET, apiPOST, apiPUT, apiDELETE, apiUpload };

@@ -3,6 +3,7 @@ import { Link, Navigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { logoSrc } from '../../assets/torneosUtils.js';
 import Avatar from '../Avatar';
+import TorneosAnotados from '../TorneosAnotados';
 import '../../assets/styles/organizador.css';
 import '../../assets/styles/torneo.css';
 
@@ -53,6 +54,8 @@ const MiEquipo = () => {
                     </div>
                 )}
             </section>
+
+            <TorneosAnotados />
         </div>
     )
 }

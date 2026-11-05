@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import PartidoItem from '../PartidoItem';
 import { getEquipoById } from '../../assets/endPoints/equipos';
-import { deleteMatch, getPartidosByTeam } from '../../assets/endPoints/partidos';
+import { getPartidosByTeam } from '../../assets/endPoints/partidos';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import { getJugadoresByTeam } from '../../assets/endPoints/jugadores';
 import { logoSrc } from '../../assets/torneosUtils.js';
@@ -11,17 +11,9 @@ const Equipo = () => {
 
     const { teamId } = useParams();
 
-    const navigate = useNavigate();
-
     const [equipo, setEquipo] = useState(undefined);
     const [jugadores, setJugadores] = useState([]);
     const [partidos, setPartidos] = useState([]);
-
-    const deleteM = async (event, matchId) => {
-        event.preventDefault();
-
-        setPartidos(await deleteMatch(matchId));
-    }
 
     useEffect(() => {
         getEquipoById(teamId)
@@ -34,12 +26,6 @@ const Equipo = () => {
             .then((data) => setPartidos(data));
     }, [teamId])
 
-    const handleButton = (event) => {
-        event.preventDefault();
-
-        navigate('./editar')
-    }
-    
     return (
         <div className='equipoContainer'>
             <div style={ {display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 30} }>
@@ -49,7 +35,6 @@ const Equipo = () => {
                             <div className='equipoInfo'>
                                 <div className='equipoLogo'>
                                     {logoSrc(equipo.logo) && <img src={logoSrc(equipo.logo)} alt={equipo.name}/>}
-                                    <div className='equipoEditar' onClick={handleButton}><box-icon color='#fff' type='solid' name='edit'></box-icon></div>
                                 </div>
                                 <h2 key={equipo.id}>{equipo.name}</h2>
                             </div>
@@ -102,7 +87,7 @@ const Equipo = () => {
                         {
                             partidos.length ?
                                 partidos.map((partido, i) => (
-                                    <PartidoItem partido={partido} deleteMatch={deleteM} />
+                                    <PartidoItem key={partido.id} partido={partido} />
                                 ))
                             :
                                 <h4>{partidos.error}</h4>

@@ -8,6 +8,7 @@ import {
     logoSrc,
 } from '../assets/torneosUtils.js';
 import Avatar from './Avatar';
+import ProximaFecha from './ProximaFecha';
 import '../assets/styles/buscador.css';
 
 const EMPTY_FILTERS = {
@@ -57,6 +58,8 @@ const BuscadorTorneos = ({ organizadorId }) => {
 
     return (
         <div className='buscador'>
+            {!organizadorId && <ProximaFecha />}
+
             {!organizadorId && (
                 <div className='buscador__hero'>
                     <h1>Encontrá tu próximo torneo</h1>

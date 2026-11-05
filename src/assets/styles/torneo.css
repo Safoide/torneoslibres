@@ -60,14 +60,14 @@
     transition: background var(--ease);
 }
 
-.equipos-lista li:hover { background: #262d3b; }
+.equipos-lista li:hover { background: var(--surface-2); }
 .equipos-lista a:hover { color: var(--accent); }
 
 .tabla-wrap { overflow-x: auto; margin: 0 -8px; }
 .tabla-wrap table { width: 100%; min-width: 520px; }
 .tabla-wrap th, .tabla-wrap td { padding: 11px 8px; font-size: .9rem; font-variant-numeric: tabular-nums; }
 .tabla-wrap tbody tr { transition: background var(--ease); }
-.tabla-wrap tbody tr:hover { background: rgba(255, 255, 255, .03); }
+.tabla-wrap tbody tr:hover { background: var(--hover); }
 .tabla-wrap tbody td:first-child { color: var(--muted); font-weight: 700; }
 .tabla-wrap tbody tr:first-child td:first-child { color: var(--accent); }
 .tabla-wrap .izq { text-align: left; }

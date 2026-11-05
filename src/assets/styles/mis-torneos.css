@@ -1,0 +1,35 @@
+/* "Torneos anotados" en la pagina del equipo */
+
+.anotados__grupo { margin-top: 18px; }
+
+.anotados__grupo h3 {
+    margin-bottom: 10px;
+    font-size: .78rem;
+    font-weight: 700;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: var(--muted);
+}
+
+.anotados__lista { display: flex; flex-direction: column; gap: 10px; list-style: none; padding: 0; }
+
+.anotados__item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 16px 18px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+}
+
+.anotados__datos { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.anotados__titulo { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; font-weight: 700; }
+.anotados__titulo .estado { font-size: .8rem; }
+.anotados__acciones { display: flex; gap: 8px; flex-shrink: 0; }
+
+@media (max-width: 640px) {
+    .anotados__item { flex-direction: column; align-items: stretch; }
+    .anotados__acciones { justify-content: flex-start; flex-wrap: wrap; }
+}

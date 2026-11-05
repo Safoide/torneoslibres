@@ -28,7 +28,9 @@ export const AuthProvider = ({ children }) => {
             setOrganizacion(undefined);
             getMiOrganizacion().then(org => setOrganizacion(org && !org.error ? org : null));
         }
-    }, [user])
+    // Solo cuando cambia la cuenta (no al editar nombre/email), para no recargar la organizacion o el equipo
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [user?.id, user?.rol])
 
     useEffect(() => {
         if (!readToken()) return;
@@ -56,7 +58,7 @@ export const AuthProvider = ({ children }) => {
     const registro = (body) => entrar(apiRegistro, body);
     const logout = () => { writeToken(null); setUser(null); };
 
-    return <AuthContext.Provider value={{ user, loading, organizacion, setOrganizacion, equipo, setEquipo, login, registro, logout }}>{children}</AuthContext.Provider>;
+    return <AuthContext.Provider value={{ user, setUser, guardarToken: writeToken, loading, organizacion, setOrganizacion, equipo, setEquipo, login, registro, logout }}>{children}</AuthContext.Provider>;
 };
 
 export const useAuth = () => useContext(AuthContext);

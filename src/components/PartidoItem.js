@@ -2,70 +2,58 @@ import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom';
 import { getEquipoById } from '../assets/endPoints/equipos';
 import { logoSrc } from '../assets/torneosUtils.js';
+import Avatar from './Avatar';
 
-const PartidoItem = ({ partido, deleteMatch }) => {
+const TZ = 'America/Argentina/Buenos_Aires';
 
-    const [homeTeam, setHomeTeam] = useState({});
-    const [awayTeam, setAwayTeam] = useState({});
+const parseDate = (fecha) => {
+    const date = new Date(fecha);
+    const dia = date.toLocaleDateString('es-AR', { weekday: 'short', day: 'numeric', month: 'short', timeZone: TZ });
+    const hora = date.toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit', hour12: false, timeZone: TZ });
 
-    const parseDate = (fecha) => {
-        const date = new Date(fecha);
+    return `${dia} · ${hora}`;
+};
 
-        let DateString = `${date.toLocaleString("es-AR", {  weekday: 'short' })}, ${date.toLocaleString("es-AR", { dateStyle: 'short' })}, ${date.toLocaleTimeString("es-AR", { timeStyle: 'short' })}`;
-
-        return DateString;
-    }
+// Un partido. Si se le pasa `equipos` ({ [id]: equipo }) los usa; si no, los pide al servidor.
+const PartidoItem = ({ partido, equipos, mostrarDia = true }) => {
+    const [pedidos, setPedidos] = useState({});
 
     useEffect(() => {
-        getEquipoById(partido.home_id)
-            .then((data) => {
-                setHomeTeam(data);
-            })
+        if (equipos) return;
 
-        getEquipoById(partido.away_id)
-            .then((data) => {
-                setAwayTeam(data);
-            })   
-    }, [partido])
+        Promise.all([getEquipoById(partido.home_id), getEquipoById(partido.away_id)])
+            .then(([home, away]) => setPedidos({ [partido.home_id]: home, [partido.away_id]: away }));
+    }, [partido, equipos])
+
+    const home = (equipos ?? pedidos)[partido.home_id];
+    const away = (equipos ?? pedidos)[partido.away_id];
+    if (!home || !away) return null;
+
+    const jugado = partido.home_goals !== null && partido.away_goals !== null;
+
+    const lado = (eq) => (
+        <Link className='equipoDiv' to={`/equipo/${eq.id}`}>
+            <Avatar name={eq.name} src={logoSrc(eq.logo)} size={56} />
+            <span>{eq.name}</span>
+        </Link>
+    );
 
     return (
-        <>
-            {
-                homeTeam.logo &&
-                awayTeam.logo &&
-                <div className='equipoPartido' key={partido.id}>
-                    <h4 className='partidoFecha secondary-text'>
-                        {parseDate(partido.date)}
-                        <div style={{display: 'flex', gap: '10px'}}>
-                            <Link className='editPartido' to={`/torneos/partidos/${partido.id}`}>
-                                <box-icon color='#9AA0A6' type='solid' name='edit'></box-icon>
-                            </Link>
-                            <div className='editPartido' onClick={(event) => deleteMatch(event, partido.id)}>
-                                <box-icon color='#9AA0A6' type='solid' name='trash'></box-icon>
-                            </div>
-                        </div>
-                    </h4>
-                    <div className='partidoContainer'>
-                        <Link className='equipoDiv' to={`/equipo/${partido.home_id}`}>
-                            {logoSrc(homeTeam.logo) && <img src={logoSrc(homeTeam.logo)} alt={partido.home_id} />}
-                            <span>{homeTeam.name}</span>
-                        </Link>
-                        <div className='golesContainer'>
-                            <span className='secondary-text'>{partido.home_goals}</span>
-                            {partido.home_goals !== null 
-                                ? <span className='secondary-text'>-</span>
-                                : <h4 className='secondary-text'>VS</h4>
-                            }
-                            <span className='secondary-text'>{partido.away_goals}</span>
-                        </div>
-                        <Link className='equipoDiv' to={`/equipo/${partido.away_id}`}>
-                            {logoSrc(awayTeam.logo) && <img src={logoSrc(awayTeam.logo)} alt={partido.away_id} />}
-                            <span>{awayTeam.name}</span>
-                        </Link>
-                    </div>
+        <div className='equipoPartido'>
+            <h4 className='partidoFecha secondary-text'>
+                <span>{mostrarDia ? parseDate(partido.date) : parseDate(partido.date).split(' · ')[1]}</span>
+                {partido.cancha && <span>Cancha {partido.cancha}</span>}
+            </h4>
+            <div className='partidoContainer'>
+                {lado(home)}
+                <div className='golesContainer'>
+                    {jugado
+                        ? <><span>{partido.home_goals}</span><span className='secondary-text'>-</span><span>{partido.away_goals}</span></>
+                        : <h4 className='secondary-text'>VS</h4>}
                 </div>
-            }
-        </>
+                {lado(away)}
+            </div>
+        </div>
     )
 }
 

@@ -1,0 +1,109 @@
+/* Fixture y fechas del torneo + "Tu proxima fecha" del capitan */
+
+.fixture {
+    width: 100%;
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 24px 16px 72px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.fixture__head { display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+.fixture__head h1 { font-size: clamp(1.6rem, 4vw, 2.2rem); letter-spacing: -.03em; }
+
+/* ---------- Formulario de nueva fecha ---------- */
+.fecha-form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 22px;
+    background: var(--surface);
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius-lg);
+}
+
+.fecha-form h2 { font-size: 1.15rem; }
+.fecha-form__grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 14px; }
+.fecha-form__acciones { display: flex; justify-content: flex-end; gap: 10px; }
+
+/* ---------- Una fecha ---------- */
+.fecha { display: flex; flex-direction: column; gap: 14px; }
+
+.fecha__top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border);
+}
+
+.fecha__top h2 { font-size: 1.25rem; }
+.fecha__acciones { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; justify-content: flex-end; }
+.fecha__partidos { display: flex; flex-direction: column; gap: 12px; }
+.fecha__partidos .equipoPartido { max-width: none; }
+
+.fecha__estado {
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-size: .72rem;
+    font-weight: 700;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
+.fecha__estado--programada { background: var(--accent-soft); color: var(--accent); }
+.fecha__estado--en-juego { background: rgba(255, 193, 77, .15); color: var(--amber); }
+.fecha__estado--jugada { background: rgba(255, 255, 255, .06); color: var(--muted); }
+
+/* ---------- Tu proxima fecha (arriba de la portada) ---------- */
+.proxima { margin: 28px 0 -8px; }
+.proxima > h2 { margin-bottom: 14px; font-size: 1.1rem; letter-spacing: -.01em; }
+.proxima__lista { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 360px), 1fr)); gap: 16px; }
+
+.proxima__card {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 20px;
+    background: linear-gradient(160deg, var(--accent-soft), var(--surface) 55%);
+    border: 1px solid var(--accent);
+    border-radius: var(--radius-lg);
+}
+
+.proxima__top { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; font-weight: 700; }
+.proxima__cuando { font-size: 1.15rem; }
+
+.proxima__partido {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 4px 0;
+    padding: 12px;
+    background: rgba(0, 0, 0, .25);
+    border-radius: var(--radius);
+}
+
+.proxima__partido div { display: flex; flex-direction: column; gap: 2px; }
+.proxima__libre { padding: 12px; background: rgba(0, 0, 0, .25); border-radius: var(--radius); color: var(--muted); }
+
+.proxima__pie {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 12px;
+    margin-top: 6px;
+    padding-top: 12px;
+    border-top: 1px solid var(--border);
+}
+
+.proxima__pie strong { display: block; font-size: 1.3rem; }
+
+@media (max-width: 560px) {
+    .fecha__top { flex-direction: column; }
+    .fecha__acciones { justify-content: flex-start; }
+    .fecha-form { padding: 16px; }
+}

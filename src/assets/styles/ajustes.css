@@ -1,0 +1,94 @@
+/* Ajustes de la cuenta */
+
+.ajustes__card {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    padding: 22px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+}
+
+.form-page .ajustes__card h2 { margin-top: 0; font-size: 1.15rem; }
+
+.ajustes__fila {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding-top: 14px;
+    border-top: 1px solid var(--border);
+}
+
+.ajustes__fila > div:first-child { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.ajustes__fila--click { cursor: pointer; }
+
+/* Botones pegados (tema, tamaño) */
+.segmentado { display: inline-flex; flex-shrink: 0; padding: 3px; background: var(--bg-elev); border: 1px solid var(--border); border-radius: 999px; }
+
+.segmentado__op {
+    position: relative;
+    padding: 7px 14px;
+    border-radius: 999px;
+    font-size: .85rem;
+    font-weight: 600;
+    color: var(--muted);
+    cursor: pointer;
+    transition: background var(--ease), color var(--ease);
+}
+
+.segmentado__op input { position: absolute; opacity: 0; inset: 0; cursor: pointer; }
+.segmentado__op:hover { color: var(--text); }
+.segmentado__op--activa { background: var(--accent); color: var(--accent-contrast); }
+.segmentado__op--activa:hover { color: var(--accent-contrast); }
+.segmentado__op:has(input:focus-visible) { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+/* Interruptor */
+.interruptor {
+    appearance: none;
+    -webkit-appearance: none;
+    flex-shrink: 0;
+    position: relative;
+    width: 44px;
+    height: 26px;
+    padding: 0;
+    border: 1px solid var(--border-strong);
+    border-radius: 999px;
+    background: var(--surface-2);
+    cursor: pointer;
+    transition: background var(--ease), border-color var(--ease);
+}
+
+.interruptor::after {
+    content: '';
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: var(--muted);
+    transition: transform var(--ease), background var(--ease);
+}
+
+.interruptor:checked { background: var(--accent); border-color: var(--accent); }
+.interruptor:checked::after { transform: translateX(18px); background: var(--accent-contrast); }
+
+/* Zona de peligro */
+.ajustes__card--peligro { border-color: color-mix(in srgb, var(--danger) 45%, var(--border)); }
+.form-page .ajustes__card--peligro h2 { color: var(--danger); }
+
+.btn--peligro { align-self: flex-start; background: var(--danger); color: #fff; border-color: var(--danger); box-shadow: none; }
+.btn--peligro:hover:not(:disabled) { filter: brightness(1.08); }
+.btn--peligro:disabled { opacity: .45; cursor: not-allowed; }
+
+.ajustes__confirmar { display: flex; flex-direction: column; gap: 8px; }
+.ajustes__confirmar > p { font-size: .95rem; padding: 12px 14px; background: var(--danger-soft); border-radius: var(--radius); color: var(--text); }
+.ajustes__confirmar label { margin-top: 6px; font-size: .8rem; font-weight: 600; color: var(--muted); }
+.ajustes__acciones { display: flex; justify-content: flex-end; gap: 10px; margin-top: 10px; }
+
+@media (max-width: 560px) {
+    .ajustes__fila { flex-direction: column; align-items: flex-start; }
+    .ajustes__card { padding: 18px; }
+}

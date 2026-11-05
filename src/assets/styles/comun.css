@@ -70,14 +70,14 @@
 
 .btn:disabled { opacity: .5; cursor: not-allowed; }
 
-.btn--primary { background: var(--accent); color: var(--accent-contrast); box-shadow: 0 8px 22px rgba(47, 210, 122, .22); }
+.btn--primary { background: var(--accent); color: var(--accent-contrast); box-shadow: 0 8px 22px var(--accent-shadow); }
 .btn--primary:hover:not(:disabled) { background: var(--accent-hover); }
 
 .btn--secundario { background: transparent; border-color: var(--border-strong); }
 .btn--secundario:hover:not(:disabled) { background: var(--surface-2); }
 
-.btn--whatsapp { background: transparent; border-color: rgba(37, 211, 102, .45); color: var(--whatsapp); }
-.btn--whatsapp:hover { background: rgba(37, 211, 102, .1); }
+.btn--whatsapp { background: transparent; border-color: color-mix(in srgb, var(--whatsapp) 45%, transparent); color: var(--whatsapp); }
+.btn--whatsapp:hover { background: color-mix(in srgb, var(--whatsapp) 10%, transparent); }
 
 .btn--chico { display: inline-flex; padding: 9px 16px; font-size: .85rem; border-radius: 10px; box-shadow: none; }
 
@@ -86,6 +86,7 @@
 .campo input,
 .campo select,
 .form input:not([type=radio]):not([type=checkbox]):not([type=file]),
+.ajustes__confirmar input,
 .form select,
 .form textarea {
     width: 100%;
@@ -102,6 +103,7 @@
 .campo input:focus,
 .campo select:focus,
 .form input:focus,
+.ajustes__confirmar input:focus,
 .form select:focus,
 .form textarea:focus {
     outline: none;

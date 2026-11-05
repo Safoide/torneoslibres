@@ -12,10 +12,10 @@ import OrganizacionForm from './components/pages/OrganizacionForm';
 import CrearTorneo from './components/pages/CrearTorneo';
 import Partidos from './components/pages/Partidos';
 import Equipo from './components/pages/Equipo';
-import EditarEquipo from './components/pages/EditarEquipo';
-import EditarPartido from './components/pages/EditarPartido';
 import EquipoForm from './components/pages/EquipoForm';
 import MiEquipo from './components/pages/MiEquipo';
+import CuentaDatos from './components/pages/CuentaDatos';
+import CuentaAjustes from './components/pages/CuentaAjustes';
 import Header from './components/Header';
 import 'boxicons';
 
@@ -36,10 +36,10 @@ function App() {
                     <Route path='/login' element={<Auth modo='login' />} />
                     <Route path='/registro' element={<Auth modo='registro' />} />
                     <Route path='/partidos/:torneo' element={<Partidos />} />
-                    <Route path='/partido/:id/editar' element={<EditarPartido />} />
                     <Route path='/equipo/:teamId' element={<Equipo />} />
-                    <Route path='/equipo/:team/editar' element={<EditarEquipo />} />
                     <Route path='/equipos/nuevo' element={<EquipoForm modo='crear' />} />
+                    <Route path='/cuenta' element={<CuentaDatos />} />
+                    <Route path='/cuenta/ajustes' element={<CuentaAjustes />} />
                     <Route path='/mi-equipo' element={<MiEquipo />} />
                     <Route path='/mi-equipo/editar' element={<EquipoForm modo='editar' />} />
                 </Routes>

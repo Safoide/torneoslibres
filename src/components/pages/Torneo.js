@@ -140,6 +140,12 @@ const Torneo = () => {
                 </Link>
             )}
 
+            {empezado && (
+                <Link className='btn btn--secundario' to={`/partidos/${tor.id}`}>
+                    Ver fixture y fechas
+                </Link>
+            )}
+
             {tor.whatsapp && (
                 <a className='btn btn--whatsapp' href={whatsappLink(tor)} target='_blank' rel='noreferrer'>
                     Consultar al organizador por WhatsApp

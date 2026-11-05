@@ -71,7 +71,7 @@
     transition: background var(--ease);
 }
 
-.cuenta__item:hover { background: rgba(255, 255, 255, .07); }
+.cuenta__item:hover { background: var(--hover-strong); }
 
 .cuenta__item--peligro {
     margin-top: 6px;

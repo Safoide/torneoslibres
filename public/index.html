@@ -8,6 +8,15 @@
       name="description"
       content="Encontra torneos de futbol 5, 7, 8 y 11 en Buenos Aires"
     />
+    <script>
+      /* Aplica el tema guardado antes de pintar, para que no parpadee */
+      try {
+        var a = JSON.parse(localStorage.getItem('ajustes') || '{}');
+        var d = document.documentElement;
+        d.dataset.theme = a.tema === 'claro' || (a.tema === 'auto' && matchMedia('(prefers-color-scheme: light)').matches) ? 'light' : 'dark';
+        if (a.texto === 'grande') d.dataset.texto = 'grande';
+      } catch (e) {}
+    </script>
     <title>Torneos Libres - Torneos de F5, F7, F8 y F11 en Buenos Aires</title>
   </head>
   <body id="root"></body>

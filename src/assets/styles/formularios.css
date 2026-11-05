@@ -19,6 +19,8 @@
 .form-page .box p { color: var(--text-soft); }
 
 /* ---------- Formulario ---------- */
+.form__ok { color: var(--accent); font-size: .9rem; font-weight: 600; }
+.form-page h2 { margin-top: 10px; font-size: 1.25rem; }
 .form {
     display: flex;
     flex-direction: column;
