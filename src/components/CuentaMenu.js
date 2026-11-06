@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import usePresencia from './usePresencia';
 import '../assets/styles/cuenta.css';
 
 const ROL_LABEL = { capitan: 'Capitán', organizador: 'Organizador' };
@@ -8,6 +9,7 @@ const ROL_LABEL = { capitan: 'Capitán', organizador: 'Organizador' };
 const CuentaMenu = () => {
     const { user, logout } = useAuth();
     const [abierto, setAbierto] = useState(false);
+    const { montado, cerrando } = usePresencia(abierto);
     const ref = useRef(null);
     const navigate = useNavigate();
 
@@ -40,8 +42,8 @@ const CuentaMenu = () => {
                 <span aria-hidden='true' className='cuenta__flecha'>▾</span>
             </button>
 
-            {abierto && (
-                <div className='cuenta__panel' role='menu'>
+            {montado && (
+                <div className={`cuenta__panel menu-flotante${cerrando ? ' saliendo' : ''}`} role='menu'>
                     <div className='cuenta__quien'>
                         <strong>{user.nombre}</strong>
                         {user.email && <span>{user.email}</span>}

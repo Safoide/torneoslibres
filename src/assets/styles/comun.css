@@ -97,7 +97,7 @@
     border-radius: 10px;
     color: var(--text);
     font-size: .95rem;
-    transition: border-color var(--ease), box-shadow var(--ease);
+    transition: border-color var(--ease);
 }
 
 .filtros__busqueda:focus,
@@ -109,7 +109,6 @@
 .form textarea:focus {
     outline: none;
     border-color: var(--accent);
-    box-shadow: 0 0 0 3px var(--accent-soft);
 }
 
 .campo select,

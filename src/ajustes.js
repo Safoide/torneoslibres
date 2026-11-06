@@ -16,10 +16,20 @@ export const leerAjustes = () => {
 
 const sistemaEsClaro = () => !!window.matchMedia?.('(prefers-color-scheme: light)').matches;
 
+let finCambioTema;
+
 export const aplicarAjustes = (ajustes = leerAjustes()) => {
     const el = document.documentElement;
+    const tema = ajustes.tema === 'claro' || (ajustes.tema === 'auto' && sistemaEsClaro()) ? 'light' : 'dark';
 
-    el.dataset.theme = ajustes.tema === 'claro' || (ajustes.tema === 'auto' && sistemaEsClaro()) ? 'light' : 'dark';
+    // Al cambiar de tema (no al cargar la página) los colores pasan de uno a otro en vez de saltar
+    if (el.dataset.theme && el.dataset.theme !== tema) {
+        el.classList.add('cambiando-tema');
+        clearTimeout(finCambioTema);
+        finCambioTema = setTimeout(() => el.classList.remove('cambiando-tema'), 450);
+    }
+
+    el.dataset.theme = tema;
     el.dataset.texto = ajustes.texto;
     el.dataset.movimiento = ajustes.movimiento;
 };

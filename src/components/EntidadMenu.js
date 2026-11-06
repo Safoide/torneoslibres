@@ -2,12 +2,14 @@ import React, { useEffect, useRef, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom';
 import { logoSrc } from '../assets/torneosUtils.js';
 import Avatar from './Avatar';
+import usePresencia from './usePresencia';
 import '../assets/styles/orgmenu.css';
 
 // Menu desplegable del header para la organizacion (organizador) o el equipo (capitan)
 const EntidadMenu = ({ nombre, logo, items, textoEliminar, confirmar, onEliminar }) => {
     const navigate = useNavigate();
     const [open, setOpen] = useState(false);
+    const { montado, cerrando } = usePresencia(open);
     const ref = useRef(null);
 
     // Se cierra al hacer click afuera o con Escape
@@ -45,8 +47,8 @@ const EntidadMenu = ({ nombre, logo, items, textoEliminar, confirmar, onEliminar
                 <span aria-hidden='true'>▾</span>
             </button>
 
-            {open && (
-                <div className='orgmenu__lista' role='menu'>
+            {montado && (
+                <div className={`orgmenu__lista menu-flotante${cerrando ? ' saliendo' : ''}`} role='menu'>
                     {items.map(it => (
                         <Link key={it.to} role='menuitem' className='orgmenu__item' to={it.to} onClick={() => setOpen(false)}>{it.label}</Link>
                     ))}
