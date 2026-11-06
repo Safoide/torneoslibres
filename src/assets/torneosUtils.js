@@ -7,6 +7,7 @@ export const MODALIDAD_LABEL = { f5: 'F5', f7: 'F7', f8: 'F8', f11: 'F11' };
 export const ESTADO_LABEL = {
     'inscripcion-abierta': 'Inscripción abierta',
     'proximamente': 'Próximamente',
+    'inscripcion-cerrada': 'Inscripción cerrada',
     'en-curso': 'En curso',
     'finalizado': 'Finalizado',
 };
@@ -36,6 +37,30 @@ export const logoSrc = (logo) => {
 };
 
 export const cupos = (tor) => Math.max(tor.equiposMax - tor.equiposInscriptos, 0);
+
+// ---------- Cierre de inscripción e inicio (las mismas reglas que la API, en torneosManager.js) ----------
+export const ANTICIPACION_DIAS = 3; // las fechas con cobro se crean con al menos 3 días de anticipación
+
+// Hoy en Argentina (YYYY-MM-DD) y sumar días a una fecha YYYY-MM-DD
+export const hoyAR = () => new Intl.DateTimeFormat('en-CA', { timeZone: 'America/Argentina/Buenos_Aires' }).format(new Date());
+export const sumarDias = (iso, dias) => {
+    const d = new Date(`${iso}T12:00:00Z`);
+    d.setUTCDate(d.getUTCDate() + dias);
+    return d.toISOString().slice(0, 10);
+};
+
+export const cobraPorFecha = (tor) => Number(tor?.precioFecha ?? 0) > 0;
+
+// Último día en que pueden cerrar las inscripciones: con cobro por fecha, 4 días antes del inicio
+// (quedan 3 para crear la fecha 1 y pagarla); sin cobro, el día anterior
+export const cierreMaximo = (fechaInicio, precioFecha) =>
+    sumarDias(fechaInicio, Number(precioFecha ?? 0) > 0 ? -(ANTICIPACION_DIAS + 1) : -1);
+
+// ¿Se puede inscribir ahora? (la API además lo controla)
+export const inscripcionAbierta = (tor) => tor.estado === 'inscripcion-abierta' && hoyAR() <= tor.cierreInscripcion;
+
+// Antes de empezar: el torneo todavía puede cambiar su inicio y su cierre
+export const ESTADOS_PREVIOS = ['proximamente', 'inscripcion-abierta', 'inscripcion-cerrada'];
 
 export const whatsappLink = (tor) =>
     `https://wa.me/${tor.whatsapp}?text=${encodeURIComponent(`Hola! Vi el torneo "${tor.nombre}" en Torneos Libres y quiero más info.`)}`;

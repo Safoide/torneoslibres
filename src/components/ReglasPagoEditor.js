@@ -27,7 +27,7 @@ const ReglasPagoEditor = ({ tor, onGuardado }) => {
         <section className='seccion form reglas-editor'>
             <h2>Reglas de pago</h2>
             <ReglasPagoCampos value={reglas} precioFecha={tor.precioFecha} onChange={(r) => { setReglas(r); setEstado(''); }} />
-            <p className='muted'>Podés cambiarlas hasta que el torneo pase a "En curso". Después quedan fijas.</p>
+            <p className='muted'>Podés cambiarlas hasta que crees la primera fecha. Después quedan fijas.</p>
 
             {error && <p className='form__error' role='alert'>{error}</p>}
             <div className='reglas-editor__acciones'>

@@ -69,7 +69,7 @@ const OrgDashboard = ({ data }) => {
         </section>
     );
 
-    const activos = totales.porEstado['en-curso'] + totales.porEstado['inscripcion-abierta'] + totales.porEstado.proximamente;
+    const activos = totales.porEstado['en-curso'] + totales.porEstado['inscripcion-abierta'] + totales.porEstado.proximamente + (totales.porEstado['inscripcion-cerrada'] ?? 0);
     const falta = dinero.porCobrar + dinero.restante + (dinero.multasPendientes ?? 0);
 
     return (

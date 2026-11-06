@@ -2,12 +2,13 @@ import React, { useEffect, useState } from 'react'
 import { Navigate, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { getFiltros, addTor } from '../../assets/endPoints/torneos.js';
-import { MODALIDAD_LABEL, CATEGORIA_LABEL, ESTADO_LABEL, DIAS, LOCALIDADES } from '../../assets/torneosUtils.js';
+import { MODALIDAD_LABEL, CATEGORIA_LABEL, ESTADO_LABEL, DIAS, LOCALIDADES, hoyAR, sumarDias, ANTICIPACION_DIAS } from '../../assets/torneosUtils.js';
 import '../../assets/styles/formularios.css';
 import { SkeletonFormulario } from '../Skeleton';
 import ReglasPagoCampos from '../ReglasPagoCampos';
 import { REGLAS_INICIALES } from '../../assets/reglasPago.js';
 import LimiteEdadCampos, { LIMITE_EDAD_INICIAL, limiteEdadParaApi } from '../LimiteEdadCampos';
+import CierreCampos, { CIERRE_INICIAL, cierreParaApi } from '../CierreCampos';
 
 const Campo = ({ id, label, completo, children }) => (
     <div className={`form__campo${completo ? ' form__campo--completo' : ''}`}>
@@ -30,11 +31,13 @@ const CrearTorneo = () => {
     const navigate = useNavigate();
 
     const [form, setForm] = useState(INICIAL);
+    const [cierre, setCierre] = useState(CIERRE_INICIAL);
     const [zonas, setZonas] = useState([]);
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
 
-    const hoy = new Date().toLocaleDateString('en-CA'); // YYYY-MM-DD en hora local
+    // El inicio más cercano posible: con cobro por fecha, en 4 días (3 completos para crear y pagar la fecha 1); sin cobro, mañana
+    const minInicio = sumarDias(hoyAR(), Number(form.precioFecha) > 0 ? ANTICIPACION_DIAS + 1 : 1);
 
     useEffect(() => {
         getFiltros().then(data => data?.zonas && setZonas(data.zonas));
@@ -57,7 +60,7 @@ const CrearTorneo = () => {
         setError('');
         setLoading(true);
 
-        const data = await addTor({ ...form, limiteEdad: limiteEdadParaApi(form.limiteEdad) });
+        const data = await addTor({ ...form, limiteEdad: limiteEdadParaApi(form.limiteEdad), cierreInscripcion: cierreParaApi(cierre) });
 
         setLoading(false);
         if (!data || data.error) return setError(data?.error || 'No pudimos conectar con el servidor');
@@ -93,7 +96,7 @@ const CrearTorneo = () => {
                     </Campo>
 
                     <Campo id='fechaInicio' label='Fecha de inicio'>
-                        <input id='fechaInicio' name='fechaInicio' type='date' required min={hoy} value={form.fechaInicio} onChange={onChange} />
+                        <input id='fechaInicio' name='fechaInicio' type='date' required min={minInicio} value={form.fechaInicio} onChange={onChange} />
                     </Campo>
 
                     <Campo id='diaJuego' label='Día de juego'>
@@ -154,8 +157,18 @@ const CrearTorneo = () => {
                     </div>
 
                     <div className='form__campo form__campo--completo'>
-                        <ReglasPagoCampos value={form.reglasPago} precioFecha={form.precioFecha} onChange={reglasPago => setForm(prev => ({ ...prev, reglasPago }))} />
-                        <span className='muted'>Podés cambiar estas reglas hasta que el torneo empiece.</span>
+                        <CierreCampos value={cierre} onChange={setCierre} fechaInicio={form.fechaInicio} precioFecha={Number(form.precioFecha) || 0} />
+                    </div>
+
+                    <div className='form__campo form__campo--completo'>
+                        {Number(form.precioFecha) > 0 ? (
+                            <>
+                                <ReglasPagoCampos value={form.reglasPago} precioFecha={form.precioFecha} onChange={reglasPago => setForm(prev => ({ ...prev, reglasPago }))} />
+                                <span className='muted'>Podés cambiar estas reglas hasta que crees la primera fecha.</span>
+                            </>
+                        ) : (
+                            <span className='muted'>Sin precio por fecha: el torneo se paga todo con la inscripción. Las fechas no tienen cobro ni vencimiento (nadie pierde por no pagar).</span>
+                        )}
                     </div>
                 </div>
 

@@ -8,7 +8,7 @@ import { getEquiposByTournament } from '../../assets/endPoints/equipos';
 import { getPartidosByTournament } from '../../assets/endPoints/partidos';
 import { getFechasByTorneo, crearFecha, cancelarFecha, getPagosTorneo } from '../../assets/endPoints/fechas.js';
 import { resumenReglas } from '../../assets/reglasPago.js';
-import { formatPrecio, formatFecha } from '../../assets/torneosUtils.js';
+import { formatPrecio, formatFecha, cobraPorFecha, hoyAR, sumarDias, ANTICIPACION_DIAS } from '../../assets/torneosUtils.js';
 import '../../assets/styles/fechas.css';
 import { SkeletonFixture } from '../Skeleton';
 
@@ -16,21 +16,20 @@ const ESTADO_FECHA = { programada: 'Programada', 'en-juego': 'En juego', jugada:
 const DIAS = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
 
 const iso = (d) => d.toISOString().slice(0, 10);
-const hoy = () => new Intl.DateTimeFormat('en-CA', { timeZone: 'America/Argentina/Buenos_Aires' }).format(new Date());
-const ANTICIPACION_DIAS = 3; // igual que en la API: los equipos tienen que tener tiempo de pagar
 
-// Primer dia permitido para una fecha nueva (hoy + 3)
-const minimoDia = () => {
-    const d = new Date(`${hoy()}T12:00:00Z`);
-    d.setUTCDate(d.getUTCDate() + ANTICIPACION_DIAS);
-    return iso(d);
+// Primer dia permitido para una fecha nueva (igual que en la API): con cobro, hoy + 3 (los equipos tienen que
+// tener tiempo de pagar); sin cobro, desde hoy. Nunca antes del inicio del torneo
+const minimoDia = (tor) => {
+    const porAnticipacion = cobraPorFecha(tor) ? sumarDias(hoyAR(), ANTICIPACION_DIAS) : hoyAR();
+    return porAnticipacion > tor.fechaInicio ? porAnticipacion : tor.fechaInicio;
 };
 
 // Proximo dia (despues de la ultima fecha y desde el minimo permitido) que cae en el dia de juego del torneo
 const diaSugerido = (tor, fechas) => {
+    const minimo = minimoDia(tor);
     const base = fechas.length ? fechas[0].dia : null; // fechas viene ordenada de la mas nueva a la mas vieja
-    const desde = new Date(`${base && base >= minimoDia() ? base : minimoDia()}T12:00:00Z`);
-    if (base && base >= minimoDia()) desde.setUTCDate(desde.getUTCDate() + 1);
+    const desde = new Date(`${base && base >= minimo ? base : minimo}T12:00:00Z`);
+    if (base && base >= minimo) desde.setUTCDate(desde.getUTCDate() + 1);
 
     for (let i = 0; i < 7; i++) {
         if (DIAS[desde.getUTCDay()] === tor.diaJuego) break;
@@ -82,7 +81,9 @@ const Partidos = () => {
     if (estado === 'error') return <div className='fixture'><p>No encontramos ese torneo.</p><Link className='back-link' to='/torneos'>← Volver a la búsqueda</Link></div>;
 
     const esDueño = user?.rol === 'organizador' && organizacion?.id === tor.organizadorId;
-    const puedeCrear = esDueño && tor.estado === 'en-curso';
+    // Las fechas se crean desde que cierra la inscripcion (la 1, antes del inicio) y mientras el torneo esta en curso
+    const puedeCrear = esDueño && (tor.estado === 'inscripcion-cerrada' || tor.estado === 'en-curso');
+    const cobra = cobraPorFecha(tor);
 
     const abrirForm = () => {
         // Horario de juego del torneo ("16:00 a 22:00") como valor inicial
@@ -136,7 +137,7 @@ const Partidos = () => {
                     <div className='fecha-form__grid'>
                         <div className='campo'>
                             <label htmlFor='dia'>Día</label>
-                            <input id='dia' name='dia' type='date' required min={minimoDia()} value={form.dia} onChange={onChange} />
+                            <input id='dia' name='dia' type='date' required min={minimoDia(tor)} value={form.dia} onChange={onChange} />
                         </div>
                         <div className='campo'>
                             <label htmlFor='inicio'>Inicio</label>
@@ -152,7 +153,12 @@ const Partidos = () => {
                         </div>
                     </div>
 
-                    <p className='muted'>Los partidos se arman solos y se reparten en ese horario. Los capitanes ven la fecha apenas la creás y pagan su parte ({formatPrecio(tor.precioFecha)} por equipo) hasta las 23:59 del día anterior. {resumenReglas(tor.reglasPago, tor.precioFecha)} Por eso la fecha tiene que ser con al menos {ANTICIPACION_DIAS} días de anticipación.</p>
+                    {cobra
+                        ? <p className='muted'>Los partidos se arman solos y se reparten en ese horario. Los capitanes ven la fecha apenas la creás y pagan su parte ({formatPrecio(tor.precioFecha)} por equipo) hasta las 23:59 del día anterior. {resumenReglas(tor.reglasPago, tor.precioFecha)} Por eso la fecha tiene que ser con al menos {ANTICIPACION_DIAS} días de anticipación.</p>
+                        : <p className='muted'>Los partidos se arman solos y se reparten en ese horario. Los capitanes ven la fecha apenas la creás. Este torneo no cobra por fecha: no hay pagos ni vencimientos.</p>}
+                    {fechas.length === 0 && tor.estado === 'inscripcion-cerrada' && (
+                        <p className='muted'>El torneo empieza el {formatFecha(tor.fechaInicio)}: la fecha 1 puede ser desde ese día.</p>
+                    )}
 
                     {error && <p className='form__error' role='alert'>{error}</p>}
 
@@ -163,7 +169,13 @@ const Partidos = () => {
                 </form>
             )}
 
-            {fechas.length === 0 && <p className='buscador__mensaje'>Todavía no hay fechas programadas en este torneo.</p>}
+            {fechas.length === 0 && (
+                <p className='buscador__mensaje'>
+                    {esDueño && tor.estado === 'inscripcion-abierta'
+                        ? `Las fechas se crean cuando cierra la inscripción (el ${formatFecha(tor.cierreInscripcion)}), así el fixture se arma con todos los equipos.`
+                        : 'Todavía no hay fechas programadas en este torneo.'}
+                </p>
+            )}
 
             {fechas.map((f, i) => {
                 const deLaFecha = partidos
@@ -180,7 +192,7 @@ const Partidos = () => {
                         <div className='fecha__top'>
                             <div>
                                 <h2>Fecha {f.numero}</h2>
-                                <p className='muted'>{formatFecha(f.dia)} · {f.inicio} a {f.fin} · {formatPrecio(f.precio)} por equipo</p>
+                                <p className='muted'>{formatFecha(f.dia)} · {f.inicio} a {f.fin} · {f.pagos ? `${formatPrecio(f.precio)} por equipo` : 'sin cobro'}</p>
                                 {f.pagos && (
                                     <p className='fecha__pagos'>
                                         Pagaron {f.pagos.pagados} de {f.pagos.total} equipos

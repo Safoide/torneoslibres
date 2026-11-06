@@ -4,8 +4,9 @@ import { getTorneoById } from '../../assets/endPoints/torneos.js';
 import { getEquiposByTournament } from '../../assets/endPoints/equipos';
 import {
     MODALIDAD_LABEL, ESTADO_LABEL, CATEGORIA_LABEL,
-    formatPrecio, formatFecha, cupos, whatsappLink, diaPlural, logoSrc, textoLimiteEdad
+    formatPrecio, formatFecha, cupos, whatsappLink, diaPlural, logoSrc, textoLimiteEdad, inscripcionAbierta, cobraPorFecha
 } from '../../assets/torneosUtils.js';
+import EstadoTorneo from '../EstadoTorneo';
 import Avatar from '../Avatar';
 import '../../assets/styles/torneo.css';
 import { useAuth } from '../../context/AuthContext';
@@ -51,8 +52,13 @@ const Torneo = () => {
     );
 
     const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${tor.direccion}, ${tor.zona}, Buenos Aires`)}`;
-    const abierto = tor.estado === 'inscripcion-abierta';
+    const abierto = inscripcionAbierta(tor); // estado + fecha de cierre
     const empezado = tor.estado === 'en-curso' || tor.estado === 'finalizado';
+    const conFixture = empezado || tor.estado === 'inscripcion-cerrada'; // desde que cierra ya puede haber fechas
+    const cobra = cobraPorFecha(tor);
+    const textoInscripcion = abierto ? `Abierta hasta el ${formatFecha(tor.cierreInscripcion)} a las 23:59`
+        : tor.estado === 'proximamente' ? `Todavía no abrió · cierra el ${formatFecha(tor.cierreInscripcion)}`
+        : 'Cerrada';
     const esDueño = user?.rol === 'organizador' && organizacion?.id === tor.organizadorId;
     const tabla = [...equipos].sort((a, b) =>
         b.points - a.points || b.goal_difference - a.goal_difference || b.goals_for - a.goals_for);
@@ -72,8 +78,11 @@ const Torneo = () => {
 
             <p>{tor.descripcion}</p>
 
+            {esDueño && <EstadoTorneo tor={tor} onCambio={setTor} />}
+
             <dl className='detalles'>
                 <div className='detalles__fila'><dt>Inicio</dt><dd>{formatFecha(tor.fechaInicio)}</dd></div>
+                {!empezado && <div className='detalles__fila'><dt>Inscripción</dt><dd>{textoInscripcion}</dd></div>}
                 <div className='detalles__fila'><dt>Días y horario</dt><dd>{diaPlural(tor.diaJuego)} · {tor.horario}</dd></div>
                 <div className='detalles__fila'><dt>Formato</dt><dd>{tor.formato}</dd></div>
                 <div className='detalles__fila'><dt>Categoría</dt><dd>{CATEGORIA_LABEL[tor.categoria]}</dd></div>
@@ -86,16 +95,22 @@ const Torneo = () => {
                     <dt>Dirección</dt>
                     <dd>{tor.direccion}, {tor.zona}{tor.localidad !== 'CABA' ? ` (${tor.localidad})` : ''} · <a href={mapsUrl} target='_blank' rel='noreferrer'>Ver en el mapa</a></dd>
                 </div>
-                <div className='detalles__fila'><dt>Inscripción</dt><dd>{formatPrecio(tor.precioInscripcion)}</dd></div>
-                <div className='detalles__fila'><dt>Por fecha</dt><dd>{formatPrecio(tor.precioFecha)} por equipo · se paga hasta las 23:59 del día anterior</dd></div>
-                <div className='detalles__fila'><dt>Si no pagás la fecha</dt><dd>{resumenReglas(tor.reglasPago, tor.precioFecha)}</dd></div>
+                <div className='detalles__fila'><dt>Precio de inscripción</dt><dd>{formatPrecio(tor.precioInscripcion)}</dd></div>
+                {cobra ? (
+                    <>
+                        <div className='detalles__fila'><dt>Por fecha</dt><dd>{formatPrecio(tor.precioFecha)} por equipo · se paga hasta las 23:59 del día anterior</dd></div>
+                        <div className='detalles__fila'><dt>Si no pagás la fecha</dt><dd>{resumenReglas(tor.reglasPago, tor.precioFecha)}</dd></div>
+                    </>
+                ) : (
+                    <div className='detalles__fila'><dt>Por fecha</dt><dd>Sin cobro: el torneo se paga todo con la inscripción</dd></div>
+                )}
                 <div className='detalles__fila'>
                     <dt>Equipos</dt>
                     <dd>{tor.equiposInscriptos} de {tor.equiposMax}{abierto ? ` · ${cupos(tor)} cupos disponibles` : ''}</dd>
                 </div>
             </dl>
 
-            {esDueño && !empezado && <ReglasPagoEditor tor={tor} onGuardado={setTor} />}
+            {esDueño && !empezado && cobra && <ReglasPagoEditor tor={tor} onGuardado={setTor} />}
 
             <section className='seccion'>
                 <h2>{empezado ? 'Tabla de posiciones' : 'Equipos inscriptos'}</h2>
@@ -151,7 +166,7 @@ const Torneo = () => {
                 </Link>
             )}
 
-            {empezado && (
+            {conFixture && (
                 <Link className='btn btn--secundario' to={`/partidos/${tor.id}`}>
                     Ver fixture y fechas
                 </Link>

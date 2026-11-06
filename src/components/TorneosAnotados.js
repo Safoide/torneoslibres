@@ -7,7 +7,7 @@ import { SkeletonLista } from './Skeleton';
 
 const GRUPOS = [
     { titulo: 'En curso', estados: ['en-curso'] },
-    { titulo: 'Próximos a empezar', estados: ['inscripcion-abierta', 'proximamente'] },
+    { titulo: 'Próximos a empezar', estados: ['inscripcion-abierta', 'proximamente', 'inscripcion-cerrada'] },
     { titulo: 'Finalizados', estados: ['finalizado'] },
 ];
 

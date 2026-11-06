@@ -86,3 +86,24 @@
 .reglas-editor h2 { margin-bottom: 4px; }
 .reglas-editor__acciones { display: flex; align-items: center; gap: 12px; }
 .reglas-editor__ok { font-size: .85rem; font-weight: 600; color: var(--accent); }
+
+/* ---------- Estado del torneo (panel del organizador dueño) ---------- */
+.estado-torneo {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 20px;
+    background: var(--surface);
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius-lg);
+}
+
+.estado-torneo__top { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.estado-torneo__top h2 { font-size: 1.1rem; }
+.estado-torneo > p { color: var(--text-soft); line-height: 1.5; }
+.estado-torneo > p strong { color: var(--text); }
+.estado-torneo__acciones { display: flex; flex-wrap: wrap; gap: 10px; }
+
+/* "Cambiar fechas" adentro del panel: sin el fondo de tarjeta del formulario */
+.estado-torneo__form { padding: 0; background: none; border: 0; }
+.cierre-campos { display: flex; flex-direction: column; gap: 8px; }

@@ -47,6 +47,7 @@
 
 .estado--inscripcion-abierta { color: var(--accent); }
 .estado--proximamente { color: var(--amber); }
+.estado--inscripcion-cerrada { color: var(--text-soft); }
 .estado--en-curso { color: var(--blue); }
 .estado--finalizado { color: var(--gray); }
 

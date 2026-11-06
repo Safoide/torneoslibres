@@ -1,6 +1,8 @@
 import { apiGET, apiPOST, apiPUT, apiDELETE } from '../fetchMethods.js';
 
-const API_BASEURL = (process.env.REACT_APP_API_URL || 'http://localhost:4000') + '/organizadores';
+import { API_URL } from '../torneosUtils.js';
+
+const API_BASEURL = API_URL + '/organizadores';
 
 const getOrganizadores = () => apiGET(API_BASEURL + '/');
 const getOrganizadorById = (orgId) => apiGET(API_BASEURL + '/' + orgId);

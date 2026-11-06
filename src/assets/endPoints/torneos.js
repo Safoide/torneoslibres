@@ -1,6 +1,7 @@
 import { apiGET, apiPOST, apiPUT, apiDELETE } from '../fetchMethods.js';
+import { API_URL } from '../torneosUtils.js';
 
-const API_BASEURL = (process.env.REACT_APP_API_URL || 'http://localhost:4000') + '/torneos';
+const API_BASEURL = API_URL + '/torneos';
 
 // GET
 
@@ -35,10 +36,13 @@ const addTor = (newTor) => apiPOST(API_BASEURL + '/', newTor);
 
 const editTor = (torId, modifiedTor) => apiPUT(API_BASEURL + '/' + torId, modifiedTor);
 
+// estado: 'inscripcion-abierta' | 'proximamente' | 'inscripcion-cerrada' | 'finalizado' (en curso es automático)
+const cambiarEstado = (torId, estado) => apiPUT(API_BASEURL + '/' + torId + '/estado', { estado });
+
 
 // DELETE
 
 const deleteTor = (torId) => apiDELETE(API_BASEURL + '/' + torId);
 
 
-export { getTorneos, getFiltros, getTorneoById, addTor, editTor, deleteTor };
+export { getTorneos, getFiltros, getTorneoById, addTor, editTor, cambiarEstado, deleteTor };
