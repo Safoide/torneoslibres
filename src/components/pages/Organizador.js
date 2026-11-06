@@ -8,6 +8,7 @@ import BuscadorTorneos from '../BuscadorTorneos';
 import '../../assets/styles/organizador.css';
 import { useAuth } from '../../context/AuthContext';
 import { logoSrc } from '../../assets/torneosUtils.js';
+import { SkeletonPerfil } from '../Skeleton';
 
 // Pestañas que ve el organizador en su propio perfil. La primera es la que se abre por defecto
 const TABS = [
@@ -40,7 +41,7 @@ const Organizador = () => {
         if (esMia) getMiDashboard().then(d => setDashboard(d && !d.error ? d : null));
     }, [esMia])
 
-    if (org === null) return <div className='org-top'><p>Cargando...</p></div>;
+    if (org === null) return <SkeletonPerfil />;
 
     if (org === false) return (
         <div className='org-top'>

@@ -1,6 +1,7 @@
 import { apiGET, apiPOST, apiPUT, apiDELETE } from '../fetchMethods.js';
+import { API_URL } from '../torneosUtils.js';
 
-const API_BASEURL = 'http://localhost:4000/equipos';
+const API_BASEURL = API_URL + '/equipos'; // usa REACT_APP_API_URL (necesario al subirlo a un hosting)
 
 // GET
 

@@ -3,6 +3,16 @@ import { Link, Navigate, useLocation, useSearchParams } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import '../../assets/styles/formularios.css';
 
+// Cuentas que crea casos-prueba.mjs en la API. Solo se muestran en desarrollo (npm start), nunca en el build.
+const PASSWORD_PRUEBA = 'Prueba123';
+const CUENTAS_PRUEBA = [
+    { email: 'organizador.casos@torneoslibres.test', nombre: 'Organizador', detalle: 'Liga de Casos de Prueba · 10 torneos' },
+    { email: 'capitan.aldia@torneoslibres.test', nombre: 'Capitán al día', detalle: 'Pendientes, pagadas, W.O. a favor, amistosos' },
+    { email: 'capitan.moroso@torneoslibres.test', nombre: 'Capitán moroso', detalle: 'Multa pendiente y bloqueos' },
+    { email: 'capitan.amistosos@torneoslibres.test', nombre: 'Capitán amistosos', detalle: 'Toma amistosos express' },
+    { email: 'capitan.incompleto@torneoslibres.test', nombre: 'Capitán incompleto', detalle: 'Plantel de 2 jugadores' },
+];
+
 const Auth = ({ modo }) => {
     const { user, login, registro } = useAuth();
     const location = useLocation();
@@ -28,6 +38,14 @@ const Auth = ({ modo }) => {
 
         const result = await (esRegistro ? registro(form) : login({ email: form.email, password: form.password }));
 
+        setLoading(false);
+        if (result.error) setError(result.error);
+    };
+
+    const entrarComo = async (email) => {
+        setError('');
+        setLoading(true);
+        const result = await login({ email, password: PASSWORD_PRUEBA });
         setLoading(false);
         if (result.error) setError(result.error);
     };
@@ -65,6 +83,22 @@ const Auth = ({ modo }) => {
                     {loading ? 'Un momento...' : esRegistro ? 'Crear cuenta' : 'Entrar'}
                 </button>
             </form>
+
+            {/* Solo en desarrollo: entrar directo a las cuentas de casos de prueba (ver casos-prueba.mjs en la API) */}
+            {!esRegistro && process.env.NODE_ENV !== 'production' && (
+                <section className='acceso-rapido'>
+                    <h2>Acceso rápido <span>solo desarrollo</span></h2>
+                    <div className='acceso-rapido__lista'>
+                        {CUENTAS_PRUEBA.map(c => (
+                            <button key={c.email} type='button' className='acceso-rapido__btn' disabled={loading} onClick={() => entrarComo(c.email)}>
+                                <strong>{c.nombre}</strong>
+                                <span>{c.detalle}</span>
+                            </button>
+                        ))}
+                    </div>
+                    <p className='muted'>Si no funcionan, cargá los casos con <code>node casos-prueba.mjs</code> en la API (con la API apagada).</p>
+                </section>
+            )}
 
             <p>
                 {esRegistro ? '¿Ya tenés cuenta? ' : '¿No tenés cuenta? '}

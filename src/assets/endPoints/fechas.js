@@ -15,3 +15,9 @@ const crearFecha = (body) => apiPOST(API_BASEURL + '/', body);
 const cancelarFecha = (fechaId) => apiDELETE(API_BASEURL + '/' + fechaId);
 
 export { getFechasByTorneo, getMisFechas, crearFecha, cancelarFecha };
+
+// El capitan paga la parte de su equipo. body: { metodo: 'tarjeta' | 'mercadopago', simular?: 'rechazado' }
+export const pagarFecha = (fechaId, body) => apiPOST(API_BASEURL + '/' + fechaId + '/pagar', body);
+
+// Quien pago cada fecha de un torneo (solo el organizador dueño): { [fechaId]: [{ equipoId, equipo, estado, monto }] }
+export const getPagosTorneo = (torId) => apiGET(API_BASEURL + '/torneo/' + torId + '/pagos');

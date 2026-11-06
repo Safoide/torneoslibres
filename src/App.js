@@ -5,6 +5,8 @@ import './assets/styles/comun.css';
 import { AuthProvider } from './context/AuthContext';
 import Torneos from './components/pages/Torneos';
 import Inicio from './components/pages/Inicio';
+import Amistosos from './components/pages/Amistosos';
+import Amistoso from './components/pages/Amistoso';
 import Torneo from './components/pages/Torneo';
 import Inscripcion from './components/pages/Inscripcion';
 import Organizador from './components/pages/Organizador';
@@ -28,6 +30,8 @@ function App() {
                 <Routes>
                     <Route path='/' element={<Inicio />} />
                     <Route path='/torneos' element={<Torneos />} />
+                    <Route path='/amistosos' element={<Amistosos />} />
+                    <Route path='/amistosos/:id' element={<Amistoso />} />
                     <Route path='/torneos/:torneo' element={<Torneo />} />
                     <Route path='/torneos/:torneo/inscripcion' element={<Inscripcion />} />
                     <Route path='/organizadores/:orgId' element={<Organizador />} />

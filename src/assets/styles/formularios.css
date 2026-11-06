@@ -70,6 +70,11 @@
     font-size: .9rem;
 }
 
+/* Alerta con lista (ej. jugadores fuera del limite de edad) */
+.form__error p { margin: 0; }
+.form__error ul { margin: 6px 0 8px; padding-left: 20px; }
+.form__error a { color: inherit; font-weight: 700; }
+
 .total { margin-top: 4px; font-size: 1.3rem; font-weight: 800; letter-spacing: -.02em; color: var(--text); }
 
 /* Formulario de torneo: grilla de campos */
@@ -82,3 +87,63 @@
     .form-page { padding: 28px 16px 60px; }
     .form { padding: 18px; }
 }
+
+/* Formulario de pago (PagoForm): botones de cancelar y pagar */
+.pago-form__acciones { display: flex; flex-wrap: wrap; gap: 10px; }
+.pago-form__acciones .btn { flex: 1 1 auto; justify-content: center; }
+
+/* Reglas de pago del torneo (penalizacion, multa, amistosos express) */
+.reglas {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin: 0;
+    padding: 18px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--bg-elev);
+}
+
+.reglas legend { padding: 0 6px; font-weight: 700; color: var(--text); }
+.reglas .muted { font-size: .82rem; }
+.reglas__multa { display: flex; flex-direction: column; gap: 6px; padding-left: 4px; }
+.reglas__fila { display: grid; grid-template-columns: minmax(0, 1fr) 140px; gap: 10px; }
+.form .opcion--apagada { opacity: .55; cursor: not-allowed; }
+.reglas__fila--doble { grid-template-columns: 1fr 1fr; }
+
+@media (max-width: 480px) {
+    .reglas__fila, .reglas__fila--doble { grid-template-columns: 1fr; }
+}
+
+/* Login: acceso rapido a las cuentas de prueba (solo en desarrollo) */
+.acceso-rapido {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 16px;
+    border: 1px dashed var(--amber);
+    border-radius: var(--radius);
+    background: var(--amber-soft);
+}
+
+.acceso-rapido h2 { display: flex; align-items: center; gap: 8px; font-size: .95rem; }
+.acceso-rapido h2 span { font-size: .7rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--amber); }
+.acceso-rapido__lista { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 200px), 1fr)); gap: 8px; }
+
+.acceso-rapido__btn {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2px;
+    padding: 10px 12px;
+    text-align: left;
+    background: var(--surface);
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius-sm);
+    transition: border-color var(--ease);
+}
+
+.acceso-rapido__btn:hover:not(:disabled) { border-color: var(--accent); }
+.acceso-rapido__btn strong { font-size: .88rem; }
+.acceso-rapido__btn span { font-size: .75rem; color: var(--muted); }
+.acceso-rapido code { font-size: .8rem; }

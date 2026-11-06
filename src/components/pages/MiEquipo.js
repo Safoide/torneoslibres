@@ -1,16 +1,17 @@
 import React from 'react'
 import { Link, Navigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-import { logoSrc } from '../../assets/torneosUtils.js';
+import { logoSrc, edadEn } from '../../assets/torneosUtils.js';
 import Avatar from '../Avatar';
 import TorneosAnotados from '../TorneosAnotados';
 import '../../assets/styles/organizador.css';
 import '../../assets/styles/torneo.css';
+import { SkeletonPerfil } from '../Skeleton';
 
 const MiEquipo = () => {
     const { user, loading, equipo } = useAuth();
 
-    if (loading || (user?.rol === 'capitan' && equipo === undefined)) return <div className='org-top'><p>Cargando...</p></div>;
+    if (loading || (user?.rol === 'capitan' && equipo === undefined)) return <SkeletonPerfil />;
     if (!user) return <Navigate to='/login' state={{ from: '/mi-equipo' }} replace />;
     if (user.rol !== 'capitan') return <Navigate to='/torneos' replace />;
     if (!equipo) return <Navigate to='/equipos/nuevo' replace />;
@@ -41,12 +42,12 @@ const MiEquipo = () => {
                     <div className='tabla-wrap'>
                         <table>
                             <thead>
-                                <tr><th className='izq'>Nombre</th><th className='izq'>Apellido</th><th>DNI</th><th>Edad</th></tr>
+                                <tr><th className='izq'>Nombre</th><th className='izq'>Apellido</th><th>DNI</th><th>Nacimiento</th><th>Edad</th></tr>
                             </thead>
                             <tbody>
                                 {equipo.jugadores.map(j => (
                                     <tr key={j.dni}>
-                                        <td className='izq'>{j.nombre}</td><td className='izq'>{j.apellido}</td><td>{j.dni}</td><td>{j.edad}</td>
+                                        <td className='izq'>{j.nombre}</td><td className='izq'>{j.apellido}</td><td>{j.dni}</td><td>{j.nacimiento ? j.nacimiento.split('-').reverse().join('/') : '-'}</td><td>{edadEn(j.nacimiento) ?? '-'}</td>
                                     </tr>
                                 ))}
                             </tbody>

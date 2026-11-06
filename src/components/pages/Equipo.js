@@ -6,6 +6,7 @@ import { getPartidosByTeam } from '../../assets/endPoints/partidos';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import { getJugadoresByTeam } from '../../assets/endPoints/jugadores';
 import { logoSrc } from '../../assets/torneosUtils.js';
+import { Cargando, Sk } from '../Skeleton';
 
 const Equipo = () => {
 
@@ -25,6 +26,18 @@ const Equipo = () => {
         getPartidosByTeam(teamId)
             .then((data) => setPartidos(data));
     }, [teamId])
+
+    if (equipo === undefined) return (
+        <Cargando texto='Cargando equipo…' className='equipoContainer'>
+            <div className='sk-col' style={{ alignItems: 'center', gap: 16 }}>
+                <Sk circle h={150} />
+                <Sk w={220} h={26} />
+            </div>
+            <div className='sk-col sk-gap' style={{ width: '100%' }}>
+                {[0, 1, 2, 3, 4].map(i => <Sk key={i} h={38} r={8} />)}
+            </div>
+        </Cargando>
+    );
 
     return (
         <div className='equipoContainer'>

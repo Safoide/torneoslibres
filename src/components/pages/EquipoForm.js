@@ -2,13 +2,15 @@ import React, { useEffect, useState } from 'react'
 import { Navigate, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { crearEquipo, editarEquipo, subirLogo } from '../../assets/endPoints/clubes.js';
-import { logoSrc } from '../../assets/torneosUtils.js';
+import { logoSrc, hoyISO, edadEn } from '../../assets/torneosUtils.js';
 import Avatar from '../Avatar';
 import '../../assets/styles/formularios.css';
 import '../../assets/styles/equipo-propio.css';
+import { SkeletonFormulario } from '../Skeleton';
 
 const MAX_JUGADORES = 30;
-const JUGADOR_VACIO = { nombre: '', apellido: '', dni: '', edad: '' };
+const MIN_NACIMIENTO = `${new Date().getFullYear() - 80}-01-01`; // la API acepta de 10 a 80 años
+const JUGADOR_VACIO = { nombre: '', apellido: '', dni: '', nacimiento: '' };
 
 const EquipoForm = ({ modo }) => {
     const esEditar = modo === 'editar';
@@ -29,7 +31,7 @@ const EquipoForm = ({ modo }) => {
         }
     }, [esEditar, equipo])
 
-    if (cargandoSesion || (user?.rol === 'capitan' && equipo === undefined)) return <div className='form-page'><p>Cargando...</p></div>;
+    if (cargandoSesion || (user?.rol === 'capitan' && equipo === undefined)) return <SkeletonFormulario />;
     if (!user) return <Navigate to='/login' state={{ from: esEditar ? '/mi-equipo/editar' : '/equipos/nuevo' }} replace />;
     if (user.rol !== 'capitan') return <Navigate to='/torneos' replace />;
     if (!esEditar && equipo) return <Navigate to='/mi-equipo' replace />; // un solo equipo por cuenta
@@ -92,13 +94,15 @@ const EquipoForm = ({ modo }) => {
                 <span className='muted'>Solo lo ven los organizadores de los torneos donde te inscribas.</span>
 
                 <label>Plantel ({jugadores.length}/{MAX_JUGADORES})</label>
+                {jugadores.length > 0 && <span className='muted'>Nombre, apellido, DNI y fecha de nacimiento. La edad se calcula sola (sirve para los torneos con límite de edad).</span>}
                 <div className='jugadores'>
                     {jugadores.map((j, i) => (
                         <div className='jugador-fila' key={i}>
                             <input aria-label={`Nombre del jugador ${i + 1}`} placeholder='Nombre' required maxLength={40} value={j.nombre} onChange={e => setJugador(i, 'nombre', e.target.value)} />
                             <input aria-label={`Apellido del jugador ${i + 1}`} placeholder='Apellido' required maxLength={40} value={j.apellido} onChange={e => setJugador(i, 'apellido', e.target.value)} />
                             <input aria-label={`DNI del jugador ${i + 1}`} placeholder='DNI' required inputMode='numeric' maxLength={8} value={j.dni} onChange={e => setJugador(i, 'dni', e.target.value)} />
-                            <input aria-label={`Edad del jugador ${i + 1}`} placeholder='Edad' type='number' required min={10} max={80} value={j.edad} onChange={e => setJugador(i, 'edad', e.target.value)} />
+                            <input aria-label={`Fecha de nacimiento del jugador ${i + 1}`} title='Fecha de nacimiento' type='date' required min={MIN_NACIMIENTO} max={hoyISO()} value={j.nacimiento ?? ''} onChange={e => setJugador(i, 'nacimiento', e.target.value)} />
+                            <span className='jugador-fila__edad muted' aria-live='polite'>{j.nacimiento ? `${edadEn(j.nacimiento)} años` : ''}</span>
                             <button type='button' className='btn-quitar' aria-label={`Quitar al jugador ${i + 1}`} onClick={() => quitar(i)}>✕</button>
                         </div>
                     ))}

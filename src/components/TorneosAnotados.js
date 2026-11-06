@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { getMisTorneos } from '../assets/endPoints/clubes.js';
 import { MODALIDAD_LABEL, ESTADO_LABEL, formatFecha } from '../assets/torneosUtils.js';
 import '../assets/styles/mis-torneos.css';
+import { SkeletonLista } from './Skeleton';
 
 const GRUPOS = [
     { titulo: 'En curso', estados: ['en-curso'] },
@@ -19,7 +20,12 @@ const TorneosAnotados = () => {
         getMisTorneos().then(data => setItems(Array.isArray(data) ? data : []));
     }, [])
 
-    if (items === undefined) return null;
+    if (items === undefined) return (
+        <section className='seccion'>
+            <h2>Torneos anotados</h2>
+            <SkeletonLista n={2} texto='Cargando tus torneos…' />
+        </section>
+    );
 
     return (
         <section className='seccion'>

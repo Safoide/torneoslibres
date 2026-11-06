@@ -81,3 +81,8 @@
     .detalles__fila { grid-template-columns: 1fr; gap: 2px; padding: 12px 0; }
     .seccion { padding: 18px 16px; }
 }
+
+/* Editor de reglas de pago (organizador, antes de que empiece el torneo) */
+.reglas-editor h2 { margin-bottom: 4px; }
+.reglas-editor__acciones { display: flex; align-items: center; gap: 12px; }
+.reglas-editor__ok { font-size: .85rem; font-weight: 600; color: var(--accent); }

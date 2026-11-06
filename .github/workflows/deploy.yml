@@ -1,0 +1,41 @@
+# Cada push a master arma el build del front y lo sube al servidor (nginx lo sirve al instante).
+# Secrets del repo: SSH_HOST, SSH_PORT, SSH_KEY. Variable del repo: SITIO_URL (ej. https://torneoslibres.com)
+name: Deploy front
+
+on:
+  push:
+    branches: [master]
+  workflow_dispatch:
+
+concurrency: deploy-front
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - name: Build
+        run: npm run build
+        env:
+          REACT_APP_API_URL: ${{ vars.SITIO_URL }}/api
+          CI: false # create-react-app corta el build por warnings si CI=true
+
+      - name: Clave SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_KEY }}" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          ssh-keyscan -p "${{ secrets.SSH_PORT || 22 }}" "${{ secrets.SSH_HOST }}" >> ~/.ssh/known_hosts
+
+      - name: Subir build
+        run: >
+          rsync -az --delete -e "ssh -p ${{ secrets.SSH_PORT || 22 }}"
+          build/ "deploy@${{ secrets.SSH_HOST }}:/srv/torneoslibres/front/"

@@ -4,6 +4,7 @@ import { useAuth } from '../../context/AuthContext';
 import { getFiltros } from '../../assets/endPoints/torneos.js';
 import { crearOrganizador } from '../../assets/endPoints/organizadores.js';
 import '../../assets/styles/formularios.css';
+import { SkeletonFormulario } from '../Skeleton';
 
 const CrearOrganizacion = () => {
     const { user, loading: cargandoSesion } = useAuth();
@@ -18,7 +19,7 @@ const CrearOrganizacion = () => {
         getFiltros().then(data => data?.zonas && setZonas(data.zonas));
     }, [])
 
-    if (cargandoSesion) return <div className='form-page'><p>Cargando...</p></div>;
+    if (cargandoSesion) return <SkeletonFormulario />;
     if (!user) return <Navigate to='/login' state={{ from: '/organizaciones/nueva' }} replace />;
 
     const onChange = (e) => setForm(prev => ({ ...prev, [e.target.name]: e.target.value }));

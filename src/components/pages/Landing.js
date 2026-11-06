@@ -7,6 +7,7 @@ import heroImg from '../../assets/imgs/landing/hero.jpg';
 import capitanesImg from '../../assets/imgs/landing/capitanes.jpg';
 import organizadoresImg from '../../assets/imgs/landing/organizadores.jpg';
 import cierreImg from '../../assets/imgs/landing/cierre.jpg';
+import { SkeletonCifras, SkeletonTarjetasTorneo } from '../Skeleton';
 import '../../assets/styles/buscador.css';
 import '../../assets/styles/landing.css';
 
@@ -30,7 +31,7 @@ const numero = (n) => new Intl.NumberFormat('es-AR').format(n);
 
 // Pagina de entrada para quien no inició sesión
 const Landing = () => {
-    const [torneos, setTorneos] = useState(null); // null = cargando o sin conexion
+    const [torneos, setTorneos] = useState(undefined); // undefined = cargando, null = sin conexion
     const [orgs, setOrgs] = useState(null);
 
     useEffect(() => {
@@ -63,6 +64,7 @@ const Landing = () => {
                     <p className='landing-hero__login'>¿Ya tenés cuenta? <Link to='/login'>Iniciá sesión</Link></p>
                 </div>
 
+                {!stats && torneos === undefined && <SkeletonCifras />}
                 {stats && (
                     <dl className='landing-stats'>
                         {stats.map(s => (
@@ -138,6 +140,15 @@ const Landing = () => {
             </section>
 
             {/* ---------- Torneos abiertos ---------- */}
+            {torneos === undefined && (
+                <section className='landing-seccion'>
+                    <header className='landing-titulo'>
+                        <span className='landing-titulo__kicker'>Inscripción abierta</span>
+                        <h2>Torneos que están por arrancar</h2>
+                    </header>
+                    <SkeletonTarjetasTorneo n={3} />
+                </section>
+            )}
             {destacados.length > 0 && (
                 <section className='landing-seccion'>
                     <header className='landing-titulo landing-titulo--fila'>

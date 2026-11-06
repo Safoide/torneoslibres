@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { formatMonto as plata, formatFecha } from '../assets/torneosUtils.js';
 import '../assets/styles/torneo.css';
 import '../assets/styles/dashboard.css';
+import { SkeletonDashboard } from './Skeleton';
 
 const numero = (n) => new Intl.NumberFormat('es-AR').format(n);
 
@@ -53,7 +54,7 @@ const IngresosPorMes = ({ datos }) => {
 
 // Pestaña "Resumen" del panel del organizador. Los datos los pide la pagina (undefined = cargando, null = error)
 const OrgDashboard = ({ data }) => {
-    if (data === undefined) return <p className='muted dash-cargando'>Cargando el resumen...</p>;
+    if (data === undefined) return <SkeletonDashboard />;
     if (data === null) return <p className='dash-cargando'>No pudimos cargar el resumen. Probá de nuevo en un rato.</p>;
 
     const { totales, dinero, porMes, proximasFechas, torneos } = data;
@@ -69,7 +70,7 @@ const OrgDashboard = ({ data }) => {
     );
 
     const activos = totales.porEstado['en-curso'] + totales.porEstado['inscripcion-abierta'] + totales.porEstado.proximamente;
-    const falta = dinero.porCobrar + dinero.restante;
+    const falta = dinero.porCobrar + dinero.restante + (dinero.multasPendientes ?? 0);
 
     return (
         <div className='dash'>
@@ -82,9 +83,11 @@ const OrgDashboard = ({ data }) => {
 
             <div className='dash-stats'>
                 <Stat destacado label='Cobrado' valor={plata(dinero.cobrado)}
-                    detalle={`${plata(dinero.inscripciones)} en inscripciones · ${plata(dinero.fechas)} en fechas`} />
+                    detalle={`${plata(dinero.inscripciones)} en inscripciones · ${plata(dinero.fechas)} en fechas${dinero.multas ? ` · ${plata(dinero.multas)} en multas` : ''}`} />
                 <Stat label='Falta cobrar' valor={plata(falta)}
-                    detalle={falta ? 'Fechas programadas y las que faltan del fixture (estimado)' : 'No hay fechas pendientes'} />
+                    detalle={falta
+                        ? `Fechas programadas y las que faltan del fixture (estimado)${dinero.multasPendientes ? `, incluye ${plata(dinero.multasPendientes)} de multas sin pagar` : ''}`
+                        : 'No hay fechas pendientes'} />
                 <Stat label='Torneos' valor={numero(totales.torneos)}
                     detalle={`${activos} ${activos === 1 ? 'activo' : 'activos'} · ${totales.porEstado.finalizado} ${totales.porEstado.finalizado === 1 ? 'finalizado' : 'finalizados'}`} />
                 <Stat label='Equipos' valor={numero(totales.equipos)}
@@ -104,7 +107,7 @@ const OrgDashboard = ({ data }) => {
                         <p>No tenés fechas programadas. Creá la próxima desde el fixture de un torneo en curso.</p>
                     ) : (
                         <ul className='dash-lista'>
-                            {proximasFechas.map(({ torneo, fecha, partidos }) => (
+                            {proximasFechas.map(({ torneo, fecha, partidos, pagos }) => (
                                 <li key={fecha.id}>
                                     <div className='dash-lista__dia'>
                                         <strong>{formatFecha(fecha.dia)}</strong>
@@ -116,6 +119,11 @@ const OrgDashboard = ({ data }) => {
                                             Fecha {fecha.numero} · {partidos} {partidos === 1 ? 'partido' : 'partidos'} · {fecha.canchas} {fecha.canchas === 1 ? 'cancha' : 'canchas'}
                                             {fecha.estado === 'en-juego' && ' · En juego'}
                                         </span>
+                                        {pagos && (
+                                            <span className={`dash-pagos${pagos.pagados === pagos.total ? ' dash-pagos--completo' : ''}`}>
+                                                {pagos.pagados === pagos.total ? '✓ Pagaron todos los equipos' : `Pagaron ${pagos.pagados} de ${pagos.total} equipos`}
+                                            </span>
+                                        )}
                                     </div>
                                 </li>
                             ))}

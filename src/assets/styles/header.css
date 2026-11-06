@@ -127,3 +127,10 @@
 @media (max-width: 480px) {
     .headerRegistro { display: none; }
 }
+
+/* Con sesion y las 3 secciones no entra el nombre completo en un celu angosto: queda solo el icono
+   (transitorio hasta tener el logo mobile) */
+@media (max-width: 480px) {
+    .headerLogo__texto { display: none; }
+    .headerLogo { font-size: 1.3rem; }
+}

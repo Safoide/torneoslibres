@@ -159,3 +159,7 @@
     .dash-barras { height: 160px; }
     .dash-lista__dia { width: 96px; }
 }
+
+/* Cuantos equipos pagaron cada proxima fecha */
+.dash-pagos { font-size: .8rem; font-weight: 600; color: var(--amber); }
+.dash-pagos--completo { color: var(--accent); }

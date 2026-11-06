@@ -5,10 +5,11 @@ import { getOrganizadores } from '../assets/endPoints/organizadores.js';
 import {
     MODALIDAD_LABEL, ESTADO_LABEL, CATEGORIA_LABEL,
     formatPrecio, formatMonto, formatFecha, cupos, diaPlural,
-    logoSrc,
+    logoSrc, etiquetaLimiteEdad,
 } from '../assets/torneosUtils.js';
 import Avatar from './Avatar';
 import ProximaFecha from './ProximaFecha';
+import { SkeletonTarjetasTorneo } from './Skeleton';
 import '../assets/styles/buscador.css';
 
 const EMPTY_FILTERS = {
@@ -24,6 +25,7 @@ const BuscadorTorneos = ({ organizadorId, ganancias }) => {
     const [orgs, setOrgs] = useState({});
     const [torneos, setTorneos] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [cargado, setCargado] = useState(false); // ya llego la primera respuesta
     const [error, setError] = useState(false);
 
     useEffect(() => {
@@ -42,6 +44,7 @@ const BuscadorTorneos = ({ organizadorId, ganancias }) => {
                 setError(!Array.isArray(data));
                 setTorneos(Array.isArray(data) ? data : []);
                 setLoading(false);
+                setCargado(true);
             });
         }, 250);
 
@@ -151,7 +154,10 @@ const BuscadorTorneos = ({ organizadorId, ganancias }) => {
                 <p className='buscador__mensaje'>No hay torneos con esos filtros. Probá ampliando la búsqueda.</p>
             )}
 
-            <div className='torneos-grid'>
+            {/* Primera carga: skeletons. Al cambiar filtros se dejan los resultados anteriores atenuados para que no parpadee */}
+            {!cargado && !error && <SkeletonTarjetasTorneo />}
+
+            <div className={`torneos-grid${loading && cargado ? ' torneos-grid--actualizando' : ''}`} aria-busy={loading}>
                 {torneos.map(tor => (
                     <article className='card-torneo' key={tor.id}>
                         <div className='card-torneo__top'>
@@ -173,7 +179,7 @@ const BuscadorTorneos = ({ organizadorId, ganancias }) => {
                         <ul className='card-torneo__info'>
                             <li>📍 {tor.zona}{tor.localidad !== 'CABA' ? ` (${tor.localidad})` : ''} · {tor.sede}</li>
                             <li>📅 {formatFecha(tor.fechaInicio)} · {diaPlural(tor.diaJuego)}</li>
-                            <li>👥 {CATEGORIA_LABEL[tor.categoria]}</li>
+                            <li>👥 {CATEGORIA_LABEL[tor.categoria]}{tor.limiteEdad ? ` · ${etiquetaLimiteEdad(tor.limiteEdad)}` : ''}</li>
                         </ul>
 
                         <div className='card-torneo__pie'>

@@ -8,6 +8,7 @@ import { logoSrc } from '../../assets/torneosUtils.js';
 import Avatar from '../Avatar';
 import '../../assets/styles/formularios.css';
 import '../../assets/styles/equipo-propio.css';
+import { SkeletonFormulario } from '../Skeleton';
 
 const VACIO = { nombre: '', zona: '', descripcion: '', instagram: '', whatsapp: '', logo: '' };
 
@@ -36,7 +37,7 @@ const OrganizacionForm = ({ modo }) => {
         }
     }, [esEditar, organizacion])
 
-    if (cargandoSesion || (user && organizacion === undefined)) return <div className='form-page'><p>Cargando...</p></div>;
+    if (cargandoSesion || (user && organizacion === undefined)) return <SkeletonFormulario />;
     if (!user) return <Navigate to='/login' state={{ from: esEditar ? '/organizacion/editar' : '/organizaciones/nueva' }} replace />;
     if (user.rol !== 'organizador') return <Navigate to='/torneos' replace />;
     if (!esEditar && organizacion) return <Navigate to={`/organizadores/${organizacion.id}`} replace />; // una sola por cuenta

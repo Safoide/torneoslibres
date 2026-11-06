@@ -45,3 +45,33 @@ export const diaPlural = (dia = '') => (dia.endsWith('s') ? dia : dia + 's');
 
 export const DIAS = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
 export const LOCALIDADES = ['CABA', 'GBA Norte', 'GBA Sur', 'GBA Oeste'];
+
+// Limite de edad del torneo: null = libre, o { min, max } (uno de los dos puede ser null). Igual que en la API.
+export const textoLimiteEdad = (l) => !l ? ''
+    : l.min != null && l.max != null ? `de ${l.min} a ${l.max} años`
+    : l.min != null ? `desde ${l.min} años`
+    : `hasta ${l.max} años`;
+
+// Etiqueta corta para las tarjetas: "+35", "Hasta 20", "18 a 25"
+export const etiquetaLimiteEdad = (l) => !l ? ''
+    : l.min != null && l.max != null ? `${l.min} a ${l.max} años`
+    : l.min != null ? `+${l.min} años`
+    : `Hasta ${l.max} años`;
+
+export const hoyISO = () => new Date().toLocaleDateString('en-CA'); // YYYY-MM-DD en hora local
+
+// Años cumplidos a una fecha (YYYY-MM-DD). Igual que edadEn de la API.
+export const edadEn = (nacimiento, fecha = hoyISO()) => {
+    if (!nacimiento) return null;
+    return Number(fecha.slice(0, 4)) - Number(nacimiento.slice(0, 4)) - (fecha.slice(5) < nacimiento.slice(5) ? 1 : 0);
+};
+
+// Jugadores que no entran en el limite, con la edad que van a tener al inicio del torneo
+export const fueraDeEdad = (jugadores = [], tor) => {
+    const l = tor?.limiteEdad;
+    if (!l) return [];
+
+    return jugadores
+        .map(j => ({ ...j, edad: edadEn(j.nacimiento, tor.fechaInicio) }))
+        .filter(j => (l.min != null && j.edad < l.min) || (l.max != null && j.edad > l.max));
+};

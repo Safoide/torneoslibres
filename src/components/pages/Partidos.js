@@ -5,21 +5,31 @@ import PartidoItem from '../PartidoItem';
 import { getTorneoById } from '../../assets/endPoints/torneos.js';
 import { getEquiposByTournament } from '../../assets/endPoints/equipos';
 import { getPartidosByTournament } from '../../assets/endPoints/partidos';
-import { getFechasByTorneo, crearFecha, cancelarFecha } from '../../assets/endPoints/fechas.js';
+import { getFechasByTorneo, crearFecha, cancelarFecha, getPagosTorneo } from '../../assets/endPoints/fechas.js';
+import { resumenReglas } from '../../assets/reglasPago.js';
 import { formatPrecio, formatFecha } from '../../assets/torneosUtils.js';
 import '../../assets/styles/fechas.css';
+import { SkeletonFixture } from '../Skeleton';
 
 const ESTADO_FECHA = { programada: 'Programada', 'en-juego': 'En juego', jugada: 'Jugada' };
 const DIAS = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
 
 const iso = (d) => d.toISOString().slice(0, 10);
 const hoy = () => new Intl.DateTimeFormat('en-CA', { timeZone: 'America/Argentina/Buenos_Aires' }).format(new Date());
+const ANTICIPACION_DIAS = 3; // igual que en la API: los equipos tienen que tener tiempo de pagar
 
-// Proximo dia (despues de la ultima fecha y desde hoy) que cae en el dia de juego del torneo
+// Primer dia permitido para una fecha nueva (hoy + 3)
+const minimoDia = () => {
+    const d = new Date(`${hoy()}T12:00:00Z`);
+    d.setUTCDate(d.getUTCDate() + ANTICIPACION_DIAS);
+    return iso(d);
+};
+
+// Proximo dia (despues de la ultima fecha y desde el minimo permitido) que cae en el dia de juego del torneo
 const diaSugerido = (tor, fechas) => {
     const base = fechas.length ? fechas[0].dia : null; // fechas viene ordenada de la mas nueva a la mas vieja
-    const desde = new Date(`${base && base >= hoy() ? base : hoy()}T12:00:00Z`);
-    if (base && base >= hoy()) desde.setUTCDate(desde.getUTCDate() + 1);
+    const desde = new Date(`${base && base >= minimoDia() ? base : minimoDia()}T12:00:00Z`);
+    if (base && base >= minimoDia()) desde.setUTCDate(desde.getUTCDate() + 1);
 
     for (let i = 0; i < 7; i++) {
         if (DIAS[desde.getUTCDay()] === tor.diaJuego) break;
@@ -37,6 +47,7 @@ const Partidos = () => {
     const [equipos, setEquipos] = useState({});
     const [partidos, setPartidos] = useState([]);
     const [fechas, setFechas] = useState([]);
+    const [pagosDetalle, setPagosDetalle] = useState(null); // solo el organizador dueño
     const [estado, setEstado] = useState('loading'); // loading | ok | error
 
     const [abierto, setAbierto] = useState(false);
@@ -56,11 +67,16 @@ const Partidos = () => {
         setPartidos(Array.isArray(pa) ? pa : []);
         setFechas(Array.isArray(fe) ? fe : []);
         setEstado('ok');
-    }, [torneo]);
+
+        // El organizador dueño ve quien pago cada fecha
+        if (user?.rol === 'organizador' && organizacion?.id === t.organizadorId) {
+            getPagosTorneo(torneo).then(d => setPagosDetalle(d && !d.error ? d : null));
+        }
+    }, [torneo, user, organizacion]);
 
     useEffect(() => { cargar(); }, [cargar])
 
-    if (estado === 'loading') return <div className='fixture'><p>Cargando...</p></div>;
+    if (estado === 'loading') return <SkeletonFixture />;
     if (estado === 'error') return <div className='fixture'><p>No encontramos ese torneo.</p><Link className='back-link' to='/torneos'>← Volver a la búsqueda</Link></div>;
 
     const esDueño = user?.rol === 'organizador' && organizacion?.id === tor.organizadorId;
@@ -118,7 +134,7 @@ const Partidos = () => {
                     <div className='fecha-form__grid'>
                         <div className='campo'>
                             <label htmlFor='dia'>Día</label>
-                            <input id='dia' name='dia' type='date' required min={hoy()} value={form.dia} onChange={onChange} />
+                            <input id='dia' name='dia' type='date' required min={minimoDia()} value={form.dia} onChange={onChange} />
                         </div>
                         <div className='campo'>
                             <label htmlFor='inicio'>Inicio</label>
@@ -134,7 +150,7 @@ const Partidos = () => {
                         </div>
                     </div>
 
-                    <p className='muted'>Los partidos se arman solos y se reparten en ese horario. Los capitanes de los equipos ven la fecha apenas la creás, con el precio de {formatPrecio(tor.precioFecha)} por equipo.</p>
+                    <p className='muted'>Los partidos se arman solos y se reparten en ese horario. Los capitanes ven la fecha apenas la creás y pagan su parte ({formatPrecio(tor.precioFecha)} por equipo) hasta las 23:59 del día anterior. {resumenReglas(tor.reglasPago, tor.precioFecha)} Por eso la fecha tiene que ser con al menos {ANTICIPACION_DIAS} días de anticipación.</p>
 
                     {error && <p className='form__error' role='alert'>{error}</p>}
 
@@ -160,6 +176,24 @@ const Partidos = () => {
                             <div>
                                 <h2>Fecha {f.numero}</h2>
                                 <p className='muted'>{formatFecha(f.dia)} · {f.inicio} a {f.fin} · {formatPrecio(f.precio)} por equipo</p>
+                                {f.pagos && (
+                                    <p className='fecha__pagos'>
+                                        Pagaron {f.pagos.pagados} de {f.pagos.total} equipos
+                                        {f.pagos.vencidos > 0 ? ` · ${f.pagos.vencidos} no ${f.pagos.vencidos === 1 ? 'pagó' : 'pagaron'} a tiempo${f.reglas?.penalizacion === false ? '' : ' (W.O.)'}` : f.pagos.pagados < f.pagos.total ? ' · el plazo vence a las 23:59 del día anterior' : ''}
+                                    </p>
+                                )}
+                                {/* Solo el organizador: quienes faltan pagar o no pagaron */}
+                                {pagosDetalle?.[f.id] && (() => {
+                                    const deben = pagosDetalle[f.id].filter(p => p.estado !== 'pagado');
+                                    if (!deben.length) return null;
+                                    return (
+                                        <p className='fecha__pagos fecha__pagos--detalle'>
+                                            {deben.some(p => p.estado === 'vencido') ? 'No pagaron: ' : 'Falta que paguen: '}
+                                            {deben.map(p => p.equipo).join(', ')}
+                                            {f.reglas?.penalizacion === false && deben.some(p => p.estado === 'vencido') && ' · sin penalización automática: definí vos qué pasa con esos partidos'}
+                                        </p>
+                                    );
+                                })()}
                             </div>
                             <div className='fecha__acciones'>
                                 <span className={`fecha__estado fecha__estado--${f.estado}`}>{ESTADO_FECHA[f.estado]}</span>

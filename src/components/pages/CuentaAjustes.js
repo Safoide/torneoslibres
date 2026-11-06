@@ -5,6 +5,7 @@ import { cerrarTodasLasSesiones, eliminarCuenta } from '../../assets/endPoints/a
 import { leerAjustes, guardarAjustes } from '../../ajustes.js';
 import '../../assets/styles/formularios.css';
 import '../../assets/styles/ajustes.css';
+import { SkeletonFormulario } from '../Skeleton';
 
 const TEMAS = [['oscuro', 'Oscuro'], ['claro', 'Claro'], ['auto', 'Automático']];
 const TEXTOS = [['normal', 'Normal'], ['grande', 'Grande']];
@@ -45,7 +46,7 @@ const CuentaAjustes = () => {
         }
     }, [hash, user])
 
-    if (loading) return <div className='form-page'><p>Cargando...</p></div>;
+    if (loading) return <SkeletonFormulario />;
     if (!user) return <Navigate to='/login' state={{ from: '/cuenta/ajustes' }} replace />;
 
     const cambiar = (cambios) => setAjustes(guardarAjustes(cambios));

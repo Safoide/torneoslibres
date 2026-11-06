@@ -13,6 +13,7 @@ const icono = (path) => (
 );
 const ICONO_TORNEOS = icono(<><path d='M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0V4Z' /><path d='M17 6h3v2a3 3 0 0 1-3 3M7 6H4v2a3 3 0 0 0 3 3' /></>);
 const ICONO_PANEL = icono(<><rect x='3' y='3' width='7' height='9' rx='1.5' /><rect x='14' y='3' width='7' height='5' rx='1.5' /><rect x='14' y='12' width='7' height='9' rx='1.5' /><rect x='3' y='16' width='7' height='5' rx='1.5' /></>);
+const ICONO_AMISTOSOS = icono(<path d='M13 2 4 14h7l-1 8 9-12h-7l1-8Z' />);
 const ICONO_EQUIPO = icono(<><path d='M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2' /><circle cx='9' cy='7' r='4' /><path d='M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75' /></>);
 
 const Header = () => {
@@ -74,7 +75,7 @@ const Header = () => {
     return (
         <header className='header'>
             <div className='headerContainer'>
-                <Link to='/' className='headerLogo'>⚽ TORNEOS LIBRES</Link>
+                <Link to='/' className='headerLogo' aria-label='Torneos Libres, inicio'>⚽ <span className='headerLogo__texto'>TORNEOS LIBRES</span></Link>
                 <nav className='navBar' aria-label='Secciones'>
                     {inicio && (
                         <NavLink to={inicio.to} className='navLink' aria-label={inicio.label}>
@@ -85,6 +86,10 @@ const Header = () => {
                     <NavLink to='/torneos' className='navLink' aria-label='Explorar torneos'>
                         {ICONO_TORNEOS}
                         <span className='navLink__texto'>Explorar torneos</span>
+                    </NavLink>
+                    <NavLink to='/amistosos' className='navLink' aria-label='Amistosos express'>
+                        {ICONO_AMISTOSOS}
+                        <span className='navLink__texto'>Amistosos</span>
                     </NavLink>
                 </nav>
                 <div className='userInfo'>

@@ -3,6 +3,7 @@ import { Link, Navigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { editarMisDatos, cambiarPassword } from '../../assets/endPoints/auth.js';
 import '../../assets/styles/formularios.css';
+import { SkeletonFormulario } from '../Skeleton';
 
 const ROL_LABEL = { capitan: 'Capitán', organizador: 'Organizador' };
 
@@ -21,7 +22,7 @@ const CuentaDatos = () => {
         if (user) setDatos({ nombre: user.nombre, email: user.email, password: '', whatsapp: equipo?.whatsapp ?? '' });
     }, [user, equipo])
 
-    if (loading) return <div className='form-page'><p>Cargando...</p></div>;
+    if (loading) return <SkeletonFormulario />;
     if (!user) return <Navigate to='/login' state={{ from: '/cuenta' }} replace />;
 
     // El WhatsApp del capitan se guarda en su equipo, asi que solo se edita si ya lo creó

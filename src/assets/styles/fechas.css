@@ -107,3 +107,80 @@
     .fecha__acciones { justify-content: flex-start; }
     .fecha-form { padding: 16px; }
 }
+
+/* ---------- Pago de la fecha y W.O. (dentro de "Tu proxima fecha") ---------- */
+.aviso {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 12px 14px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--inset);
+}
+
+.aviso p { font-size: .88rem; color: var(--text-soft); line-height: 1.45; }
+.aviso .muted { font-size: .8rem; }
+.aviso > .btn { align-self: flex-start; }
+
+.aviso--fila { display: flex; flex-direction: row; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+.aviso.aviso--fila { padding: 10px 14px; }
+
+.aviso--ok { border-color: color-mix(in srgb, var(--accent) 45%, transparent); background: var(--accent-soft); }
+.aviso--ok > strong, .aviso--ok.aviso--fila strong { color: var(--accent); }
+
+.aviso--pendiente { border-color: color-mix(in srgb, var(--amber) 45%, transparent); background: var(--amber-soft); }
+.aviso--urgente { border-color: color-mix(in srgb, var(--danger) 50%, transparent); background: var(--danger-soft); }
+.aviso--error { border-color: color-mix(in srgb, var(--danger) 50%, transparent); background: var(--danger-soft); }
+.aviso--error > strong { color: var(--danger); }
+
+.aviso__reloj { font-size: .8rem; font-weight: 700; font-variant-numeric: tabular-nums; white-space: nowrap; color: var(--amber); }
+.aviso--urgente .aviso__reloj { color: var(--danger); }
+
+/* El formulario de pago dentro del aviso, sin el fondo de tarjeta de las paginas de formulario */
+.aviso .pago-form { padding: 0; background: none; border: 0; }
+
+/* Link del amistoso para compartir */
+.compartir { display: flex; flex-direction: column; gap: 8px; }
+
+.compartir__link {
+    width: 100%;
+    padding: 9px 12px;
+    font: inherit;
+    font-size: .82rem;
+    color: var(--text-soft);
+    background: var(--bg-elev);
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius-sm);
+}
+
+.compartir__acciones { display: flex; flex-wrap: wrap; gap: 8px; }
+
+/* Tarjeta de un amistoso que tomo el equipo */
+.proxima__card--amistoso { background: linear-gradient(160deg, var(--amber-soft), var(--surface) 55%); border-color: color-mix(in srgb, var(--amber) 60%, transparent); }
+
+/* ---------- W.O. en el fixture ---------- */
+.wo-tag {
+    display: inline-flex;
+    padding: 2px 8px;
+    border-radius: 999px;
+    background: var(--danger-soft);
+    color: var(--danger);
+    font-size: .72rem;
+    font-weight: 800;
+    letter-spacing: .04em;
+    text-transform: none; /* el encabezado del partido capitaliza cada palabra */
+}
+
+.fecha__pagos { font-size: .8rem; color: var(--muted); }
+
+/* Multas pendientes del equipo */
+.multas { margin-bottom: 16px; }
+.multas__lista { display: flex; flex-direction: column; gap: 4px; padding: 0; list-style: none; font-size: .85rem; }
+.multas__lista li { display: flex; justify-content: space-between; gap: 12px; color: var(--text-soft); }
+.multas__lista li span:last-child { font-weight: 700; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.fecha__pagos--detalle { color: var(--amber); }
+
+/* Nota chica debajo del estado del pago (si el rival ya pago o todavia no) */
+.aviso__nota { font-size: .82rem; color: var(--text-soft); }
+.aviso .aviso__nota { color: var(--text); }

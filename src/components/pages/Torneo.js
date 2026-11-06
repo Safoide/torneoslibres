@@ -4,11 +4,14 @@ import { getTorneoById } from '../../assets/endPoints/torneos.js';
 import { getEquiposByTournament } from '../../assets/endPoints/equipos';
 import {
     MODALIDAD_LABEL, ESTADO_LABEL, CATEGORIA_LABEL,
-    formatPrecio, formatFecha, cupos, whatsappLink, diaPlural, logoSrc
+    formatPrecio, formatFecha, cupos, whatsappLink, diaPlural, logoSrc, textoLimiteEdad
 } from '../../assets/torneosUtils.js';
 import Avatar from '../Avatar';
 import '../../assets/styles/torneo.css';
 import { useAuth } from '../../context/AuthContext';
+import { resumenReglas } from '../../assets/reglasPago.js';
+import ReglasPagoEditor from '../ReglasPagoEditor';
+import { SkeletonTorneo } from '../Skeleton';
 
 
 // Los logos de equipos son archivos en src/assets/imgs. Si no existe, devuelve null (se muestra la inicial)
@@ -16,7 +19,7 @@ import { useAuth } from '../../context/AuthContext';
 const Torneo = () => {
 
     const { torneo: torId } = useParams();
-    const { user } = useAuth();
+    const { user, organizacion } = useAuth();
 
     const [tor, setTor] = useState(null);
     const [equipos, setEquipos] = useState([]);
@@ -38,7 +41,7 @@ const Torneo = () => {
             .then(data => setEquipos(Array.isArray(data) ? data : []));
     }, [torId])
 
-    if (status === 'loading') return <div className='torneo'><p>Cargando...</p></div>;
+    if (status === 'loading') return <SkeletonTorneo />;
 
     if (status !== 'ok') return (
         <div className='torneo'>
@@ -50,6 +53,7 @@ const Torneo = () => {
     const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${tor.direccion}, ${tor.zona}, Buenos Aires`)}`;
     const abierto = tor.estado === 'inscripcion-abierta';
     const empezado = tor.estado === 'en-curso' || tor.estado === 'finalizado';
+    const esDueño = user?.rol === 'organizador' && organizacion?.id === tor.organizadorId;
     const tabla = [...equipos].sort((a, b) =>
         b.points - a.points || b.goal_difference - a.goal_difference || b.goals_for - a.goals_for);
 
@@ -73,18 +77,25 @@ const Torneo = () => {
                 <div className='detalles__fila'><dt>Días y horario</dt><dd>{diaPlural(tor.diaJuego)} · {tor.horario}</dd></div>
                 <div className='detalles__fila'><dt>Formato</dt><dd>{tor.formato}</dd></div>
                 <div className='detalles__fila'><dt>Categoría</dt><dd>{CATEGORIA_LABEL[tor.categoria]}</dd></div>
+                <div className='detalles__fila'>
+                    <dt>Edad</dt>
+                    <dd>{tor.limiteEdad ? `Todo el plantel tiene que tener ${textoLimiteEdad(tor.limiteEdad)}, cumplidos el día que empieza (${formatFecha(tor.fechaInicio)})` : 'Sin límite de edad'}</dd>
+                </div>
                 <div className='detalles__fila'><dt>Sede</dt><dd>{tor.sede}</dd></div>
                 <div className='detalles__fila'>
                     <dt>Dirección</dt>
                     <dd>{tor.direccion}, {tor.zona}{tor.localidad !== 'CABA' ? ` (${tor.localidad})` : ''} · <a href={mapsUrl} target='_blank' rel='noreferrer'>Ver en el mapa</a></dd>
                 </div>
                 <div className='detalles__fila'><dt>Inscripción</dt><dd>{formatPrecio(tor.precioInscripcion)}</dd></div>
-                <div className='detalles__fila'><dt>Por fecha</dt><dd>{formatPrecio(tor.precioFecha)}</dd></div>
+                <div className='detalles__fila'><dt>Por fecha</dt><dd>{formatPrecio(tor.precioFecha)} por equipo · se paga hasta las 23:59 del día anterior</dd></div>
+                <div className='detalles__fila'><dt>Si no pagás la fecha</dt><dd>{resumenReglas(tor.reglasPago, tor.precioFecha)}</dd></div>
                 <div className='detalles__fila'>
                     <dt>Equipos</dt>
                     <dd>{tor.equiposInscriptos} de {tor.equiposMax}{abierto ? ` · ${cupos(tor)} cupos disponibles` : ''}</dd>
                 </div>
             </dl>
+
+            {esDueño && !empezado && <ReglasPagoEditor tor={tor} onGuardado={setTor} />}
 
             <section className='seccion'>
                 <h2>{empezado ? 'Tabla de posiciones' : 'Equipos inscriptos'}</h2>

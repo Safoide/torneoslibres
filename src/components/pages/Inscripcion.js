@@ -3,10 +3,10 @@ import { Link, Navigate, useParams } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { getTorneoById } from '../../assets/endPoints/torneos.js';
 import { crearInscripcion, pagarInscripcion } from '../../assets/endPoints/inscripciones.js';
-import { MODALIDAD_LABEL, MIN_JUGADORES, formatPrecio, formatFecha } from '../../assets/torneosUtils.js';
+import { MODALIDAD_LABEL, MIN_JUGADORES, formatPrecio, formatFecha, textoLimiteEdad, fueraDeEdad } from '../../assets/torneosUtils.js';
 import '../../assets/styles/formularios.css';
-
-const METODOS = { tarjeta: 'Tarjeta de crédito / débito', mercadopago: 'Mercado Pago' };
+import { SkeletonFormulario } from '../Skeleton';
+import PagoForm from '../PagoForm';
 
 const Inscripcion = () => {
     const { torneo: torId } = useParams();
@@ -14,8 +14,6 @@ const Inscripcion = () => {
 
     const [tor, setTor] = useState(null); // null = cargando, false = no existe
     const [step, setStep] = useState('resumen'); // resumen | pago | ok
-    const [metodo, setMetodo] = useState('tarjeta');
-    const [simularRechazo, setSimularRechazo] = useState(false);
     const [insc, setInsc] = useState(null);
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
@@ -37,21 +35,15 @@ const Inscripcion = () => {
         setStep('pago');
     };
 
-    const pagar = async () => {
-        setError('');
-        setLoading(true);
-
-        const data = await pagarInscripcion(insc.id, { metodo, simular: simularRechazo ? 'rechazado' : undefined });
-
-        setLoading(false);
-        if (!data || data.error) return setError(data?.error || 'No pudimos conectar con el servidor');
-
-        setInsc(data);
-        setStep('ok');
+    // PagoForm muestra el error si lo hay; si sale bien, pasamos a la confirmacion
+    const pagar = async (body) => {
+        const data = await pagarInscripcion(insc.id, body);
+        if (data && !data.error) { setInsc(data); setStep('ok'); }
+        return data;
     };
 
     if (tor === null || cargandoSesion || (user?.rol === 'capitan' && equipo === undefined)) {
-        return <div className='form-page'><p>Cargando...</p></div>;
+        return <SkeletonFormulario />;
     }
 
     if (tor === false) return (
@@ -73,6 +65,7 @@ const Inscripcion = () => {
     if (!equipo) return <Navigate to='/equipos/nuevo' replace />;
 
     const faltan = Math.max((MIN_JUGADORES[tor.modalidad] ?? 0) - equipo.jugadores.length, 0);
+    const fuera = fueraDeEdad(equipo.jugadores, tor); // la API lo vuelve a controlar
 
     if (step === 'ok') return (
         <div className='form-page'>
@@ -102,7 +95,22 @@ const Inscripcion = () => {
                     <div className='box'>
                         <strong>Tu equipo: {equipo.nombre}</strong>
                         <p>{equipo.jugadores.length} jugadores anotados</p>
+                        {tor.limiteEdad && <p>Este torneo es solo para jugadores {textoLimiteEdad(tor.limiteEdad)}, cumplidos el día que empieza.</p>}
                     </div>
+
+                    {fuera.length > 0 && (
+                        <div className='form__error' role='alert'>
+                            <p>
+                                {fuera.length === 1
+                                    ? 'Un jugador de tu equipo no cumple con el límite de edad del torneo'
+                                    : `${fuera.length} jugadores de tu equipo no cumplen con el límite de edad del torneo`} ({textoLimiteEdad(tor.limiteEdad)}, cumplidos el día que empieza):
+                            </p>
+                            <ul>
+                                {fuera.map(j => <li key={j.dni}>{j.nombre} {j.apellido} · va a tener {j.edad} años el {formatFecha(tor.fechaInicio)}</li>)}
+                            </ul>
+                            <Link to='/mi-equipo/editar'>Revisar el plantel</Link>
+                        </div>
+                    )}
 
                     {faltan > 0 && (
                         <p className='form__error'>
@@ -111,37 +119,13 @@ const Inscripcion = () => {
                     )}
 
                     {error && <p className='form__error' role='alert'>{error}</p>}
-                    <button className='btn btn--primary' type='button' onClick={continuar} disabled={loading || faltan > 0}>
+                    <button className='btn btn--primary' type='button' onClick={continuar} disabled={loading || faltan > 0 || fuera.length > 0}>
                         {loading ? 'Guardando...' : 'Continuar al pago'}
                     </button>
                 </div>
             )}
 
-            {step === 'pago' && (
-                <div className='form'>
-                    <label>Método de pago</label>
-                    {Object.entries(METODOS).map(([key, label]) => (
-                        <label className='opcion' key={key}>
-                            <input type='radio' name='metodo' checked={metodo === key} onChange={() => setMetodo(key)} />
-                            {label}
-                        </label>
-                    ))}
-
-                    <p className='form__nota'>Pago de prueba: no se cobra dinero real ni se piden datos de tarjeta.</p>
-
-                    {process.env.NODE_ENV !== 'production' && (
-                        <label className='opcion'>
-                            <input type='checkbox' checked={simularRechazo} onChange={e => setSimularRechazo(e.target.checked)} />
-                            Modo prueba: simular pago rechazado
-                        </label>
-                    )}
-
-                    {error && <p className='form__error' role='alert'>{error}</p>}
-                    <button className='btn btn--primary' type='button' onClick={pagar} disabled={loading}>
-                        {loading ? 'Procesando pago...' : `Pagar ${formatPrecio(insc.monto)}`}
-                    </button>
-                </div>
-            )}
+            {step === 'pago' && <PagoForm monto={insc.monto} onPagar={pagar} />}
         </div>
     )
 }

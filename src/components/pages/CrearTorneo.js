@@ -4,6 +4,10 @@ import { useAuth } from '../../context/AuthContext';
 import { getFiltros, addTor } from '../../assets/endPoints/torneos.js';
 import { MODALIDAD_LABEL, CATEGORIA_LABEL, ESTADO_LABEL, DIAS, LOCALIDADES } from '../../assets/torneosUtils.js';
 import '../../assets/styles/formularios.css';
+import { SkeletonFormulario } from '../Skeleton';
+import ReglasPagoCampos from '../ReglasPagoCampos';
+import { REGLAS_INICIALES } from '../../assets/reglasPago.js';
+import LimiteEdadCampos, { LIMITE_EDAD_INICIAL, limiteEdadParaApi } from '../LimiteEdadCampos';
 
 const Campo = ({ id, label, completo, children }) => (
     <div className={`form__campo${completo ? ' form__campo--completo' : ''}`}>
@@ -17,6 +21,8 @@ const INICIAL = {
     zona: '', localidad: 'CABA', sede: '', direccion: '',
     fechaInicio: '', diaJuego: 'Sábado', horario: '', formato: '',
     equiposMax: 12, precioInscripcion: '', precioFecha: 0, whatsapp: '', descripcion: '',
+    reglasPago: REGLAS_INICIALES,
+    limiteEdad: LIMITE_EDAD_INICIAL,
 };
 
 const CrearTorneo = () => {
@@ -39,7 +45,7 @@ const CrearTorneo = () => {
         if (organizacion?.zona) setForm(prev => prev.zona ? prev : { ...prev, zona: organizacion.zona });
     }, [organizacion])
 
-    if (cargandoSesion || (user && organizacion === undefined)) return <div className='form-page'><p>Cargando...</p></div>;
+    if (cargandoSesion || (user && organizacion === undefined)) return <SkeletonFormulario />;
     if (!user) return <Navigate to='/login' state={{ from: '/organizacion/torneo/nuevo' }} replace />;
     if (user.rol !== 'organizador') return <Navigate to='/torneos' replace />;
     if (!organizacion) return <Navigate to='/organizaciones/nueva' replace />;
@@ -51,7 +57,7 @@ const CrearTorneo = () => {
         setError('');
         setLoading(true);
 
-        const data = await addTor(form);
+        const data = await addTor({ ...form, limiteEdad: limiteEdadParaApi(form.limiteEdad) });
 
         setLoading(false);
         if (!data || data.error) return setError(data?.error || 'No pudimos conectar con el servidor');
@@ -142,6 +148,15 @@ const CrearTorneo = () => {
                     <Campo id='descripcion' label='Descripción (opcional)' completo>
                         <textarea id='descripcion' name='descripcion' rows={3} maxLength={500} value={form.descripcion} onChange={onChange} />
                     </Campo>
+
+                    <div className='form__campo form__campo--completo'>
+                        <LimiteEdadCampos value={form.limiteEdad} onChange={limiteEdad => setForm(prev => ({ ...prev, limiteEdad }))} />
+                    </div>
+
+                    <div className='form__campo form__campo--completo'>
+                        <ReglasPagoCampos value={form.reglasPago} precioFecha={form.precioFecha} onChange={reglasPago => setForm(prev => ({ ...prev, reglasPago }))} />
+                        <span className='muted'>Podés cambiar estas reglas hasta que el torneo empiece.</span>
+                    </div>
                 </div>
 
                 {error && <p className='form__error' role='alert'>{error}</p>}

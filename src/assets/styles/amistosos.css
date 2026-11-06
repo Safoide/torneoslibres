@@ -1,0 +1,65 @@
+/* Amistosos express: listado (/amistosos) y detalle (/amistosos/:id) */
+
+.amistoso-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    width: fit-content;
+    padding: 3px 10px;
+    border-radius: 999px;
+    background: var(--amber-soft);
+    color: var(--amber);
+    font-size: .78rem;
+    font-weight: 800;
+    letter-spacing: .02em;
+}
+
+.amistosos-hero { display: flex; flex-direction: column; gap: 12px; }
+.amistosos-hero p { max-width: 62ch; }
+
+.amistosos-vacio {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 28px;
+    text-align: center;
+    background: var(--surface);
+    border: 1px dashed var(--border-strong);
+    border-radius: var(--radius-lg);
+}
+
+.amistosos-vacio p { max-width: 60ch; margin: 0 auto; color: var(--muted); }
+.amistosos-vacio a { color: var(--link); }
+
+/* Tarjeta */
+.amistoso-card__rival {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: .9rem;
+    color: var(--text-soft);
+}
+
+.amistoso-precio__antes { display: block; font-size: .8rem; color: var(--muted); text-decoration: line-through; }
+.detalles .amistoso-precio__antes { display: inline; }
+
+/* Detalle */
+.amistoso__titulo { font-size: clamp(1.6rem, 4vw, 2.2rem); font-weight: 800; letter-spacing: -.02em; }
+
+.amistoso__rival {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 16px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+}
+
+.amistoso__rival div { display: flex; flex-direction: column; gap: 2px; }
+.amistoso__rival strong { font-size: 1.1rem; }
+
+.amistoso__accion { display: flex; flex-direction: column; gap: 12px; }
+.amistoso__accion > .btn { align-self: flex-start; }

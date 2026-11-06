@@ -43,13 +43,19 @@ const PartidoItem = ({ partido, equipos, mostrarDia = true }) => {
             <h4 className='partidoFecha secondary-text'>
                 <span>{mostrarDia ? parseDate(partido.date) : parseDate(partido.date).split(' · ')[1]}</span>
                 {partido.cancha && <span>Cancha {partido.cancha}</span>}
+                {/* W.O.: el equipo (o los dos) no pago la fecha a tiempo */}
+                {partido.wo && (
+                    <span className='wo-tag' title={partido.wo === 'doble' ? 'Ninguno de los dos equipos pagó a tiempo' : `${(partido.wo === 'local' ? home : away).name} no pagó a tiempo`}>
+                        {partido.wo === 'doble' ? 'W.O. doble' : `W.O. · ${(partido.wo === 'local' ? home : away).name} no pagó`}
+                    </span>
+                )}
             </h4>
             <div className='partidoContainer'>
                 {lado(home)}
                 <div className='golesContainer'>
                     {jugado
                         ? <><span>{partido.home_goals}</span><span className='secondary-text'>-</span><span>{partido.away_goals}</span></>
-                        : <h4 className='secondary-text'>VS</h4>}
+                        : <h4 className='secondary-text'>{partido.wo === 'doble' ? '—' : 'VS'}</h4>}
                 </div>
                 {lado(away)}
             </div>
