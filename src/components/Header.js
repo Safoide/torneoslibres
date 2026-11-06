@@ -6,6 +6,9 @@ import { eliminarEquipo } from '../assets/endPoints/clubes.js';
 import EntidadMenu from './EntidadMenu';
 import '../assets/styles/header.css';
 import CuentaMenu from './CuentaMenu.js';
+import logoDark from '../assets/imgs/logo/logo-dark.svg';
+import logoLight from '../assets/imgs/logo/logo-light.svg';
+import logoMobile from '../assets/imgs/logo/logo-mobile.svg';
 
 // Iconos de la navegacion (SVG en linea, toman el color del texto)
 const icono = (path) => (
@@ -75,7 +78,12 @@ const Header = () => {
     return (
         <header className='header'>
             <div className='headerContainer'>
-                <Link to='/' className='headerLogo' aria-label='Torneos Libres, inicio'>⚽ <span className='headerLogo__texto'>TORNEOS LIBRES</span></Link>
+                {/* Se muestra uno solo segun el tema y el ancho de pantalla (ver header.css) */}
+                <Link to='/' className='headerLogo' aria-label='Torneos Libres, inicio'>
+                    <img src={logoDark} alt='' className='headerLogo__img headerLogo__img--dark' width='314' height='64' />
+                    <img src={logoLight} alt='' className='headerLogo__img headerLogo__img--light' width='314' height='64' />
+                    <img src={logoMobile} alt='' className='headerLogo__img headerLogo__img--mobile' width='64' height='64' />
+                </Link>
                 <nav className='navBar' aria-label='Secciones'>
                     {inicio && (
                         <NavLink to={inicio.to} className='navLink' aria-label={inicio.label}>

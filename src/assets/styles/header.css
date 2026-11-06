@@ -23,7 +23,13 @@
     gap: 16px;
 }
 
-.headerLogo { font-size: 1rem; font-weight: 800; letter-spacing: .05em; white-space: nowrap; }
+/* Logo: en desktop el de cada tema (oscuro por defecto, claro con data-theme="light"); en < 480px el escudo solo */
+.headerLogo { display: flex; align-items: center; flex-shrink: 0; }
+.headerLogo__img { display: block; width: auto; height: 34px; }
+.headerLogo__img--light, .headerLogo__img--mobile { display: none; }
+:root[data-theme=light] .headerLogo__img--dark { display: none; }
+:root[data-theme=light] .headerLogo__img--light { display: block; }
+.headerLogo:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; border-radius: var(--radius-sm); }
 
 .navBar { margin-right: auto; margin-left: 20px; display: flex; gap: 4px; }
 
@@ -110,7 +116,7 @@
 
 @media (max-width: 760px) {
     .header { padding: 0 14px; }
-    .headerLogo { font-size: .85rem; }
+    .headerLogo__img { height: 28px; }
     .userInfo > span { display: none; }
     .headerContainer { justify-content: space-between; gap: 8px; }
     .headerLogo { margin-right: auto; }
@@ -128,9 +134,17 @@
     .headerRegistro { display: none; }
 }
 
-/* Con sesion y las 3 secciones no entra el nombre completo en un celu angosto: queda solo el icono
-   (transitorio hasta tener el logo mobile) */
-@media (max-width: 480px) {
-    .headerLogo__texto { display: none; }
-    .headerLogo { font-size: 1.3rem; }
+/* En celus no entra el logo completo junto a los botones: queda el escudo (logo mobile) */
+@media (max-width: 560px) {
+    .headerLogo__img--dark, :root[data-theme=light] .headerLogo__img--light { display: none; }
+    .headerLogo__img--mobile { display: block; height: 40px; }
+}
+
+/* Celus muy angostos con sesion: se achican los espacios y se ocultan las flechitas de los menus */
+@media (max-width: 360px) {
+    .header { padding: 0 8px; }
+    .headerContainer { padding: 0 4px; gap: 6px; }
+    .navLink { padding: 0 7px; }
+    .userInfo { gap: 6px; }
+    .cuenta__flecha, .orgmenu__btn > span:last-child { display: none; }
 }
