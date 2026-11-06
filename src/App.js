@@ -38,8 +38,8 @@ function App() {
                     <Route path='/organizaciones/nueva' element={<OrganizacionForm modo='crear' />} />
                     <Route path='/organizacion/editar' element={<OrganizacionForm modo='editar' />} />
                     <Route path='/organizacion/torneo/nuevo' element={<CrearTorneo />} />
-                    <Route path='/login' element={<Auth modo='login' />} />
-                    <Route path='/registro' element={<Auth modo='registro' />} />
+                    <Route path='/login' element={<Auth key='login' modo='login' />} />
+                    <Route path='/registro' element={<Auth key='registro' modo='registro' />} />
                     <Route path='/partidos/:torneo' element={<Partidos />} />
                     <Route path='/equipo/:teamId' element={<Equipo />} />
                     <Route path='/equipos/nuevo' element={<EquipoForm modo='crear' />} />

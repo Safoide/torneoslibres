@@ -147,3 +147,62 @@
 .acceso-rapido__btn strong { font-size: .88rem; }
 .acceso-rapido__btn span { font-size: .75rem; color: var(--muted); }
 .acceso-rapido code { font-size: .8rem; }
+
+/* ---------- Login / registro con Google ---------- */
+.auth-google { display: flex; flex-direction: column; gap: 16px; width: 100%; margin-bottom: 4px; }
+/* Botón propio de Google: el .btn--secundario de la página con el logo G oficial */
+.btn--google { width: 100%; gap: 12px; }
+.btn--google img { flex-shrink: 0; }
+.form .auth-google .btn { margin-top: 0; }
+
+.auth-separador {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 0;
+    font-size: .78rem;
+    font-weight: 600;
+    letter-spacing: .02em;
+    color: var(--muted);
+}
+
+.auth-separador::before, .auth-separador::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+/* Inició sesión con Google y falta crear la cuenta: "Iniciado como ..." en lugar de los campos */
+.auth-iniciado {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 6px;
+    padding: 12px 14px;
+    background: var(--surface-2);
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius);
+}
+
+.auth-iniciado img { flex-shrink: 0; }
+.auth-iniciado div { display: flex; flex-direction: column; gap: 2px; min-width: 0; flex: 1; }
+.auth-iniciado span { overflow: hidden; text-overflow: ellipsis; }
+.auth-iniciado strong { color: var(--text); }
+.auth-iniciado .muted { font-size: .82rem; }
+
+.auth-iniciado__cambiar {
+    flex-shrink: 0;
+    padding: 0;
+    font: inherit;
+    font-size: .82rem;
+    font-weight: 600;
+    color: var(--link);
+    background: none;
+    border: 0;
+    cursor: pointer;
+}
+
+.auth-iniciado__cambiar:hover:not(:disabled) { text-decoration: underline; }
+
+/* Error con una acción (crear cuenta / iniciar sesión con ese email) */
+.form__error .btn { margin-top: 8px; }
+.form__error a.btn { color: var(--text); font-weight: 600; }
+
+/* Cuenta vinculada con Google (Editar mis datos) */
+.cuenta-google { display: flex; align-items: center; gap: 8px; font-size: .9rem; color: var(--text-soft); }

@@ -6,6 +6,7 @@ import { leerAjustes, guardarAjustes } from '../../ajustes.js';
 import '../../assets/styles/formularios.css';
 import '../../assets/styles/ajustes.css';
 import { SkeletonFormulario } from '../Skeleton';
+import GoogleBoton, { GOOGLE_CLIENT_ID } from '../GoogleBoton';
 
 const TEMAS = [['oscuro', 'Oscuro'], ['claro', 'Claro'], ['auto', 'Automático']];
 const TEXTOS = [['normal', 'Normal'], ['grande', 'Grande']];
@@ -33,6 +34,7 @@ const CuentaAjustes = () => {
 
     const [confirmando, setConfirmando] = useState(false);
     const [password, setPassword] = useState('');
+    const [credential, setCredential] = useState(''); // cuenta sin contraseña: confirma volviendo a entrar con Google
     const [palabra, setPalabra] = useState('');
     const [error, setError] = useState('');
     const [borrando, setBorrando] = useState(false);
@@ -62,14 +64,15 @@ const CuentaAjustes = () => {
         navigate('/login');
     };
 
-    const cancelar = () => { setConfirmando(false); setPassword(''); setPalabra(''); setError(''); };
+    const cancelar = () => { setConfirmando(false); setPassword(''); setCredential(''); setPalabra(''); setError(''); };
+    const confirmado = user.tienePassword ? !!password : !!credential;
 
     const borrar = async (e) => {
         e.preventDefault();
         setError('');
         setBorrando(true);
 
-        const data = await eliminarCuenta(password);
+        const data = await eliminarCuenta(user.tienePassword ? { password } : { credential });
 
         setBorrando(false);
         if (!data || data.error) return setError(data?.error || 'No pudimos conectar con el servidor');
@@ -133,8 +136,21 @@ const CuentaAjustes = () => {
                     <form className='ajustes__confirmar' onSubmit={borrar}>
                         <p>{consecuencias}</p>
 
-                        <label htmlFor='password'>Tu contraseña</label>
-                        <input id='password' type='password' required autoComplete='current-password' value={password} onChange={(e) => setPassword(e.target.value)} />
+                        {user.tienePassword ? (
+                            <>
+                                <label htmlFor='password'>Tu contraseña</label>
+                                <input id='password' type='password' required autoComplete='current-password' value={password} onChange={(e) => setPassword(e.target.value)} />
+                            </>
+                        ) : credential ? (
+                            <p className='form__ok'>Cuenta de Google confirmada.</p>
+                        ) : (
+                            <>
+                                <label>Confirmá que sos vos con tu cuenta de Google</label>
+                                {GOOGLE_CLIENT_ID
+                                    ? <GoogleBoton texto='continue_with' onCredential={setCredential} />
+                                    : <p className='muted'>El ingreso con Google no está disponible en este momento. Creá una contraseña en <Link to='/cuenta'>Editar mis datos</Link> para poder eliminar la cuenta.</p>}
+                            </>
+                        )}
 
                         <label htmlFor='palabra'>Para confirmar, escribí <strong>{PALABRA}</strong></label>
                         <input id='palabra' autoComplete='off' value={palabra} onChange={(e) => setPalabra(e.target.value)} />
@@ -143,7 +159,7 @@ const CuentaAjustes = () => {
 
                         <div className='ajustes__acciones'>
                             <button type='button' className='btn btn--secundario btn--chico' onClick={cancelar}>Cancelar</button>
-                            <button type='submit' className='btn btn--peligro btn--chico' disabled={borrando || palabra !== PALABRA || !password}>
+                            <button type='submit' className='btn btn--peligro btn--chico' disabled={borrando || palabra !== PALABRA || !confirmado}>
                                 {borrando ? 'Eliminando...' : 'Eliminar definitivamente'}
                             </button>
                         </div>

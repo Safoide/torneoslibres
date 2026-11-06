@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useEffect, useState } from 'react'
-import { login as apiLogin, registro as apiRegistro, getMe } from '../assets/endPoints/auth.js';
+import { login as apiLogin, registro as apiRegistro, loginGoogle as apiLoginGoogle, getMe } from '../assets/endPoints/auth.js';
 import { getMiOrganizacion } from '../assets/endPoints/organizadores.js';
 import { getMiEquipo } from '../assets/endPoints/clubes.js';
 import { SESION_INVALIDA } from '../assets/fetchMethods.js';
@@ -84,9 +84,17 @@ export const AuthProvider = ({ children }) => {
 
     const login = (body) => entrar(apiLogin, body);
     const registro = (body) => entrar(apiRegistro, body);
+
+    // Google: devuelve la respuesta tal cual SIN iniciar la sesion, porque puede faltar elegir el tipo de cuenta
+    // (necesitaRol) o haber un aviso que mostrar antes (passwordBorrada). Para entrar, llamar a aplicarSesion(data).
+    const loginGoogle = async (credential, rol) => {
+        const data = await apiLoginGoogle({ credential, ...(rol ? { rol } : {}) });
+        return data || { error: 'No pudimos conectar con el servidor' };
+    };
+    const aplicarSesion = (data) => { writeToken(data.token); setUser(data.user); };
     const logout = () => { writeToken(null); setUser(null); };
 
-    return <AuthContext.Provider value={{ user, setUser, guardarToken: writeToken, loading, organizacion, setOrganizacion, equipo, setEquipo, login, registro, logout }}>{children}</AuthContext.Provider>;
+    return <AuthContext.Provider value={{ user, setUser, guardarToken: writeToken, loading, organizacion, setOrganizacion, equipo, setEquipo, login, registro, loginGoogle, aplicarSesion, logout }}>{children}</AuthContext.Provider>;
 };
 
 export const useAuth = () => useContext(AuthContext);

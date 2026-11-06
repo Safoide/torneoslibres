@@ -55,27 +55,32 @@ const CuentaDatos = () => {
         if (clave.nueva !== clave.repetir) return setMsgClave({ tipo: 'error', texto: 'Las contraseñas nuevas no coinciden' });
 
         setGuardandoClave(true);
-        const data = await cambiarPassword({ actual: clave.actual, nueva: clave.nueva });
+        // Sin contraseña (cuenta de Google) se crea sin pedir la actual
+        const data = await cambiarPassword(user.tienePassword ? { actual: clave.actual, nueva: clave.nueva } : { nueva: clave.nueva });
         setGuardandoClave(false);
 
         if (!data || data.error) return setMsgClave({ tipo: 'error', texto: data?.error || 'No pudimos conectar con el servidor' });
 
         if (data.token) guardarToken(data.token); // cambiar la clave cierra las otras sesiones: seguimos con un token nuevo
         setClave({ actual: '', nueva: '', repetir: '' });
-        setMsgClave({ tipo: 'ok', texto: 'Contraseña actualizada.' });
+        setMsgClave({ tipo: 'ok', texto: user.tienePassword ? 'Contraseña actualizada.' : 'Contraseña creada: ahora también podés entrar con tu email y contraseña.' });
+        if (!user.tienePassword) setUser({ ...user, tienePassword: true });
     };
 
     return (
         <div className='form-page'>
             <h1>Editar mis datos</h1>
             <p>Tipo de cuenta: <strong>{ROL_LABEL[user.rol] || user.rol}</strong></p>
+            {user.conGoogle && <p className='cuenta-google'>Tu cuenta está vinculada con Google: podés entrar con el botón "Continuar con Google".</p>}
 
             <form className='form' onSubmit={guardarDatos}>
                 <label htmlFor='nombre'>Nombre</label>
                 <input id='nombre' name='nombre' required maxLength={60} value={datos.nombre} onChange={onDatos} />
 
                 <label htmlFor='email'>Email</label>
-                <input id='email' name='email' type='email' required autoComplete='email' value={datos.email} onChange={onDatos} />
+                <input id='email' name='email' type='email' required autoComplete='email' value={datos.email} onChange={onDatos} disabled={!user.tienePassword} />
+                {/* Cambiar el email pide la contraseña: una cuenta de Google sin contraseña primero tiene que crear una */}
+                {!user.tienePassword && <span className='muted'>Para cambiar el email, primero creá una contraseña (más abajo).</span>}
 
                 {conWhatsapp && (
                     <>
@@ -96,20 +101,25 @@ const CuentaDatos = () => {
                 <button className='btn btn--primary' type='submit' disabled={guardandoDatos}>{guardandoDatos ? 'Guardando...' : 'Guardar cambios'}</button>
             </form>
 
-            <h2>Cambiar contraseña</h2>
+            <h2>{user.tienePassword ? 'Cambiar contraseña' : 'Crear contraseña'}</h2>
+            {!user.tienePassword && <p>Tu cuenta entra con Google. Si creás una contraseña, también vas a poder entrar con tu email.</p>}
 
             <form className='form' onSubmit={guardarClave}>
-                <label htmlFor='actual'>Contraseña actual</label>
-                <input id='actual' name='actual' type='password' required autoComplete='current-password' value={clave.actual} onChange={onClave} />
+                {user.tienePassword && (
+                    <>
+                        <label htmlFor='actual'>Contraseña actual</label>
+                        <input id='actual' name='actual' type='password' required autoComplete='current-password' value={clave.actual} onChange={onClave} />
+                    </>
+                )}
 
-                <label htmlFor='nueva'>Contraseña nueva (mínimo 8 caracteres)</label>
+                <label htmlFor='nueva'>{user.tienePassword ? 'Contraseña nueva' : 'Contraseña'} (mínimo 8 caracteres)</label>
                 <input id='nueva' name='nueva' type='password' required minLength={8} maxLength={72} autoComplete='new-password' value={clave.nueva} onChange={onClave} />
 
                 <label htmlFor='repetir'>Repetí la contraseña nueva</label>
                 <input id='repetir' name='repetir' type='password' required minLength={8} maxLength={72} autoComplete='new-password' value={clave.repetir} onChange={onClave} />
 
                 {msgClave.texto && <p className={msgClave.tipo === 'ok' ? 'form__ok' : 'form__error'} role={msgClave.tipo === 'ok' ? 'status' : 'alert'}>{msgClave.texto}</p>}
-                <button className='btn btn--primary' type='submit' disabled={guardandoClave}>{guardandoClave ? 'Guardando...' : 'Cambiar contraseña'}</button>
+                <button className='btn btn--primary' type='submit' disabled={guardandoClave}>{guardandoClave ? 'Guardando...' : user.tienePassword ? 'Cambiar contraseña' : 'Crear contraseña'}</button>
             </form>
 
             <Link to='/cuenta/ajustes'>Ajustes de la cuenta: tema, sesiones y eliminar cuenta →</Link>

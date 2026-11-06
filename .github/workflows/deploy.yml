@@ -1,5 +1,5 @@
 # Cada push a master arma el build del front y lo sube al servidor (nginx lo sirve al instante).
-# Secrets del repo: SSH_HOST, SSH_PORT, SSH_KEY. Variable del repo: SITIO_URL (ej. https://torneoslibres.com)
+# Secrets del repo: SSH_HOST, SSH_PORT, SSH_KEY. Variable del repo: GOOGLE_CLIENT_ID (Client ID de OAuth, es publico)
 name: Deploy front
 
 on:
@@ -25,7 +25,8 @@ jobs:
       - name: Build
         run: npm run build
         env:
-          REACT_APP_API_URL: ${{ vars.SITIO_URL }}/api
+          REACT_APP_API_URL: /api # mismo dominio: nginx pasa /api a la API
+          REACT_APP_GOOGLE_CLIENT_ID: ${{ vars.GOOGLE_CLIENT_ID }} # publico; sin el, no se muestra el boton de Google
           CI: false # create-react-app corta el build por warnings si CI=true
 
       - name: Clave SSH
