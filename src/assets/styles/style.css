@@ -5,7 +5,9 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 
 /* ---------- Reset ---------- */
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; transition: all .3s ease 0s; }
+/* Sin `transition: all` global: animaba cualquier cambio de tamaño/posición y frenaba el render.
+   Las transiciones están puestas a mano en cada pieza (y las genéricas en animaciones.css). */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 html { background: var(--bg); -webkit-text-size-adjust: 100%; }
 
@@ -26,7 +28,6 @@ body {
     /* brillo verde muy sutil arriba, como luz de cancha */
     background: radial-gradient(900px 340px at 50% -140px, var(--glow), transparent 70%) no-repeat var(--bg);
     -webkit-font-smoothing: antialiased;
-    transition: all .3s ease 0s;
 }
 
 h1, h2, h3, h4 { line-height: 1.2; letter-spacing: -.01em; font-weight: 700; }
@@ -38,6 +39,8 @@ button { cursor: pointer; }
 input::placeholder, textarea::placeholder { color: var(--muted); opacity: .85; }
 
 :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+/* Los campos de texto marcan el foco solo con el borde verde (sin contorno) */
+input:focus-visible, select:focus-visible, textarea:focus-visible { outline: none; }
 
 .primary-text { color: var(--text); }
 .secondary-text { color: var(--muted); }

@@ -1,0 +1,250 @@
+/* ============================================================
+   Transiciones y animaciones de toda la app.
+   Duraciones y curvas: variables de movimiento en theme.css.
+   Todo se apaga con "Animaciones reducidas" (Ajustes de la cuenta,
+   html[data-movimiento='reducido']) o con prefers-reduced-motion (ver style.css).
+   Solo se animan opacity, transform, colores y sombras (nada que mueva el layout).
+   ============================================================ */
+
+/* ---------- Animaciones ---------- */
+@keyframes aparecer {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: none; }
+}
+
+@keyframes aparecer-suave {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes menu-abrir {
+    from { opacity: 0; transform: translateY(-6px) scale(.97); }
+    to { opacity: 1; transform: none; }
+}
+
+@keyframes menu-cerrar {
+    from { opacity: 1; transform: none; }
+    to { opacity: 0; transform: translateY(-4px) scale(.98); }
+}
+
+@keyframes desplegar {
+    from { opacity: 0; transform: translateY(-6px); }
+    to { opacity: 1; transform: none; }
+}
+
+@keyframes sacudir {
+    0%, 100% { transform: none; }
+    20% { transform: translateX(-4px); }
+    40% { transform: translateX(4px); }
+    60% { transform: translateX(-2px); }
+    80% { transform: translateX(2px); }
+}
+
+/* Sin opacity: si no, un input oculto (opacity: 0) se vería durante la animación */
+@keyframes check-pop {
+    0% { transform: scale(.6); }
+    100% { transform: none; }
+}
+
+/* ---------- Transición por defecto de los elementos interactivos ----------
+   :where() no suma especificidad: cualquier `transition` puesta en un componente la reemplaza */
+:where(a, button, input, select, textarea, label, summary, [role='menuitem']) {
+    transition:
+        color var(--dur-rapida) ease,
+        background-color var(--dur-rapida) ease,
+        border-color var(--dur-rapida) ease,
+        box-shadow var(--dur) ease,
+        opacity var(--dur-rapida) ease,
+        transform var(--dur-rapida) var(--curva);
+}
+
+/* ---------- Cambio de pantalla ----------
+   `backwards` (no `both`): al terminar no queda ningún transform puesto, así no rompe position: sticky/fixed */
+.pagina { animation: aparecer var(--dur-lenta) var(--curva) backwards; }
+
+/* ---------- Cambio de tema (clase que pone ajustes.js durante ~0.45s) ---------- */
+html.cambiando-tema *,
+html.cambiando-tema *::before,
+html.cambiando-tema *::after {
+    transition:
+        background-color .35s ease,
+        color .35s ease,
+        border-color .35s ease,
+        fill .35s ease,
+        stroke .35s ease,
+        box-shadow .35s ease;
+}
+
+html.cambiando-tema body { transition: background-color .35s ease; }
+
+/* ---------- Botones ---------- */
+.btn {
+    transition:
+        background var(--dur-rapida) ease,
+        border-color var(--dur-rapida) ease,
+        color var(--dur-rapida) ease,
+        box-shadow var(--dur) ease,
+        transform var(--dur-rapida) var(--curva),
+        filter var(--dur-rapida) ease;
+}
+
+.btn--primary:hover:not(:disabled) { transform: translateY(-1px); box-shadow: 0 12px 28px var(--accent-shadow); }
+
+/* Al apretar se hunde un poco: respuesta inmediata al click/tap */
+.btn:active:not(:disabled),
+.chip:active,
+.tabButton:active,
+.segmentado__op:active,
+.cuenta__btn:active,
+.orgmenu__btn:active,
+.userInfo > a:active,
+.logoutBtn:active { transform: scale(.97); transition-duration: .06s; }
+
+.btn--primary:active:not(:disabled) { transform: translateY(0) scale(.97); box-shadow: 0 6px 16px var(--accent-shadow); }
+
+/* ---------- Inputs, selects y textareas ----------
+   El borde se aclara al pasar el mouse y se pone verde al enfocar (sin anillo ni contorno) */
+.filtros__busqueda,
+.campo input,
+.campo select,
+.form input:not([type=radio]):not([type=checkbox]):not([type=file]),
+.ajustes__confirmar input,
+.form select,
+.form textarea,
+.compartir__link {
+    transition:
+        border-color var(--dur-rapida) ease,
+        background-color var(--dur-rapida) ease;
+}
+
+.filtros__busqueda:hover:not(:focus),
+.campo input:hover:not(:focus),
+.campo select:hover:not(:focus),
+.form input:not([type=radio]):not([type=checkbox]):not([type=file]):hover:not(:focus):not(:disabled),
+.ajustes__confirmar input:hover:not(:focus),
+.form select:hover:not(:focus):not(:disabled),
+.form textarea:hover:not(:focus) { border-color: var(--border-strong); }
+
+.filtros__busqueda:focus,
+.campo input:focus,
+.campo select:focus,
+.form input:not([type=radio]):not([type=checkbox]):focus,
+.ajustes__confirmar input:focus,
+.form select:focus,
+.form textarea:focus,
+.compartir__link:focus { outline: none; box-shadow: none; border-color: var(--accent); }
+
+/* La etiqueta del campo enfocado se pinta del acento */
+.form label,
+.form__campo label { transition: color var(--dur-rapida) ease; }
+
+.form__campo:focus-within > label,
+.campo:focus-within > label { color: var(--accent); }
+
+/* Radios y checkboxes de las opciones tipo tarjeta: un "pop" al marcarlos (con :focus para que no salte
+   al cargar la pantalla). Solo los visibles: los del selector segmentado (tema, tamaño) están ocultos. */
+.form .opcion input:checked:focus { animation: check-pop var(--dur) var(--curva-rebote); }
+
+/* Opciones tipo tarjeta (método de pago, tipo de cuenta) */
+.form .opcion { transition: border-color var(--dur-rapida) ease, background var(--dur) ease, transform var(--dur-rapida) var(--curva); }
+.form .opcion:active:not(.opcion--apagada) { transform: scale(.99); }
+
+/* Interruptor (Ajustes): la bolita rebota un poco al llegar */
+.interruptor::after { transition: transform var(--dur) var(--curva-rebote), width var(--dur-rapida) ease, background var(--dur-rapida) ease; }
+.interruptor:active::after { width: 22px; }
+.interruptor:checked:active::after { transform: translateX(14px); }
+
+/* ---------- Menús desplegables (Mi cuenta, organización / equipo) ---------- */
+.menu-flotante {
+    transform-origin: top right;
+    animation: menu-abrir var(--dur) var(--curva);
+}
+
+.menu-flotante.saliendo {
+    pointer-events: none;
+    animation: menu-cerrar var(--dur-salida) var(--curva-salida) forwards;
+}
+
+/* Los items entran escalonados */
+.menu-flotante:not(.saliendo) > * { animation: aparecer-suave var(--dur) ease backwards; }
+.menu-flotante:not(.saliendo) > :nth-child(2) { animation-delay: 20ms; }
+.menu-flotante:not(.saliendo) > :nth-child(3) { animation-delay: 40ms; }
+.menu-flotante:not(.saliendo) > :nth-child(4) { animation-delay: 60ms; }
+.menu-flotante:not(.saliendo) > :nth-child(n+5) { animation-delay: 80ms; }
+
+/* La flechita gira cuando el menú está abierto */
+.cuenta__flecha,
+.orgmenu__btn > span:last-child {
+    display: inline-block;
+    transition: transform var(--dur) var(--curva);
+}
+
+.cuenta__btn[aria-expanded='true'] .cuenta__flecha,
+.orgmenu__btn[aria-expanded='true'] > span:last-child { transform: rotate(180deg); }
+
+/* ---------- Navegación del header ----------
+   La barra verde de la sección actual crece desde el centro */
+.navLink::after {
+    transform: scaleX(0);
+    transition: transform var(--dur) var(--curva), background var(--dur-rapida) ease;
+}
+
+.navLink:hover::after,
+.navLink.active::after { transform: scaleX(1); }
+
+.navLink__icono { transition: color var(--dur-rapida) ease, transform var(--dur) var(--curva-rebote); }
+.navLink:hover .navLink__icono { transform: translateY(-1px) scale(1.08); }
+
+/* ---------- Pestañas (panel del organizador, equipo) ---------- */
+.tabButton { transition: color var(--dur-rapida) ease, border-color var(--dur) ease, transform var(--dur-rapida) var(--curva); }
+.tabPanel-select { animation: aparecer var(--dur) var(--curva); }
+
+/* ---------- Chips de filtros ---------- */
+.chip { transition: background var(--dur-rapida) ease, border-color var(--dur-rapida) ease, color var(--dur-rapida) ease, transform var(--dur-rapida) var(--curva); }
+
+/* ---------- Tarjetas de torneo: entran escalonadas al cargar ---------- */
+.card-torneo {
+    transition: transform var(--dur) var(--curva), border-color var(--dur-rapida) ease, box-shadow var(--dur) ease;
+    animation: aparecer var(--dur-lenta) var(--curva) backwards;
+}
+
+.torneos-grid > :nth-child(2) { animation-delay: 30ms; }
+.torneos-grid > :nth-child(3) { animation-delay: 60ms; }
+.torneos-grid > :nth-child(4) { animation-delay: 90ms; }
+.torneos-grid > :nth-child(5) { animation-delay: 120ms; }
+.torneos-grid > :nth-child(6) { animation-delay: 150ms; }
+.torneos-grid > :nth-child(n+7) { animation-delay: 180ms; }
+
+.torneos-grid--actualizando { transition: opacity var(--dur) ease; }
+
+/* El contenido que reemplaza a un skeleton aparece suave en vez de "saltar" */
+.landing-modalidad,
+.dash-stat { animation: aparecer var(--dur-lenta) var(--curva) backwards; }
+
+.landing-modalidad { transition: border-color var(--dur-rapida) ease, transform var(--dur) var(--curva); }
+
+/* ---------- Avisos y mensajes ---------- */
+.aviso,
+.form__ok,
+.reglas-editor__ok { animation: aparecer var(--dur) var(--curva) backwards; }
+
+/* Los errores además se sacuden un poco para que se noten */
+.form__error { animation: aparecer-suave var(--dur-rapida) ease, sacudir .35s ease .05s; }
+
+/* ---------- Paneles que se abren dentro de una pantalla ----------
+   (cargar resultados, cambiar fechas, formulario de pago, compartir amistoso) */
+.resultados-form,
+.estado-torneo__form,
+.pago-form,
+.compartir,
+.ajustes__confirmar { animation: desplegar var(--dur) var(--curva); }
+
+/* ---------- Tablas: la fila bajo el mouse se resalta suave ---------- */
+.tabla-wrap tbody tr { transition: background var(--dur-rapida) ease; }
+
+/* ---------- Landing: el hero entra escalonado ---------- */
+.landing-hero__contenido > * { animation: aparecer .5s var(--curva) backwards; }
+.landing-hero__contenido > :nth-child(2) { animation-delay: 60ms; }
+.landing-hero__contenido > :nth-child(3) { animation-delay: 120ms; }
+.landing-hero__contenido > :nth-child(4) { animation-delay: 180ms; }
+.landing-hero__contenido > :nth-child(n+5) { animation-delay: 240ms; }

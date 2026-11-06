@@ -1,4 +1,4 @@
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { BrowserRouter, Route, Routes, useLocation } from 'react-router-dom';
 import './assets/styles/style.css';
 import './assets/styles/theme.css';
 import './assets/styles/comun.css';
@@ -22,32 +22,40 @@ import CuentaAjustes from './components/pages/CuentaAjustes';
 import Header from './components/Header';
 import 'boxicons';
 
+// Cada cambio de pantalla vuelve a montar el contenedor y corre la animación de entrada (.pagina en animaciones.css)
+const Pagina = ({ children }) => {
+    const { pathname } = useLocation();
+    return <div className='pagina' key={pathname}>{children}</div>;
+};
+
 function App() {
     return (
         <AuthProvider>
             <BrowserRouter>
                 <Header />
-                <Routes>
-                    <Route path='/' element={<Inicio />} />
-                    <Route path='/torneos' element={<Torneos />} />
-                    <Route path='/amistosos' element={<Amistosos />} />
-                    <Route path='/amistosos/:id' element={<Amistoso />} />
-                    <Route path='/torneos/:torneo' element={<Torneo />} />
-                    <Route path='/torneos/:torneo/inscripcion' element={<Inscripcion />} />
-                    <Route path='/organizadores/:orgId' element={<Organizador />} />
-                    <Route path='/organizaciones/nueva' element={<OrganizacionForm modo='crear' />} />
-                    <Route path='/organizacion/editar' element={<OrganizacionForm modo='editar' />} />
-                    <Route path='/organizacion/torneo/nuevo' element={<CrearTorneo />} />
-                    <Route path='/login' element={<Auth key='login' modo='login' />} />
-                    <Route path='/registro' element={<Auth key='registro' modo='registro' />} />
-                    <Route path='/partidos/:torneo' element={<Partidos />} />
-                    <Route path='/equipo/:teamId' element={<Equipo />} />
-                    <Route path='/equipos/nuevo' element={<EquipoForm modo='crear' />} />
-                    <Route path='/cuenta' element={<CuentaDatos />} />
-                    <Route path='/cuenta/ajustes' element={<CuentaAjustes />} />
-                    <Route path='/mi-equipo' element={<MiEquipo />} />
-                    <Route path='/mi-equipo/editar' element={<EquipoForm modo='editar' />} />
-                </Routes>
+                <Pagina>
+                    <Routes>
+                        <Route path='/' element={<Inicio />} />
+                        <Route path='/torneos' element={<Torneos />} />
+                        <Route path='/amistosos' element={<Amistosos />} />
+                        <Route path='/amistosos/:id' element={<Amistoso />} />
+                        <Route path='/torneos/:torneo' element={<Torneo />} />
+                        <Route path='/torneos/:torneo/inscripcion' element={<Inscripcion />} />
+                        <Route path='/organizadores/:orgId' element={<Organizador />} />
+                        <Route path='/organizaciones/nueva' element={<OrganizacionForm modo='crear' />} />
+                        <Route path='/organizacion/editar' element={<OrganizacionForm modo='editar' />} />
+                        <Route path='/organizacion/torneo/nuevo' element={<CrearTorneo />} />
+                        <Route path='/login' element={<Auth key='login' modo='login' />} />
+                        <Route path='/registro' element={<Auth key='registro' modo='registro' />} />
+                        <Route path='/partidos/:torneo' element={<Partidos />} />
+                        <Route path='/equipo/:teamId' element={<Equipo />} />
+                        <Route path='/equipos/nuevo' element={<EquipoForm modo='crear' />} />
+                        <Route path='/cuenta' element={<CuentaDatos />} />
+                        <Route path='/cuenta/ajustes' element={<CuentaAjustes />} />
+                        <Route path='/mi-equipo' element={<MiEquipo />} />
+                        <Route path='/mi-equipo/editar' element={<EquipoForm modo='editar' />} />
+                    </Routes>
+                </Pagina>
             </BrowserRouter>
         </AuthProvider>
     );
