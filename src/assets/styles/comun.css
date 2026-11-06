@@ -122,3 +122,16 @@
 }
 
 .form textarea { resize: vertical; min-height: 84px; }
+
+/* Botón con aspecto de link (acciones chicas dentro de un texto: "Usar otra cuenta") */
+.link-boton {
+    padding: 0;
+    font: inherit;
+    font-weight: 600;
+    color: var(--link);
+    background: none;
+    border: 0;
+    cursor: pointer;
+}
+
+.link-boton:hover { text-decoration: underline; }

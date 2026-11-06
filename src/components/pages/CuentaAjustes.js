@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { Link, Navigate, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-import { cerrarTodasLasSesiones, eliminarCuenta } from '../../assets/endPoints/auth.js';
+import { cerrarTodasLasSesiones, confirmarGoogle, eliminarCuenta } from '../../assets/endPoints/auth.js';
 import { leerAjustes, guardarAjustes } from '../../ajustes.js';
 import '../../assets/styles/formularios.css';
 import '../../assets/styles/ajustes.css';
@@ -35,6 +35,8 @@ const CuentaAjustes = () => {
     const [confirmando, setConfirmando] = useState(false);
     const [password, setPassword] = useState('');
     const [credential, setCredential] = useState(''); // cuenta sin contraseña: confirma volviendo a entrar con Google
+    const [emailGoogle, setEmailGoogle] = useState(''); // la cuenta de Google ya verificada
+    const [verificando, setVerificando] = useState(false);
     const [palabra, setPalabra] = useState('');
     const [error, setError] = useState('');
     const [borrando, setBorrando] = useState(false);
@@ -64,8 +66,21 @@ const CuentaAjustes = () => {
         navigate('/login');
     };
 
-    const cancelar = () => { setConfirmando(false); setPassword(''); setCredential(''); setPalabra(''); setError(''); };
+    const cancelar = () => { setConfirmando(false); setPassword(''); setCredential(''); setEmailGoogle(''); setPalabra(''); setError(''); };
     const confirmado = user.tienePassword ? !!password : !!credential;
+
+    // Cuenta sin contraseña: apenas elige la cuenta de Google se verifica que sea la vinculada.
+    // Si no lo es, se avisa en el momento y el botón sigue disponible para elegir otra
+    const conGoogle = async (token) => {
+        setError('');
+        setVerificando(true);
+        const data = await confirmarGoogle(token);
+        setVerificando(false);
+        if (!data || data.error) return setError(data?.error || 'No pudimos conectar con el servidor');
+        setCredential(token);
+        setEmailGoogle(data.email ?? '');
+    };
+    const usarOtraCuenta = () => { setCredential(''); setEmailGoogle(''); setError(''); };
 
     const borrar = async (e) => {
         e.preventDefault();
@@ -142,13 +157,17 @@ const CuentaAjustes = () => {
                                 <input id='password' type='password' required autoComplete='current-password' value={password} onChange={(e) => setPassword(e.target.value)} />
                             </>
                         ) : credential ? (
-                            <p className='form__ok'>Cuenta de Google confirmada.</p>
+                            <p className='form__ok'>
+                                Confirmado con Google{emailGoogle ? ` (${emailGoogle})` : ''}.{' '}
+                                <button type='button' className='link-boton' onClick={usarOtraCuenta}>Usar otra cuenta</button>
+                            </p>
                         ) : (
                             <>
-                                <label>Confirmá que sos vos con tu cuenta de Google</label>
+                                <label>Confirmá que sos vos con la cuenta de Google vinculada{user.email ? ` (${user.email})` : ''}</label>
                                 {GOOGLE_CLIENT_ID
-                                    ? <GoogleBoton texto='continue_with' onCredential={setCredential} />
+                                    ? <GoogleBoton texto='continue_with' deshabilitado={verificando} onCredential={conGoogle} />
                                     : <p className='muted'>El ingreso con Google no está disponible en este momento. Creá una contraseña en <Link to='/cuenta'>Editar mis datos</Link> para poder eliminar la cuenta.</p>}
+                                {verificando && <p className='muted'>Verificando tu cuenta de Google...</p>}
                             </>
                         )}
 

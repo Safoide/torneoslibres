@@ -16,7 +16,9 @@ const editarMisDatos = (body) => apiPUT(API_BASEURL + '/me', body);
 const cambiarPassword = (body) => apiPUT(API_BASEURL + '/password', body);
 
 const cerrarTodasLasSesiones = () => apiPOST(API_BASEURL + '/logout-all', {});
+// Cuenta sin contraseña: verifica que la cuenta de Google elegida sea la vinculada (antes de eliminar). { ok, email } | { error }
+const confirmarGoogle = (credential) => apiPOST(API_BASEURL + '/confirmar-google', { credential });
 // confirmacion: { password } o, si la cuenta entra solo con Google, { credential }
 const eliminarCuenta = (confirmacion) => apiDELETE(API_BASEURL + '/me', confirmacion);
 
-export { login, registro, getMe, loginGoogle, editarMisDatos, cambiarPassword, cerrarTodasLasSesiones, eliminarCuenta };
+export { login, registro, getMe, loginGoogle, editarMisDatos, cambiarPassword, cerrarTodasLasSesiones, confirmarGoogle, eliminarCuenta };
