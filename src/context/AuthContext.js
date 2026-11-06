@@ -2,6 +2,7 @@ import React, { createContext, useContext, useEffect, useState } from 'react'
 import { login as apiLogin, registro as apiRegistro, getMe } from '../assets/endPoints/auth.js';
 import { getMiOrganizacion } from '../assets/endPoints/organizadores.js';
 import { getMiEquipo } from '../assets/endPoints/clubes.js';
+import { SESION_INVALIDA } from '../assets/fetchMethods.js';
 
 const AuthContext = createContext(null);
 
@@ -50,6 +51,25 @@ export const AuthProvider = ({ children }) => {
         });
     }, [])
 
+
+    // La sesion se comparte entre pestañas (el token esta en localStorage):
+    // - si otra pestaña cierra sesion o entra con otra cuenta, esta se actualiza (evento `storage`)
+    // - si la API rechaza la sesion (401), se cierra aca tambien en vez de seguir "logueado" sin token
+    useEffect(() => {
+        const alCambiarToken = (e) => {
+            if (e.key !== null && e.key !== 'token') return;
+            if (!e.newValue) return setUser(null);
+            getMe().then(data => setUser(data && !data.error ? data : null));
+        };
+        const alInvalidarse = () => { writeToken(null); setUser(null); };
+
+        window.addEventListener('storage', alCambiarToken);
+        window.addEventListener(SESION_INVALIDA, alInvalidarse);
+        return () => {
+            window.removeEventListener('storage', alCambiarToken);
+            window.removeEventListener(SESION_INVALIDA, alInvalidarse);
+        };
+    }, []);
 
     const entrar = async (request, body) => {
         const data = await request(body);

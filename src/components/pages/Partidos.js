@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import PartidoItem from '../PartidoItem';
+import ResultadosFecha from '../ResultadosFecha';
 import { getTorneoById } from '../../assets/endPoints/torneos.js';
 import { getEquiposByTournament } from '../../assets/endPoints/equipos';
 import { getPartidosByTournament } from '../../assets/endPoints/partidos';
@@ -54,6 +55,7 @@ const Partidos = () => {
     const [form, setForm] = useState({ dia: '', inicio: '', fin: '', canchas: 2 });
     const [error, setError] = useState('');
     const [guardando, setGuardando] = useState(false);
+    const [editando, setEditando] = useState(null); // id de la fecha cuyos resultados se estan cargando
 
     const cargar = useCallback(async () => {
         const [t, eq, pa, fe] = await Promise.all([
@@ -169,6 +171,9 @@ const Partidos = () => {
                     .sort((a, b) => a.date.localeCompare(b.date) || (a.cancha ?? 0) - (b.cancha ?? 0));
                 const juegan = new Set(deLaFecha.flatMap(p => [p.home_id, p.away_id]));
                 const libres = Object.values(equipos).filter(e => !juegan.has(e.id));
+                // Resultados: el dueño los carga cuando la fecha termino y los puede corregir hasta que el torneo finaliza
+                const sinResultado = deLaFecha.filter(p => !p.wo && (p.home_goals === null || p.away_goals === null)).length;
+                const puedeCargar = esDueño && tor.estado === 'en-curso' && f.estado === 'jugada' && deLaFecha.some(p => !p.wo);
 
                 return (
                     <section className='fecha' key={f.id}>
@@ -197,15 +202,30 @@ const Partidos = () => {
                             </div>
                             <div className='fecha__acciones'>
                                 <span className={`fecha__estado fecha__estado--${f.estado}`}>{ESTADO_FECHA[f.estado]}</span>
+                                {puedeCargar && editando !== f.id && (
+                                    <button type='button' className={`btn btn--chico ${sinResultado ? 'btn--primary' : 'btn--secundario'}`} onClick={() => setEditando(f.id)}>
+                                        {sinResultado ? 'Cargar resultados' : 'Editar resultados'}
+                                    </button>
+                                )}
                                 {esDueño && i === 0 && f.estado === 'programada' && (
                                     <button type='button' className='btn btn--secundario btn--chico' onClick={() => cancelar(f)}>Cancelar fecha</button>
                                 )}
                             </div>
                         </div>
 
-                        <div className='fecha__partidos'>
-                            {deLaFecha.map(p => <PartidoItem key={p.id} partido={p} equipos={equipos} mostrarDia={false} />)}
-                        </div>
+                        {puedeCargar && sinResultado > 0 && editando !== f.id && (
+                            <p className='fecha__pagos fecha__pagos--detalle'>
+                                {sinResultado === 1 ? 'Falta cargar 1 resultado' : `Faltan cargar ${sinResultado} resultados`}
+                            </p>
+                        )}
+
+                        {editando === f.id
+                            ? <ResultadosFecha fecha={f} partidos={deLaFecha} equipos={equipos}
+                                onCancelar={() => setEditando(null)}
+                                onGuardado={() => { setEditando(null); cargar(); }} />
+                            : <div className='fecha__partidos'>
+                                {deLaFecha.map(p => <PartidoItem key={p.id} partido={p} equipos={equipos} mostrarDia={false} />)}
+                            </div>}
 
                         {libres.length > 0 && <p className='muted'>Libre: {libres.map(e => e.name).join(', ')}</p>}
                     </section>

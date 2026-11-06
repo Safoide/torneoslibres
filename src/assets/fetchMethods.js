@@ -5,6 +5,10 @@ const authHeaders = () => {
     return { 'Content-Type': 'application/json', ...(token ? { Authorization: `Bearer ${token}` } : {}) };
 };
 
+// Si la API rechaza la sesion (401), se avisa a AuthContext para que cierre la sesion en esta pestaña:
+// pasa si el token se borro o se invalido en otra pestaña, si vencio o si la cuenta ya no existe
+export const SESION_INVALIDA = 'sesion-invalida';
+
 const request = async (method, url, body) => {
     try {
         const response = await fetch(url, {
@@ -13,6 +17,7 @@ const request = async (method, url, body) => {
             ...(body !== undefined && { body: JSON.stringify(body) }),
         });
 
+        if (response.status === 401) window.dispatchEvent(new Event(SESION_INVALIDA));
         return await response.json();
     } catch (error) {
         console.error(error);

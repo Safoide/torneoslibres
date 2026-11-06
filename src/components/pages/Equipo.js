@@ -20,11 +20,12 @@ const Equipo = () => {
         getEquipoById(teamId)
             .then((data) => setEquipo(data));
 
+        // Sin jugadores o sin partidos la API devuelve { error } en vez de una lista: se toma como lista vacia
         getJugadoresByTeam(teamId)
-            .then((data) => setJugadores(data));
+            .then((data) => setJugadores(Array.isArray(data) ? data : []));
 
         getPartidosByTeam(teamId)
-            .then((data) => setPartidos(data));
+            .then((data) => setPartidos(Array.isArray(data) ? data : []));
     }, [teamId])
 
     if (equipo === undefined) return (
@@ -76,9 +77,11 @@ const Equipo = () => {
                                 </tr>
                             </thead>
                             <tbody>
+                                {jugadores.length === 0 && (
+                                    <tr><td colSpan={7} className='secondary-text'>Todavía no hay estadísticas de jugadores de este equipo.</td></tr>
+                                )}
                                 {
-                                    jugadores &&
-                                        jugadores.map((jugador, orden) => (
+                                    jugadores.map((jugador, orden) => (
                                             <tr key={jugador.id}>
                                                 <th className='secondary-text'>{orden+1}</th>
                                                 <th className='secondary-text'>{jugador.full_name}</th>
@@ -103,7 +106,7 @@ const Equipo = () => {
                                     <PartidoItem key={partido.id} partido={partido} />
                                 ))
                             :
-                                <h4>{partidos.error}</h4>
+                                <h4>Este equipo todavía no tiene partidos.</h4>
                         }
                     </div>
                 </TabPanel>

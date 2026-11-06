@@ -1,4 +1,4 @@
-import { apiGET, apiPOST, apiDELETE } from '../fetchMethods.js';
+import { apiGET, apiPOST, apiPUT, apiDELETE } from '../fetchMethods.js';
 import { API_URL } from '../torneosUtils.js';
 
 const API_BASEURL = API_URL + '/fechas';
@@ -21,3 +21,6 @@ export const pagarFecha = (fechaId, body) => apiPOST(API_BASEURL + '/' + fechaId
 
 // Quien pago cada fecha de un torneo (solo el organizador dueño): { [fechaId]: [{ equipoId, equipo, estado, monto }] }
 export const getPagosTorneo = (torId) => apiGET(API_BASEURL + '/torneo/' + torId + '/pagos');
+
+// Cargar o corregir resultados de una fecha terminada (organizador dueño). resultados: [{ id, home_goals, away_goals }]
+export const cargarResultados = (fechaId, resultados) => apiPUT(API_BASEURL + '/' + fechaId + '/resultados', { resultados });

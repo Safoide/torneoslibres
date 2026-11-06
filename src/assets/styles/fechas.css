@@ -184,3 +184,58 @@
 /* Nota chica debajo del estado del pago (si el rival ya pago o todavia no) */
 .aviso__nota { font-size: .82rem; color: var(--text-soft); }
 .aviso .aviso__nota { color: var(--text); }
+
+/* ---------- Carga de resultados de una fecha (organizador) ---------- */
+.resultados-form {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    padding: 18px;
+    background: var(--surface);
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius-lg);
+}
+
+.resultados-form > .muted { font-size: .85rem; line-height: 1.45; }
+.resultados-form__lista { display: flex; flex-direction: column; gap: 8px; padding: 0; margin: 0; list-style: none; }
+
+.resultado {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 12px;
+    background: var(--inset);
+    border-radius: var(--radius);
+}
+
+.resultado__equipo { display: flex; align-items: center; gap: 10px; min-width: 0; font-weight: 600; }
+.resultado__equipo span:last-child { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.resultado > .resultado__equipo:last-child { flex-direction: row-reverse; text-align: right; }
+
+.resultado__goles, .resultado__wo { display: flex; align-items: center; gap: 8px; }
+.resultado__wo { flex-direction: column; gap: 2px; font-size: .85rem; }
+
+.resultado__goles input {
+    width: 48px;
+    padding: 8px 4px;
+    font: inherit;
+    font-size: 1.1rem;
+    font-weight: 700;
+    text-align: center;
+    color: var(--text);
+    background: var(--bg-elev);
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius-sm);
+}
+
+.resultado__goles input:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
+
+@media (max-width: 560px) {
+    .resultados-form { padding: 14px; }
+    .resultado { gap: 8px; padding: 8px; }
+    .resultado__equipo { flex-direction: column; text-align: center; font-size: .8rem; }
+    .resultado > .resultado__equipo:last-child { flex-direction: column; text-align: center; }
+    .resultado__equipo span:last-child { white-space: normal; }
+    .resultado__goles input { width: 40px; }
+}
