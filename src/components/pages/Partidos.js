@@ -6,7 +6,8 @@ import ResultadosFecha from '../ResultadosFecha';
 import { getTorneoById } from '../../assets/endPoints/torneos.js';
 import { getEquiposByTournament } from '../../assets/endPoints/equipos';
 import { getPartidosByTournament } from '../../assets/endPoints/partidos';
-import { getFechasByTorneo, crearFecha, cancelarFecha, getPagosTorneo } from '../../assets/endPoints/fechas.js';
+import { getFechasByTorneo, crearFecha, cancelarFecha, getPagosTorneo, getSaldosTorneo, getDevolucionesTorneo } from '../../assets/endPoints/fechas.js';
+import Devoluciones from '../Devoluciones';
 import { resumenReglas } from '../../assets/reglasPago.js';
 import { formatPrecio, formatFecha, cobraPorFecha, hoyAR, sumarDias, ANTICIPACION_DIAS } from '../../assets/torneosUtils.js';
 import '../../assets/styles/fechas.css';
@@ -48,6 +49,9 @@ const Partidos = () => {
     const [partidos, setPartidos] = useState([]);
     const [fechas, setFechas] = useState([]);
     const [pagosDetalle, setPagosDetalle] = useState(null); // solo el organizador dueño
+    const [saldos, setSaldos] = useState([]); // saldos a favor de los equipos (solo el organizador dueño)
+    const [devoluciones, setDevoluciones] = useState([]); // saldos que quedaron al terminar (solo el organizador dueño)
+    const [aviso, setAviso] = useState(''); // resultado de cancelar una fecha
     const [estado, setEstado] = useState('loading'); // loading | ok | error
 
     const [abierto, setAbierto] = useState(false);
@@ -72,6 +76,8 @@ const Partidos = () => {
         // El organizador dueño ve quien pago cada fecha
         if (user?.rol === 'organizador' && organizacion?.id === t.organizadorId) {
             getPagosTorneo(torneo).then(d => setPagosDetalle(d && !d.error ? d : null));
+            getSaldosTorneo(torneo).then(d => setSaldos(Array.isArray(d) ? d : []));
+            getDevolucionesTorneo(torneo).then(d => setDevoluciones(Array.isArray(d) ? d : []));
         }
     }, [torneo, user, organizacion]);
 
@@ -110,11 +116,16 @@ const Partidos = () => {
     };
 
     const cancelar = async (f) => {
-        if (!window.confirm(`¿Cancelar la fecha ${f.numero}? Se borran sus partidos.`)) return;
+        const pagaron = f.pagos?.pagados ?? 0;
+        const saldo = pagaron ? ` ${pagaron === 1 ? 'El equipo que ya pagó queda' : `Los ${pagaron} equipos que ya pagaron quedan`} con ese monto como saldo a favor para su próxima fecha.` : '';
+        if (!window.confirm(`¿Cancelar la fecha ${f.numero}? Se borran sus partidos y les avisamos a los capitanes.${saldo}`)) return;
 
+        setAviso('');
         const data = await cancelarFecha(f.id);
         if (!data || data.error) return window.alert(data?.error || 'No pudimos conectar con el servidor');
 
+        const n = data.acreditados?.length ?? 0;
+        setAviso(`Cancelaste la fecha ${f.numero}.${n ? ` ${n === 1 ? '1 equipo quedó' : `${n} equipos quedaron`} con saldo a favor: se usa solo en su próxima fecha.` : ''}`);
         cargar();
     };
 
@@ -129,6 +140,17 @@ const Partidos = () => {
                 </div>
                 {puedeCrear && !abierto && <button type='button' className='btn btn--primary btn--chico' onClick={abrirForm}>+ Crear nueva fecha</button>}
             </div>
+
+            {aviso && <p className='form__ok' role='status'>{aviso}</p>}
+
+            {esDueño && <Devoluciones lista={devoluciones} />}
+
+            {/* Solo el organizador: equipos con saldo a favor (de fechas canceladas que ya habían pagado) */}
+            {esDueño && saldos.length > 0 && (
+                <p className='fecha__pagos fecha__pagos--detalle'>
+                    Saldo a favor (se usa solo en su próxima fecha): {saldos.map(s => `${s.equipo} ${formatPrecio(s.monto)}`).join(' · ')}
+                </p>
+            )}
 
             {abierto && (
                 <form className='fecha-form' onSubmit={enviar}>
@@ -202,13 +224,22 @@ const Partidos = () => {
                                 {/* Solo el organizador: quienes faltan pagar o no pagaron */}
                                 {pagosDetalle?.[f.id] && (() => {
                                     const deben = pagosDetalle[f.id].filter(p => p.estado !== 'pagado');
-                                    if (!deben.length) return null;
+                                    const conSaldo = pagosDetalle[f.id].filter(p => p.estado === 'pagado' && p.conSaldo > 0);
                                     return (
-                                        <p className='fecha__pagos fecha__pagos--detalle'>
-                                            {deben.some(p => p.estado === 'vencido') ? 'No pagaron: ' : 'Falta que paguen: '}
-                                            {deben.map(p => p.equipo).join(', ')}
-                                            {f.reglas?.penalizacion === false && deben.some(p => p.estado === 'vencido') && ' · sin penalización automática: definí vos qué pasa con esos partidos'}
-                                        </p>
+                                        <>
+                                            {deben.length > 0 && (
+                                                <p className='fecha__pagos fecha__pagos--detalle'>
+                                                    {deben.some(p => p.estado === 'vencido') ? 'No pagaron: ' : 'Falta que paguen: '}
+                                                    {deben.map(p => p.equipo).join(', ')}
+                                                    {f.reglas?.penalizacion === false && deben.some(p => p.estado === 'vencido') && ' · sin penalización automática: definí vos qué pasa con esos partidos'}
+                                                </p>
+                                            )}
+                                            {conSaldo.length > 0 && (
+                                                <p className='fecha__pagos fecha__pagos--detalle'>
+                                                    Pagaron con saldo a favor: {conSaldo.map(p => `${p.equipo} (${formatPrecio(p.conSaldo)})`).join(', ')}
+                                                </p>
+                                            )}
+                                        </>
                                     );
                                 })()}
                             </div>

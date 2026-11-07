@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { getMisFechas, pagarFecha } from '../assets/endPoints/fechas.js';
+import { getMisFechas, pagarFecha, getMisDevoluciones } from '../assets/endPoints/fechas.js';
 import { getMisAmistosos } from '../assets/endPoints/amistosos.js';
 import { MODALIDAD_LABEL, formatPrecio, formatFecha, logoSrc } from '../assets/torneosUtils.js';
 import Avatar from './Avatar';
@@ -11,6 +11,7 @@ import MultasPendientes from './MultasPendientes';
 import { getMisMultas } from '../assets/endPoints/multas.js';
 import { textoMulta } from '../assets/reglasPago.js';
 import '../assets/styles/fechas.css';
+import '../assets/styles/devoluciones.css';
 
 const TZ = 'America/Argentina/Buenos_Aires';
 
@@ -25,6 +26,30 @@ const faltan = (ms) => {
 };
 
 const mapsUrl = (t) => `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${t.direccion}, ${t.zona}, Buenos Aires`)}`;
+
+// La parte se cubre entera con el saldo a favor: un botón, sin datos de pago
+const PagarConSaldo = ({ fechaId, onPagado }) => {
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState('');
+
+    const confirmar = async () => {
+        setError('');
+        setLoading(true);
+        const data = await pagarFecha(fechaId, {});
+        setLoading(false);
+        if (!data || data.error) return setError(data?.error || 'No pudimos conectar con el servidor');
+        onPagado();
+    };
+
+    return (
+        <>
+            <button type='button' className='btn btn--primary btn--chico' disabled={loading} onClick={confirmar}>
+                {loading ? 'Un momento...' : 'Pagar con mi saldo a favor'}
+            </button>
+            {error && <p className='form__error' role='alert'>{error}</p>}
+        </>
+    );
+};
 
 // Estado del pago de la fecha (o el resultado del vencimiento si ya paso)
 const EstadoPago = ({ item, ahora, onPagado, conDeuda }) => {
@@ -93,6 +118,12 @@ const EstadoPago = ({ item, ahora, onPagado, conDeuda }) => {
                     <span className='muted'>{formatPrecio(pago.monto)}</span>
                 </div>
             )}
+            {pago.conSaldo > 0 && (
+                <p className='aviso__nota'>
+                    {pago.conSaldo >= pago.monto ? 'La pagaste con tu saldo a favor' : `Usaste ${formatPrecio(pago.conSaldo)} de tu saldo a favor`} (de una fecha cancelada).
+                </p>
+            )}
+            {item.saldo > 0 && <p className='aviso__nota'>Te quedan {formatPrecio(item.saldo)} de saldo a favor para las próximas fechas.</p>}
             {rivalPago === 'pendiente' && (
                 <p className='aviso__nota'>Falta que pague {partido.rival.name}: tiene tiempo hasta las 23:59 del {diaCorto(pago.vence)}.</p>
             )}
@@ -109,11 +140,14 @@ const EstadoPago = ({ item, ahora, onPagado, conDeuda }) => {
 
     const resta = Date.parse(pago.vence) - ahora;
     const urgente = resta < 24 * 3600e3;
+    // Saldo a favor (de una fecha cancelada): se descuenta y se cobra la diferencia (puede ser $0)
+    const usaSaldo = pago.usaSaldo ?? 0;
+    const aPagar = pago.aPagar ?? pago.monto;
 
     return (
         <div className={`aviso ${urgente ? 'aviso--urgente' : 'aviso--pendiente'}`}>
             <div className='aviso--fila'>
-                <strong>Pagá tu parte: {formatPrecio(pago.monto)}</strong>
+                <strong>Pagá tu parte: {formatPrecio(aPagar)}</strong>
                 <span className='aviso__reloj' title={`Vence el ${diaCorto(pago.vence)} a las 23:59`}>⏱ {resta > 0 ? `faltan ${faltan(resta)}` : 'venció'}</span>
             </div>
             <p>
@@ -122,13 +156,22 @@ const EstadoPago = ({ item, ahora, onPagado, conDeuda }) => {
                     ? 'Si no pagás a tiempo, el organizador decide qué pasa con el partido.'
                     : `Si no pagás, perdés 0-3 por W.O.${textoMulta(reglas, fecha.precio) ? ` y recibís ${textoMulta(reglas, fecha.precio)}` : ''}.`}
             </p>
+            {usaSaldo > 0 && (
+                <p className='aviso__nota'>
+                    Tu parte es {formatPrecio(pago.monto)}: descontamos {formatPrecio(usaSaldo)} de tu saldo a favor (de una fecha cancelada)
+                    {aPagar > 0 ? ` y pagás ${formatPrecio(aPagar)}.` : ', así que no tenés que pagar nada: solo confirmalo.'}
+                </p>
+            )}
             {rivalPago === 'pagado' && <p className='aviso__nota'>✓ Tu rival ({partido.rival.name}) ya pagó: solo faltás vos para confirmar el partido.</p>}
 
             {conDeuda ? (
                 <p className='muted'>Primero pagá tus multas pendientes (arriba) para poder pagar esta fecha.</p>
+            ) : aPagar === 0 ? (
+                // El saldo cubre todo: no hace falta tarjeta
+                resta > 0 && <PagarConSaldo fechaId={fecha.id} onPagado={onPagado} />
             ) : pagando ? (
                 <PagoForm
-                    monto={pago.monto}
+                    monto={aPagar}
                     onCancelar={() => setPagando(false)}
                     onPagar={async (body) => {
                         const data = await pagarFecha(fecha.id, body);
@@ -150,14 +193,18 @@ const ProximaFecha = () => {
     const [items, setItems] = useState([]);
     const [amistosos, setAmistosos] = useState([]);
     const [multas, setMultas] = useState(null); // { total, multas }
+    const [devoluciones, setDevoluciones] = useState([]); // saldo a favor que quedó al terminar un torneo
     const [ahora, setAhora] = useState(Date.now());
 
     const cargar = useCallback(() => {
-        if (user?.rol !== 'capitan') { setItems([]); setAmistosos([]); setMultas(null); return; }
+        if (user?.rol !== 'capitan') { setItems([]); setAmistosos([]); setMultas(null); setDevoluciones([]); return; }
 
         getMisFechas().then(data => setItems(Array.isArray(data) ? data : []));
         getMisAmistosos().then(data => setAmistosos(Array.isArray(data) ? data : []));
         getMisMultas().then(data => setMultas(data && !data.error ? data : null));
+        // Las pendientes y las devueltas de los últimos 30 días
+        getMisDevoluciones().then(data => setDevoluciones(Array.isArray(data)
+            ? data.filter(d => d.estado === 'pendiente' || Date.now() - Date.parse(d.devuelta) < 30 * 864e5) : []));
     }, [user])
 
     useEffect(() => { cargar(); }, [cargar])
@@ -170,11 +217,29 @@ const ProximaFecha = () => {
 
     const total = items.length + amistosos.length;
     const conDeuda = multas?.total > 0;
-    if (!total && !conDeuda) return null;
+    if (!total && !conDeuda && !devoluciones.length) return null;
 
     return (
         <section className='proxima'>
             <MultasPendientes data={multas} onPagado={cargar} />
+
+            {devoluciones.length > 0 && (
+                <section className={`devoluciones${devoluciones.some(d => d.estado === 'pendiente') ? ' devoluciones--pendientes' : ''}`}>
+                    <strong>Saldo a favor por devolver</strong>
+                    <p className='devoluciones__texto'>Terminó un torneo y te quedó saldo de una fecha cancelada que ya habías pagado: el organizador te tiene que devolver el monto completo.</p>
+                    <ul className='devoluciones__lista'>
+                        {devoluciones.map(d => (
+                            <li key={d.id} className='devoluciones__item'>
+                                <span><strong>{d.torneo}</strong> · {d.organizador}</span>
+                                <span className='devoluciones__monto'>{formatPrecio(d.monto)}</span>
+                                {d.estado === 'pendiente'
+                                    ? (d.whatsapp && <a className='btn btn--secundario btn--chico' href={`https://wa.me/${d.whatsapp}`} target='_blank' rel='noreferrer'>Escribirle</a>)
+                                    : <span className='devoluciones__hecha'>✓ Te la devolvieron</span>}
+                            </li>
+                        ))}
+                    </ul>
+                </section>
+            )}
 
             {total > 0 && <h2>{total === 1 ? 'Tu próxima fecha' : 'Tus próximas fechas'}</h2>}
 

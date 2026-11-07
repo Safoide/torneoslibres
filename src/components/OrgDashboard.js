@@ -4,6 +4,7 @@ import { formatMonto as plata, formatFecha } from '../assets/torneosUtils.js';
 import '../assets/styles/torneo.css';
 import '../assets/styles/dashboard.css';
 import { SkeletonDashboard } from './Skeleton';
+import Devoluciones from './Devoluciones';
 
 const numero = (n) => new Intl.NumberFormat('es-AR').format(n);
 
@@ -74,6 +75,8 @@ const OrgDashboard = ({ data }) => {
 
     return (
         <div className='dash'>
+            {data.devoluciones?.length > 0 && <Devoluciones lista={data.devoluciones} conTorneo />}
+
             {totales.resultadosPendientes > 0 && (
                 <div className='dash-aviso' role='status'>
                     <strong>⚠ {totales.resultadosPendientes} {totales.resultadosPendientes === 1 ? 'partido jugado no tiene' : 'partidos jugados no tienen'} resultado cargado.</strong>

@@ -19,8 +19,16 @@ export { getFechasByTorneo, getMisFechas, crearFecha, cancelarFecha };
 // El capitan paga la parte de su equipo. body: { metodo: 'tarjeta' | 'mercadopago', simular?: 'rechazado' }
 export const pagarFecha = (fechaId, body) => apiPOST(API_BASEURL + '/' + fechaId + '/pagar', body);
 
-// Quien pago cada fecha de un torneo (solo el organizador dueño): { [fechaId]: [{ equipoId, equipo, estado, monto }] }
+// Quien pago cada fecha de un torneo (solo el organizador dueño): { [fechaId]: [{ equipoId, equipo, estado, monto, conSaldo }] }
 export const getPagosTorneo = (torId) => apiGET(API_BASEURL + '/torneo/' + torId + '/pagos');
 
 // Cargar o corregir resultados de una fecha terminada (organizador dueño). resultados: [{ id, home_goals, away_goals }]
 export const cargarResultados = (fechaId, resultados) => apiPUT(API_BASEURL + '/' + fechaId + '/resultados', { resultados });
+
+// Saldos a favor de los equipos (de fechas canceladas que ya habían pagado). Solo el organizador dueño: [{ equipoId, equipo, monto }]
+export const getSaldosTorneo = (torId) => apiGET(API_BASEURL + '/torneo/' + torId + '/saldos');
+
+// Devoluciones: saldo a favor que quedó al terminar un torneo. [{ id, equipoId, equipo, tor_id, torneo, monto, estado: 'pendiente' | 'devuelta', creada, devuelta }]
+export const getMisDevoluciones = () => apiGET(API_BASEURL + '/devoluciones/mias'); // capitán (incluye whatsapp y organizador del torneo)
+export const getDevolucionesTorneo = (torId) => apiGET(API_BASEURL + '/torneo/' + torId + '/devoluciones'); // organizador dueño
+export const marcarDevuelta = (id) => apiPUT(API_BASEURL + '/devoluciones/' + id + '/devuelta', {}); // organizador dueño
