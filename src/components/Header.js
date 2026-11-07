@@ -76,7 +76,7 @@ const Header = () => {
             : null;
 
     return (
-        <header className='header'>
+        <header className={`header${user ? ' header--sesion' : ''}`}>
             <div className='headerContainer'>
                 {/* Se muestra uno solo segun el tema y el ancho de pantalla (ver header.css) */}
                 <Link to='/' className='headerLogo' aria-label='Torneos Libres, inicio'>
@@ -86,16 +86,16 @@ const Header = () => {
                 </Link>
                 <nav className='navBar' aria-label='Secciones'>
                     {inicio && (
-                        <NavLink to={inicio.to} className='navLink' aria-label={inicio.label}>
+                        <NavLink to={inicio.to} className='navLink' aria-label={inicio.label} title={inicio.label}>
                             {inicio.icono}
                             <span className='navLink__texto'>{inicio.label}</span>
                         </NavLink>
                     )}
-                    <NavLink to='/torneos' className='navLink' aria-label='Explorar torneos'>
+                    <NavLink to='/torneos' className='navLink' aria-label='Explorar torneos' title='Explorar torneos'>
                         {ICONO_TORNEOS}
                         <span className='navLink__texto'>Explorar torneos</span>
                     </NavLink>
-                    <NavLink to='/amistosos' className='navLink' aria-label='Amistosos express'>
+                    <NavLink to='/amistosos' className='navLink' aria-label='Amistosos express' title='Amistosos express'>
                         {ICONO_AMISTOSOS}
                         <span className='navLink__texto'>Amistosos</span>
                     </NavLink>

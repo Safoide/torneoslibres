@@ -1,6 +1,6 @@
 /* Dropdown "Mi cuenta" */
 
-.cuenta { position: relative; }
+.cuenta { position: relative; flex-shrink: 0; }
 
 .cuenta__btn {
     display: flex;
@@ -30,6 +30,7 @@
     font-weight: 800;
 }
 
+.cuenta__texto { white-space: nowrap; }
 .cuenta__flecha { color: var(--muted); font-size: .75rem; }
 
 .cuenta__panel {

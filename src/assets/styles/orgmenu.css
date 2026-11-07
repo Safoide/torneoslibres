@@ -65,3 +65,8 @@
     .orgmenu__btn > span:nth-last-child(2) { display: none; }
     .orgmenu__btn { padding-right: 10px; }
 }
+
+/* Si falta lugar en el header se recorta el nombre (no empuja al resto fuera de la pantalla) */
+.orgmenu { min-width: 0; }
+.orgmenu__btn { max-width: 100%; }
+.orgmenu__btn > :first-child, .orgmenu__btn > span:last-child { flex-shrink: 0; }

@@ -72,7 +72,9 @@
 .navLink.active .navLink__icono { color: var(--accent); }
 .navLink.active::after { background: var(--accent); }
 
-.userInfo { display: flex; align-items: center; gap: 10px; }
+/* El logo y la navegacion no se achican: si falta lugar se recorta el nombre del equipo / organizacion */
+.navBar { flex-shrink: 0; }
+.userInfo { display: flex; align-items: center; gap: 10px; min-width: 0; }
 
 .userInfo > span {
     max-width: 140px;
@@ -114,17 +116,37 @@
 
 .logoutBtn:hover { background: var(--danger-soft); border-color: transparent; color: var(--danger); }
 
+/* Se va achicando por pasos (con sesion los menus de la derecha ocupan bastante mas):
+   1100: "Mi cuenta" queda solo con la inicial
+   940 con sesion / 860 sin sesion: la navegacion queda solo con los iconos
+   760: botones y logo mas chicos; el menu del equipo / organizacion queda solo con el logo */
+@media (max-width: 1100px) {
+    .header--sesion .cuenta__texto { display: none; }
+    .header--sesion .cuenta__btn { padding-right: 10px; }
+}
+
+@media (max-width: 940px) {
+    .header--sesion .navBar { margin-left: 8px; }
+    .header--sesion .navLink { padding: 0 10px; }
+    .header--sesion .navLink::after { left: 4px; right: 4px; }
+    .header--sesion .navLink__texto { display: none; }
+}
+
+@media (max-width: 860px) {
+    .navBar { margin-left: 8px; }
+    .navLink { padding: 0 10px; }
+    .navLink::after { left: 4px; right: 4px; }
+    .navLink__texto { display: none; }
+}
+
 @media (max-width: 760px) {
     .header { padding: 0 14px; }
     .headerLogo__img { height: 28px; }
     .userInfo > span { display: none; }
     .headerContainer { justify-content: space-between; gap: 8px; }
     .headerLogo { margin-right: auto; }
-    .navBar { margin: 0; }
-    /* En el celu quedan solo los iconos */
-    .navLink { padding: 0 9px; }
-    .navLink::after { left: 4px; right: 4px; }
-    .navLink__texto { display: none; }
+    .navBar, .header--sesion .navBar { margin: 0; }
+    .navLink, .header--sesion .navLink { padding: 0 9px; }
     .userInfo { gap: 8px; }
     .userInfo > a, .logoutBtn { padding: 7px 11px; font-size: .7rem; }
 }
@@ -146,5 +168,14 @@
     .headerContainer { padding: 0 4px; gap: 6px; }
     .navLink { padding: 0 7px; }
     .userInfo { gap: 6px; }
-    .cuenta__flecha, .orgmenu__btn > span:last-child { display: none; }
+    .userInfo .cuenta__flecha, .userInfo .orgmenu__btn > span:last-child { display: none; }
+    .userInfo .cuenta__btn, .userInfo .orgmenu__btn { padding: 3px; }
+}
+
+/* Los mas chicos (320px o menos): escudo y separaciones al minimo */
+@media (max-width: 330px) {
+    .headerContainer { padding: 0; gap: 4px; }
+    .headerLogo__img--mobile { height: 34px; }
+    .navLink, .header--sesion .navLink { padding: 0 6px; }
+    .navLink::after { left: 2px; right: 2px; }
 }
