@@ -24,7 +24,13 @@ import EquipoForm from './components/pages/EquipoForm';
 import MiEquipo from './components/pages/MiEquipo';
 import CuentaDatos from './components/pages/CuentaDatos';
 import CuentaAjustes from './components/pages/CuentaAjustes';
+import Terminos from './components/pages/Terminos';
+import Privacidad from './components/pages/Privacidad';
+import Contacto from './components/pages/Contacto';
+import Ayuda from './components/pages/Ayuda';
 import Header from './components/Header';
+import Footer from './components/Footer';
+import AceptarTerminos from './components/AceptarTerminos';
 import 'boxicons';
 
 // Cada cambio de pantalla vuelve a montar el contenedor y corre la animación de entrada (.pagina en animaciones.css)
@@ -64,8 +70,15 @@ function App() {
                         <Route path='/cuenta/ajustes' element={<CuentaAjustes />} />
                         <Route path='/mi-equipo' element={<MiEquipo />} />
                         <Route path='/mi-equipo/editar' element={<EquipoForm modo='editar' />} />
+                        <Route path='/terminos' element={<Terminos />} />
+                        <Route path='/privacidad' element={<Privacidad />} />
+                        <Route path='/contacto' element={<Contacto />} />
+                        <Route path='/ayuda' element={<Ayuda />} />
                     </Routes>
                 </Pagina>
+                <Footer />
+                {/* Al final: en /terminos y /privacidad es una barra pegada abajo (sticky); en el resto tapa la página */}
+                <AceptarTerminos />
             </BrowserRouter>
         </AuthProvider>
     );

@@ -1,0 +1,63 @@
+/* Aviso para aceptar los términos y la privacidad (components/AceptarTerminos.js) */
+
+/* ---------- Modal: tapa la página ---------- */
+.terminos-fondo {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+    background: var(--photo-scrim);
+    backdrop-filter: blur(3px);
+    animation: aparecer var(--dur) var(--curva) backwards;
+}
+
+.terminos-modal {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+    max-width: 480px;
+    padding: 26px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow);
+}
+
+.terminos-modal h2 { font-size: 1.35rem; font-weight: 800; letter-spacing: -.02em; }
+.terminos-modal p { color: var(--text-soft); line-height: 1.55; }
+.terminos-modal a { color: var(--link); font-weight: 600; }
+.terminos-modal a:hover { text-decoration: underline; }
+
+.terminos-modal__acciones { display: flex; flex-direction: column; align-items: center; gap: 12px; margin-top: 6px; }
+.terminos-modal__acciones .btn { width: 100%; }
+
+/* ---------- Barra: en /terminos y /privacidad, para leerlos antes de aceptar ---------- */
+.terminos-barra {
+    position: sticky;
+    bottom: 0;
+    z-index: 50;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 10px 18px;
+    padding: 14px 20px;
+    background: var(--surface);
+    border-top: 1px solid var(--border-strong);
+    box-shadow: 0 -8px 24px var(--inset);
+    font-size: .92rem;
+    color: var(--text-soft);
+    text-align: center;
+}
+
+.terminos-barra strong { color: var(--text); }
+
+@media (max-width: 560px) {
+    .terminos-modal { padding: 22px 18px; }
+    .terminos-barra { padding: 12px 16px; }
+    .terminos-barra .btn { width: 100%; }
+}

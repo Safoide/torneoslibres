@@ -1,0 +1,47 @@
+/* Pie de todas las páginas (components/Footer.js) */
+
+/* En las páginas cortas el pie queda abajo de la pantalla, no pegado al contenido */
+.pagina { min-height: calc(100vh - var(--header-h)); }
+
+.footer {
+    width: 100%;
+    padding: 32px 20px 28px;
+    border-top: 1px solid var(--border);
+    background: var(--bg-elev);
+    font-size: .85rem;
+    color: var(--muted);
+}
+
+.footer__contenido,
+.footer__legal {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 16px 32px;
+    max-width: 1140px;
+    margin: 0 auto;
+}
+
+.footer__marca { display: flex; flex-direction: column; gap: 4px; }
+.footer__marca strong { font-size: .95rem; color: var(--text); }
+
+.footer__links { display: flex; flex-wrap: wrap; align-items: flex-start; gap: 10px 22px; }
+
+.footer a { color: var(--text-soft); transition: color var(--ease); }
+.footer a:hover { color: var(--text); text-decoration: underline; }
+
+.footer__legal {
+    gap: 8px 24px;
+    margin-top: 24px;
+    padding-top: 18px;
+    border-top: 1px solid var(--border);
+    font-size: .8rem;
+}
+
+.footer__legal a { color: var(--muted); }
+
+@media (max-width: 560px) {
+    .footer { padding: 28px 16px 24px; }
+    .footer__links { flex-direction: column; gap: 10px; }
+    .footer__legal { flex-direction: column; }
+}

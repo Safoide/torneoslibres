@@ -1,0 +1,142 @@
+/* Páginas de texto largo: términos, privacidad y preguntas frecuentes (components/Documento.js, pages/Ayuda.js).
+   También el campo trampa y el contador del formulario de contacto. */
+
+.legal {
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+    width: 100%;
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 44px 20px 80px;
+    line-height: 1.65;
+}
+
+.legal__encabezado { display: flex; flex-direction: column; gap: 8px; }
+.legal__encabezado h1 { font-size: clamp(1.8rem, 4vw, 2.3rem); font-weight: 800; letter-spacing: -.03em; line-height: 1.15; }
+.legal__bajada { font-size: 1.05rem; color: var(--text-soft); }
+
+/* ---------- Índice ---------- */
+.legal__indice {
+    padding: 18px 22px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+}
+
+.legal__indice h2 { margin-bottom: 8px; font-size: .8rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+.legal__indice ol { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 4px 24px; padding-left: 22px; }
+.legal__indice li { color: var(--muted); font-size: .92rem; }
+
+.legal a { color: var(--link); }
+.legal a:hover { text-decoration: underline; }
+.legal a.btn, .legal a.btn:hover { color: var(--accent-contrast); text-decoration: none; }
+
+/* Índice de la FAQ: temas como chips */
+.legal__indice--chips { display: flex; flex-wrap: wrap; gap: 8px; padding: 0; background: none; border: 0; }
+.legal__indice--chips a {
+    padding: 7px 14px;
+    border: 1px solid var(--border-strong);
+    border-radius: 999px;
+    color: var(--text-soft);
+    font-size: .88rem;
+    font-weight: 600;
+    transition: border-color var(--ease), color var(--ease);
+}
+.legal__indice--chips a:hover { border-color: var(--accent); color: var(--text); text-decoration: none; }
+
+/* ---------- Secciones ---------- */
+.legal__seccion {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    scroll-margin-top: calc(var(--header-h) + 16px); /* que el header fijo no tape el título al ir a #seccion */
+}
+
+.legal__seccion h2 { font-size: 1.25rem; font-weight: 800; letter-spacing: -.02em; }
+.legal__numero { color: var(--accent); }
+.legal__seccion p,
+.legal__seccion li { color: var(--text-soft); }
+.legal__seccion strong { color: var(--text); }
+.legal__seccion ul { display: flex; flex-direction: column; gap: 8px; padding-left: 22px; list-style: disc; }
+.legal__seccion li::marker { color: var(--accent); }
+
+/* Texto legal obligatorio (leyenda de la Ley 25.326) */
+.legal__aviso {
+    padding: 14px 16px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    font-size: .88rem;
+}
+
+/* Dato todavía sin cargar en assets/legal.js */
+.legal__falta {
+    padding: 1px 6px;
+    border-radius: 6px;
+    background: var(--amber-soft);
+    color: var(--amber);
+    font-weight: 700;
+}
+
+.legal__cierre { align-items: flex-start; }
+.legal__cierre p { color: var(--text-soft); }
+
+/* ---------- Preguntas frecuentes ---------- */
+.faq {
+    display: flex;
+    flex-direction: column;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+}
+
+.faq__item + .faq__item { border-top: 1px solid var(--border); }
+
+.faq__item summary {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    padding: 15px 20px;
+    font-weight: 600;
+    color: var(--text);
+    cursor: pointer;
+    list-style: none;
+    transition: background var(--ease);
+}
+
+.faq__item summary::-webkit-details-marker { display: none; }
+.faq__item summary:hover { background: var(--hover); }
+
+.faq__item summary::after {
+    content: '';
+    flex-shrink: 0;
+    width: 16px;
+    height: 16px;
+    background: var(--chevron) center / contain no-repeat;
+    transition: transform var(--dur) var(--curva);
+}
+
+.faq__item[open] summary::after { transform: rotate(180deg); }
+.faq__item p { padding: 0 20px 18px; }
+
+/* ---------- Contacto ---------- */
+.contacto__contador { align-self: flex-end; }
+
+/* Campo trampa para robots: fuera de la pantalla (no display:none, que algunos robots detectan) */
+.contacto__trampa {
+    position: absolute;
+    left: -10000px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+}
+
+@media (max-width: 560px) {
+    .legal { padding: 32px 16px 64px; gap: 24px; }
+    .legal__indice ol { grid-template-columns: 1fr; }
+    .faq__item summary { padding: 14px 16px; }
+    .faq__item p { padding: 0 16px 16px; }
+}
