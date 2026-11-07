@@ -10,6 +10,7 @@ import cierreImg from '../../assets/imgs/landing/cierre.jpg';
 import { SkeletonCifras, SkeletonTarjetasTorneo } from '../Skeleton';
 import '../../assets/styles/buscador.css';
 import '../../assets/styles/landing.css';
+import useTitulo from '../useTitulo';
 
 // Fotos: Unsplash (licencia libre). hero 1431324155629, capitanes 1560272564, organizadores 1556056504, cierre 1529900748604
 
@@ -31,6 +32,7 @@ const numero = (n) => new Intl.NumberFormat('es-AR').format(n);
 
 // Pagina de entrada para quien no inició sesión
 const Landing = () => {
+    useTitulo('Torneos de fútbol 5, 7, 8 y 11 en Buenos Aires');
     const [torneos, setTorneos] = useState(undefined); // undefined = cargando, null = sin conexion
     const [orgs, setOrgs] = useState(null);
 

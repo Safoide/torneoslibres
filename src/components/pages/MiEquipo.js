@@ -7,8 +7,10 @@ import TorneosAnotados from '../TorneosAnotados';
 import '../../assets/styles/organizador.css';
 import '../../assets/styles/torneo.css';
 import { SkeletonPerfil } from '../Skeleton';
+import useTitulo from '../useTitulo';
 
 const MiEquipo = () => {
+    useTitulo('Mi equipo');
     const { user, loading, equipo } = useAuth();
 
     if (loading || (user?.rol === 'capitan' && equipo === undefined)) return <SkeletonPerfil />;

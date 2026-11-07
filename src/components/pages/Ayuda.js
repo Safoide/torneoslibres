@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { useIrAlInicio } from '../Documento';
 import { MODELO_COBRO_ACTIVO } from '../../assets/legal.js';
 import '../../assets/styles/legal.css';
+import useTitulo from '../useTitulo';
 
 // Preguntas frecuentes (/ayuda). Tienen que coincidir con cómo funciona la app: si cambia una regla
 // (vencimientos, W.O., inscripción), actualizar la respuesta acá también.
@@ -64,6 +65,7 @@ const GRUPOS = [
 ];
 
 const Ayuda = () => {
+    useTitulo('Preguntas frecuentes', 'Cómo inscribir a tu equipo, cómo se pagan las fechas, qué pasa si no pagás a tiempo y cómo publicar un torneo en Torneos Libres.');
     useIrAlInicio();
 
     return (

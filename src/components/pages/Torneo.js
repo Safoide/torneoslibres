@@ -13,6 +13,7 @@ import { useAuth } from '../../context/AuthContext';
 import { resumenReglas } from '../../assets/reglasPago.js';
 import ReglasPagoEditor from '../ReglasPagoEditor';
 import { SkeletonTorneo } from '../Skeleton';
+import useTitulo from '../useTitulo';
 
 
 // Los logos de equipos son archivos en src/assets/imgs. Si no existe, devuelve null (se muestra la inicial)
@@ -25,6 +26,8 @@ const Torneo = () => {
     const [tor, setTor] = useState(null);
     const [equipos, setEquipos] = useState([]);
     const [status, setStatus] = useState('loading'); // loading | ok | notfound | error
+    useTitulo(status === 'ok' ? tor.nombre : status === 'notfound' ? 'Torneo no encontrado' : 'Torneo',
+        status === 'ok' ? `Torneo de ${MODALIDAD_LABEL[tor.modalidad]} en ${tor.zona} (${tor.sede}). Inscripción, fixture, tabla y resultados en Torneos Libres.` : undefined);
 
     useEffect(() => {
         setStatus('loading');

@@ -2,10 +2,12 @@ import React, { useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom';
 import { olvidePassword } from '../../assets/endPoints/auth.js';
 import '../../assets/styles/formularios.css';
+import useTitulo from '../useTitulo';
 
 // Pedir el link para cambiar la contraseña. La API responde lo mismo exista o no la cuenta,
 // así que el mensaje tampoco lo dice
 const OlvidePassword = () => {
+    useTitulo('Olvidé mi contraseña');
     const [params] = useSearchParams();
     const [email, setEmail] = useState(params.get('email') ?? '');
     const [enviado, setEnviado] = useState('');

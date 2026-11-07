@@ -9,6 +9,7 @@ import ReglasPagoCampos from '../ReglasPagoCampos';
 import { REGLAS_INICIALES } from '../../assets/reglasPago.js';
 import LimiteEdadCampos, { LIMITE_EDAD_INICIAL, limiteEdadParaApi } from '../LimiteEdadCampos';
 import CierreCampos, { CIERRE_INICIAL, cierreParaApi } from '../CierreCampos';
+import useTitulo from '../useTitulo';
 
 const Campo = ({ id, label, completo, children }) => (
     <div className={`form__campo${completo ? ' form__campo--completo' : ''}`}>
@@ -27,6 +28,7 @@ const INICIAL = {
 };
 
 const CrearTorneo = () => {
+    useTitulo('Crear torneo');
     const { user, loading: cargandoSesion, organizacion } = useAuth();
     const navigate = useNavigate();
 

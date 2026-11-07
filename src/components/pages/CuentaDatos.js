@@ -5,10 +5,12 @@ import { editarMisDatos, cambiarPassword } from '../../assets/endPoints/auth.js'
 import '../../assets/styles/formularios.css';
 import { SkeletonFormulario } from '../Skeleton';
 import AvisoVerificacion from '../AvisoVerificacion';
+import useTitulo from '../useTitulo';
 
 const ROL_LABEL = { capitan: 'Capitán', organizador: 'Organizador' };
 
 const CuentaDatos = () => {
+    useTitulo('Mis datos');
     const { user, setUser, guardarToken, loading, equipo, setEquipo } = useAuth();
 
     const [datos, setDatos] = useState({ nombre: '', email: '', password: '', whatsapp: '' });

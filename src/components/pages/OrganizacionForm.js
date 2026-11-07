@@ -9,10 +9,12 @@ import Avatar from '../Avatar';
 import '../../assets/styles/formularios.css';
 import '../../assets/styles/equipo-propio.css';
 import { SkeletonFormulario } from '../Skeleton';
+import useTitulo from '../useTitulo';
 
 const VACIO = { nombre: '', zona: '', descripcion: '', instagram: '', whatsapp: '', logo: '' };
 
 const OrganizacionForm = ({ modo }) => {
+    useTitulo(modo === 'crear' ? 'Crear organización' : 'Editar organización');
     const esEditar = modo === 'editar';
     const { user, loading: cargandoSesion, organizacion, setOrganizacion } = useAuth();
     const navigate = useNavigate();

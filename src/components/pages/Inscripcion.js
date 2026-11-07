@@ -7,12 +7,14 @@ import { MODALIDAD_LABEL, MIN_JUGADORES, formatPrecio, formatFecha, textoLimiteE
 import '../../assets/styles/formularios.css';
 import { SkeletonFormulario } from '../Skeleton';
 import PagoForm from '../PagoForm';
+import useTitulo from '../useTitulo';
 
 const Inscripcion = () => {
     const { torneo: torId } = useParams();
     const { user, loading: cargandoSesion, equipo } = useAuth();
 
     const [tor, setTor] = useState(null); // null = cargando, false = no existe
+    useTitulo(tor?.nombre ? `Inscripción · ${tor.nombre}` : 'Inscripción');
     const [step, setStep] = useState('resumen'); // resumen | pago | ok
     const [insc, setInsc] = useState(null);
     const [error, setError] = useState('');

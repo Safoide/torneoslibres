@@ -7,12 +7,14 @@ import Avatar from '../Avatar';
 import '../../assets/styles/formularios.css';
 import '../../assets/styles/equipo-propio.css';
 import { SkeletonFormulario } from '../Skeleton';
+import useTitulo from '../useTitulo';
 
 const MAX_JUGADORES = 30;
 const MIN_NACIMIENTO = `${new Date().getFullYear() - 80}-01-01`; // la API acepta de 10 a 80 años
 const JUGADOR_VACIO = { nombre: '', apellido: '', dni: '', nacimiento: '' };
 
 const EquipoForm = ({ modo }) => {
+    useTitulo(modo === 'crear' ? 'Crear equipo' : 'Editar equipo');
     const esEditar = modo === 'editar';
     const { user, loading: cargandoSesion, equipo, setEquipo } = useAuth();
     const navigate = useNavigate();

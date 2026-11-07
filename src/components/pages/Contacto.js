@@ -5,6 +5,7 @@ import { enviarContacto } from '../../assets/endPoints/contacto.js';
 import { EmailContacto, useIrAlInicio } from '../Documento';
 import '../../assets/styles/formularios.css';
 import '../../assets/styles/legal.css';
+import useTitulo from '../useTitulo';
 
 // Los mismos ids que MOTIVOS en la API (routes/contacto.route.js), que los valida
 const MOTIVOS = [
@@ -20,6 +21,7 @@ const MOTIVOS = [
 const MAX_MENSAJE = 3000;
 
 const Contacto = () => {
+    useTitulo('Contacto', '¿Tenés una consulta, un problema con un torneo o una idea? Escribinos y te respondemos por mail.');
     useIrAlInicio();
     const { user } = useAuth();
     // sitioWeb: campo trampa para robots (oculto; una persona no lo completa)

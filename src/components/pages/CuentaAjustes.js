@@ -8,6 +8,7 @@ import '../../assets/styles/ajustes.css';
 import { SkeletonFormulario } from '../Skeleton';
 import GoogleBoton, { GOOGLE_CLIENT_ID } from '../GoogleBoton';
 import NotificacionesAjustes from '../NotificacionesAjustes';
+import useTitulo from '../useTitulo';
 
 const TEMAS = [['oscuro', 'Oscuro'], ['claro', 'Claro'], ['auto', 'Automático']];
 const TEXTOS = [['normal', 'Normal'], ['grande', 'Grande']];
@@ -26,6 +27,7 @@ const Segmentado = ({ nombre, valor, opciones, onChange }) => (
 );
 
 const CuentaAjustes = () => {
+    useTitulo('Ajustes de la cuenta');
     const { user, loading, organizacion, equipo, logout } = useAuth();
     const navigate = useNavigate();
     const { hash } = useLocation();

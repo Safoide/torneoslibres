@@ -12,6 +12,7 @@ import { resumenReglas } from '../../assets/reglasPago.js';
 import { formatPrecio, formatFecha, cobraPorFecha, hoyAR, sumarDias, ANTICIPACION_DIAS } from '../../assets/torneosUtils.js';
 import '../../assets/styles/fechas.css';
 import { SkeletonFixture } from '../Skeleton';
+import useTitulo from '../useTitulo';
 
 const ESTADO_FECHA = { programada: 'Programada', 'en-juego': 'En juego', jugada: 'Jugada' };
 const DIAS = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
@@ -45,6 +46,7 @@ const Partidos = () => {
     const { user, organizacion } = useAuth();
 
     const [tor, setTor] = useState(null);
+    useTitulo(tor?.nombre ? `Fixture · ${tor.nombre}` : 'Fixture', tor?.nombre ? `Fixture, resultados y tabla de posiciones de ${tor.nombre}.` : undefined);
     const [equipos, setEquipos] = useState({});
     const [partidos, setPartidos] = useState([]);
     const [fechas, setFechas] = useState([]);

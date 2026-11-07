@@ -7,12 +7,14 @@ import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import { getJugadoresByTeam } from '../../assets/endPoints/jugadores';
 import { logoSrc } from '../../assets/torneosUtils.js';
 import { Cargando, Sk } from '../Skeleton';
+import useTitulo from '../useTitulo';
 
 const Equipo = () => {
 
     const { teamId } = useParams();
 
     const [equipo, setEquipo] = useState(undefined);
+    useTitulo(equipo?.name || 'Equipo');
     const [jugadores, setJugadores] = useState([]);
     const [partidos, setPartidos] = useState([]);
 

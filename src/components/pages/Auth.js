@@ -5,6 +5,7 @@ import GoogleBoton, { GOOGLE_CLIENT_ID } from '../GoogleBoton';
 import logoGoogle from '../../assets/imgs/google-g.svg';
 import { VERSION_LEGAL } from '../../assets/legal.js';
 import '../../assets/styles/formularios.css';
+import useTitulo from '../useTitulo';
 
 // Cuentas que crea casos-prueba.mjs en la API. Solo se muestran en desarrollo (npm start), nunca en el build.
 const PASSWORD_PRUEBA = 'Prueba123';
@@ -22,6 +23,7 @@ const ROLES = [
 ];
 
 const Auth = ({ modo }) => {
+    useTitulo(modo === 'registro' ? 'Crear cuenta' : 'Iniciar sesión');
     const { user, login, registro, loginGoogle, aplicarSesion } = useAuth();
     const location = useLocation();
     const [params] = useSearchParams();

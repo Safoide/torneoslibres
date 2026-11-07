@@ -11,12 +11,14 @@ import { diaAmistoso, horaAmistoso } from './Amistosos';
 import '../../assets/styles/torneo.css';
 import '../../assets/styles/fechas.css';
 import '../../assets/styles/amistosos.css';
+import useTitulo from '../useTitulo';
 
 // Un amistoso express: es la pagina del link que comparte el capitan. Desde aca se toma y se paga.
 const Amistoso = () => {
     const { id } = useParams();
     const { user, equipo } = useAuth();
     const [a, setA] = useState(undefined); // undefined = cargando, null = no existe
+    useTitulo(a && !a.error ? `Amistoso · ${a.torneo}` : 'Amistoso', a && !a.error ? `Partido amistoso de ${MODALIDAD_LABEL[a.modalidad]} en ${a.sede}, ${a.zona}. Un lugar libre del torneo ${a.torneo}, a mitad de precio.` : undefined);
     const [pagando, setPagando] = useState(false);
     const [tomado, setTomado] = useState(false); // lo acabo de tomar yo
 

@@ -6,6 +6,7 @@ import Avatar from '../Avatar';
 import { SkeletonTarjetasTorneo } from '../Skeleton';
 import '../../assets/styles/buscador.css';
 import '../../assets/styles/amistosos.css';
+import useTitulo from '../useTitulo';
 
 const TZ = 'America/Argentina/Buenos_Aires';
 // "lunes, 9 de noviembre" -> "Lunes, 9 de noviembre"
@@ -49,6 +50,7 @@ export const TarjetaAmistoso = ({ a }) => (
 
 // Seccion "Amistosos express": lugares que quedaron libres porque un equipo no pago su fecha
 const Amistosos = () => {
+    useTitulo('Amistosos', 'Partidos amistosos de fútbol en Buenos Aires: lugares libres de torneos a mitad de precio. El primero que lo paga se queda con el partido.');
     const [lista, setLista] = useState(undefined); // undefined = cargando, null = error
 
     useEffect(() => {

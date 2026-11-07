@@ -5,9 +5,11 @@ import { useAuth } from '../../context/AuthContext';
 import AvisoVerificacion from '../AvisoVerificacion';
 import { SkeletonFormulario } from '../Skeleton';
 import '../../assets/styles/formularios.css';
+import useTitulo from '../useTitulo';
 
 // Link del mail: /verificar#<token>. Funciona con o sin la sesión iniciada; el token se saca de la barra de direcciones
 const VerificarEmail = () => {
+    useTitulo('Verificar email');
     const { user, refrescarUsuario } = useAuth();
     const [token] = useState(() => window.location.hash.slice(1));
     const [estado, setEstado] = useState('verificando'); // verificando | ok | error

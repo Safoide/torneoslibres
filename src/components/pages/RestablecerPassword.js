@@ -4,10 +4,12 @@ import { revisarLink, restablecerPassword } from '../../assets/endPoints/auth.js
 import { useAuth } from '../../context/AuthContext';
 import { SkeletonFormulario } from '../Skeleton';
 import '../../assets/styles/formularios.css';
+import useTitulo from '../useTitulo';
 
 // Link del mail: /restablecer#<token>. El token va después del # para que el navegador no lo mande
 // a ningún servidor; apenas se lee se saca de la barra de direcciones (y del historial)
 const RestablecerPassword = () => {
+    useTitulo('Elegir contraseña nueva');
     const { aplicarSesion } = useAuth();
     const [token] = useState(() => window.location.hash.slice(1));
 

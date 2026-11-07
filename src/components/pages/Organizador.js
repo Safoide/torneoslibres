@@ -9,6 +9,7 @@ import '../../assets/styles/organizador.css';
 import { useAuth } from '../../context/AuthContext';
 import { logoSrc } from '../../assets/torneosUtils.js';
 import { SkeletonPerfil } from '../Skeleton';
+import useTitulo from '../useTitulo';
 
 // Pestañas que ve el organizador en su propio perfil. La primera es la que se abre por defecto
 const TABS = [
@@ -19,6 +20,8 @@ const TABS = [
 const Organizador = () => {
     const { orgId } = useParams();
     const [org, setOrg] = useState(null); // null = cargando, false = no existe
+    useTitulo(org?.nombre || (org === false ? 'Organización no encontrada' : 'Organización'),
+        org?.nombre ? (org.descripcion || `Torneos de fútbol organizados por ${org.nombre}.`) : undefined);
     const [dashboard, setDashboard] = useState(undefined); // undefined = cargando, null = error
 
     const { organizacion } = useAuth();

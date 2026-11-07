@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react'
 import { useLocation } from 'react-router-dom';
 import { EMAIL_CONTACTO } from '../assets/legal.js';
+import useTitulo from './useTitulo';
 import '../assets/styles/legal.css';
 
 // Diseño de las páginas de texto largo (términos, privacidad, preguntas frecuentes):
@@ -30,6 +31,7 @@ export const EmailContacto = () => (
 
 const Documento = ({ titulo, bajada, vigencia, secciones }) => {
     useIrAlInicio();
+    useTitulo(titulo, bajada);
     const lista = secciones.filter(Boolean);
 
     return (

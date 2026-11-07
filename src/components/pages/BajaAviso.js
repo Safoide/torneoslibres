@@ -4,10 +4,12 @@ import { revisarBaja, confirmarBaja } from '../../assets/endPoints/auth.js';
 import { useAuth } from '../../context/AuthContext';
 import { SkeletonFormulario } from '../Skeleton';
 import '../../assets/styles/formularios.css';
+import useTitulo from '../useTitulo';
 
 // Link "Dejar de recibir este aviso" de los mails: /baja?u=<cuenta>&a=<aviso>&f=<firma>. No pide iniciar sesión.
 // Se confirma con un botón: algunos programas de mail y antivirus abren los links solos y no tienen que dar de baja a nadie
 const BajaAviso = () => {
+    useTitulo('Dejar de recibir un aviso');
     const { user } = useAuth();
     const [params] = useSearchParams();
     const datos = { u: params.get('u') ?? '', a: params.get('a') ?? '', f: params.get('f') ?? '' };
