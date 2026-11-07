@@ -52,6 +52,7 @@ const CuentaMenu = () => {
 
                     <button role='menuitem' className='cuenta__item' onClick={() => ir('/cuenta')}>Editar mis datos</button>
                     <button role='menuitem' className='cuenta__item' onClick={() => ir('/cuenta/ajustes')}>Ajustes de la cuenta</button>
+                    <button role='menuitem' className='cuenta__item' onClick={() => ir('/cuenta/ajustes#notificaciones')}>Notificaciones</button>
                     <button role='menuitem' className='cuenta__item cuenta__item--peligro' onClick={salir}>Cerrar sesión</button>
                 </div>
             )}

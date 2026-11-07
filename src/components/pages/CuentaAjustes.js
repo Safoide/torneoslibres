@@ -7,6 +7,7 @@ import '../../assets/styles/formularios.css';
 import '../../assets/styles/ajustes.css';
 import { SkeletonFormulario } from '../Skeleton';
 import GoogleBoton, { GOOGLE_CLIENT_ID } from '../GoogleBoton';
+import NotificacionesAjustes from '../NotificacionesAjustes';
 
 const TEMAS = [['oscuro', 'Oscuro'], ['claro', 'Claro'], ['auto', 'Automático']];
 const TEXTOS = [['normal', 'Normal'], ['grande', 'Grande']];
@@ -48,6 +49,11 @@ const CuentaAjustes = () => {
             setConfirmando(true);
             zonaPeligro.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
         }
+    }, [hash, user])
+
+    // El menu "Notificaciones" llega con #notificaciones
+    useEffect(() => {
+        if (hash === '#notificaciones' && user) document.getElementById('notificaciones')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }, [hash, user])
 
     if (loading) return <SkeletonFormulario />;
@@ -125,6 +131,8 @@ const CuentaAjustes = () => {
                         onChange={(e) => cambiar({ movimiento: e.target.checked ? 'reducido' : 'normal' })} />
                 </label>
             </section>
+
+            <NotificacionesAjustes email={user.email} />
 
             <section className='ajustes__card'>
                 <h2>Seguridad</h2>

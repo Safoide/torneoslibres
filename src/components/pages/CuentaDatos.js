@@ -122,7 +122,7 @@ const CuentaDatos = () => {
                 <button className='btn btn--primary' type='submit' disabled={guardandoClave}>{guardandoClave ? 'Guardando...' : user.tienePassword ? 'Cambiar contraseña' : 'Crear contraseña'}</button>
             </form>
 
-            <Link to='/cuenta/ajustes'>Ajustes de la cuenta: tema, sesiones y eliminar cuenta →</Link>
+            <Link to='/cuenta/ajustes'>Ajustes de la cuenta: tema, notificaciones, sesiones y eliminar cuenta →</Link>
             <Link className='back-link' to='/torneos'>← Volver al inicio</Link>
         </div>
     )

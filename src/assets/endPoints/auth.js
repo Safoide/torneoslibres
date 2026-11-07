@@ -17,6 +17,15 @@ const olvidePassword = (email) => apiPOST(API_BASEURL + '/olvide', { email });
 const revisarLink = (token) => apiPOST(API_BASEURL + '/restablecer/revisar', { token });
 const restablecerPassword = (token, nueva) => apiPOST(API_BASEURL + '/restablecer', { token, nueva });
 
+// Notificaciones por email: { avisos: [{ id, titulo, texto, activa }], novedades: { ..., activa } }
+// Guardar: { avisos: { id: bool }, novedades: bool }; responde las preferencias como quedaron
+const getNotificaciones = () => apiGET(API_BASEURL + '/notificaciones');
+const guardarNotificaciones = (body) => apiPUT(API_BASEURL + '/notificaciones', body);
+
+// Darse de baja de un aviso desde el link del mail (sin sesión). datos: { u, a, f } (los parámetros del link)
+const revisarBaja = (datos) => apiPOST(API_BASEURL + '/baja/revisar', datos);
+const confirmarBaja = (datos) => apiPOST(API_BASEURL + '/baja', datos);
+
 const editarMisDatos = (body) => apiPUT(API_BASEURL + '/me', body);
 // Sin `actual` crea la contraseña (solo cuentas de Google que todavía no tienen)
 const cambiarPassword = (body) => apiPUT(API_BASEURL + '/password', body);
@@ -27,4 +36,4 @@ const confirmarGoogle = (credential) => apiPOST(API_BASEURL + '/confirmar-google
 // confirmacion: { password } o, si la cuenta entra solo con Google, { credential }
 const eliminarCuenta = (confirmacion) => apiDELETE(API_BASEURL + '/me', confirmacion);
 
-export { login, registro, getMe, loginGoogle, olvidePassword, revisarLink, restablecerPassword,editarMisDatos, cambiarPassword, cerrarTodasLasSesiones, confirmarGoogle, eliminarCuenta };
+export { login, registro, getMe, loginGoogle, olvidePassword, revisarLink, restablecerPassword, getNotificaciones, guardarNotificaciones, revisarBaja, confirmarBaja, editarMisDatos, cambiarPassword, cerrarTodasLasSesiones, confirmarGoogle, eliminarCuenta };

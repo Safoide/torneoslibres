@@ -210,3 +210,8 @@
 /* Recuperar contraseña */
 .form .auth-olvide { align-self: flex-end; margin-top: -2px; font-size: .82rem; }
 .recuperar__email { word-break: break-all; }
+
+/* Casilla suelta (novedades en el registro): sin el recuadro de las opciones */
+.form .opcion--check { align-items: flex-start; margin-top: 6px; padding: 2px 0; border: none; font-size: .88rem; color: var(--text-soft); }
+.form .opcion--check:hover, .form .opcion--check:has(input:checked) { border: none; background: none; }
+.form .opcion--check input { margin-top: 1px; }

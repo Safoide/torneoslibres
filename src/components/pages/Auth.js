@@ -29,7 +29,8 @@ const Auth = ({ modo }) => {
     // /registro?rol=capitan (o organizador) llega con el tipo de cuenta ya elegido, por ejemplo desde la landing.
     // ?email= llega desde "Crear cuenta con este email" / "Iniciá sesión" con el email ya cargado
     const rolInicial = ['capitan', 'organizador'].includes(params.get('rol')) ? params.get('rol') : '';
-    const [form, setForm] = useState({ nombre: '', email: params.get('email') ?? '', password: '', rol: rolInicial });
+    // novedades: casilla "recibir novedades y promociones", destildada (se suscribe solo quien la marca)
+    const [form, setForm] = useState({ nombre: '', email: params.get('email') ?? '', password: '', rol: rolInicial, novedades: false });
     const [error, setError] = useState(null); // { texto, sinCuenta?, yaExiste?, soloGoogle? }
     const [loading, setLoading] = useState(false);
 
@@ -73,7 +74,8 @@ const Auth = ({ modo }) => {
         setError(null);
         setLoading(true);
         // En el registro, si ya eligió el tipo de cuenta, se usa ese
-        const data = await loginGoogle(credential, rolElegido || (esRegistro ? form.rol : undefined));
+        // Si termina creando la cuenta, va también la elección de novedades (en una cuenta existente no se usa)
+        const data = await loginGoogle(credential, rolElegido || (esRegistro ? form.rol : undefined), { novedades: form.novedades });
         setLoading(false);
 
         if (data.error) return setError({ texto: data.error });
@@ -154,6 +156,14 @@ const Auth = ({ modo }) => {
                             autoComplete={esRegistro ? 'new-password' : 'current-password'} value={form.password} onChange={onChange} />
                         {!esRegistro && <Link className='auth-olvide' to={`/olvide${emailParam ? '?' + emailParam : ''}`}>¿Olvidaste tu contraseña?</Link>}
                     </>
+                )}
+
+                {creando && (
+                    <label className='opcion opcion--check'>
+                        <input type='checkbox' name='novedades' checked={form.novedades}
+                            onChange={(e) => setForm(prev => ({ ...prev, novedades: e.target.checked }))} />
+                        <span>Quiero recibir novedades y promociones de Torneos Libres por email. <span className='muted'>Te podés dar de baja cuando quieras.</span></span>
+                    </label>
                 )}
 
                 {error && (

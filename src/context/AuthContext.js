@@ -87,8 +87,9 @@ export const AuthProvider = ({ children }) => {
 
     // Google: devuelve la respuesta tal cual SIN iniciar la sesion, porque puede faltar elegir el tipo de cuenta
     // (necesitaRol) o haber un aviso que mostrar antes (passwordBorrada). Para entrar, llamar a aplicarSesion(data).
-    const loginGoogle = async (credential, rol) => {
-        const data = await apiLoginGoogle({ credential, ...(rol ? { rol } : {}) });
+    // extra: { novedades } si está creando la cuenta (no cambia una que ya existe)
+    const loginGoogle = async (credential, rol, extra = {}) => {
+        const data = await apiLoginGoogle({ credential, ...(rol ? { rol } : {}), ...extra });
         return data || { error: 'No pudimos conectar con el servidor' };
     };
     const aplicarSesion = (data) => { writeToken(data.token); setUser(data.user); };
