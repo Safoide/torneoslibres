@@ -32,7 +32,7 @@ const numero = (n) => new Intl.NumberFormat('es-AR').format(n);
 
 // Pagina de entrada para quien no inició sesión
 const Landing = () => {
-    useTitulo('Torneos de fútbol 5, 7, 8 y 11 en Buenos Aires');
+    useTitulo(); // la portada es solo "Torneos Libres"
     const [torneos, setTorneos] = useState(undefined); // undefined = cargando, null = sin conexion
     const [orgs, setOrgs] = useState(null);
 
