@@ -3,6 +3,7 @@ import { Link, Navigate, useLocation, useSearchParams } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import GoogleBoton, { GOOGLE_CLIENT_ID } from '../GoogleBoton';
 import logoGoogle from '../../assets/imgs/google-g.svg';
+import { VERSION_LEGAL } from '../../assets/legal.js';
 import '../../assets/styles/formularios.css';
 
 // Cuentas que crea casos-prueba.mjs en la API. Solo se muestran en desarrollo (npm start), nunca en el build.
@@ -56,7 +57,8 @@ const Auth = ({ modo }) => {
         setError(null);
         setLoading(true);
 
-        const result = await (esRegistro ? registro(form) : login({ email: form.email, password: form.password }));
+        // terminos: la versión que se muestra en el aviso de arriba ("Al crear tu cuenta aceptás...")
+        const result = await (esRegistro ? registro({ ...form, terminos: VERSION_LEGAL }) : login({ email: form.email, password: form.password }));
 
         setLoading(false);
         if (result.error) setError({ texto: result.error, sinCuenta: result.sinCuenta, yaExiste: result.yaExiste, soloGoogle: result.soloGoogle });
@@ -74,8 +76,9 @@ const Auth = ({ modo }) => {
         setError(null);
         setLoading(true);
         // En el registro, si ya eligió el tipo de cuenta, se usa ese
-        // Si termina creando la cuenta, va también la elección de novedades (en una cuenta existente no se usa)
-        const data = await loginGoogle(credential, rolElegido || (esRegistro ? form.rol : undefined), { novedades: form.novedades });
+        // Si termina creando la cuenta, van también la elección de novedades y los términos aceptados (en una cuenta
+        // existente no se usan). Sin tipo de cuenta nunca se crea: antes se muestra el aviso de los términos
+        const data = await loginGoogle(credential, rolElegido || (esRegistro ? form.rol : undefined), { novedades: form.novedades, terminos: VERSION_LEGAL });
         setLoading(false);
 
         if (data.error) return setError({ texto: data.error });
@@ -108,6 +111,13 @@ const Auth = ({ modo }) => {
     return (
         <div className='form-page'>
             <h1>{creando ? 'Crear cuenta' : 'Iniciar sesión'}</h1>
+            {/* Antes del formulario: así se lee antes de tocar cualquier botón (también "Continuar con Google") */}
+            {creando && (
+                <p>
+                    Al crear tu cuenta aceptás los <Link to='/terminos' target='_blank'>Términos y condiciones</Link> y
+                    la <Link to='/privacidad' target='_blank'>Política de privacidad</Link>.
+                </p>
+            )}
 
             <form className='form' onSubmit={enviar}>
                 {pendiente ? (

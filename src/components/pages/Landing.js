@@ -198,11 +198,6 @@ const Landing = () => {
                     <Link className='btn btn--secundario landing-btn-claro' to='/torneos'>Explorar sin cuenta</Link>
                 </div>
             </section>
-
-            <footer className='landing-pie'>
-                <span>⚽ Torneos Libres · Buenos Aires</span>
-                <span>Fotos: Unsplash</span>
-            </footer>
         </div>
     )
 }

@@ -30,6 +30,9 @@ const verificarEmail = (token) => apiPOST(API_BASEURL + '/verificar', { token })
 const revisarBaja = (datos) => apiPOST(API_BASEURL + '/baja/revisar', datos);
 const confirmarBaja = (datos) => apiPOST(API_BASEURL + '/baja', datos);
 
+// Aceptar los términos y la privacidad vigentes (cuentas con `terminosPendientes`). Responde la cuenta actualizada
+const aceptarTerminos = (version) => apiPOST(API_BASEURL + '/terminos', { version });
+
 const editarMisDatos = (body) => apiPUT(API_BASEURL + '/me', body);
 // Sin `actual` crea la contraseña (solo cuentas de Google que todavía no tienen)
 const cambiarPassword = (body) => apiPUT(API_BASEURL + '/password', body);
@@ -40,4 +43,4 @@ const confirmarGoogle = (credential) => apiPOST(API_BASEURL + '/confirmar-google
 // confirmacion: { password } o, si la cuenta entra solo con Google, { credential }
 const eliminarCuenta = (confirmacion) => apiDELETE(API_BASEURL + '/me', confirmacion);
 
-export { login, registro, getMe, loginGoogle, olvidePassword, revisarLink, restablecerPassword, getNotificaciones, guardarNotificaciones, revisarBaja, confirmarBaja, enviarVerificacion, verificarEmail, editarMisDatos, cambiarPassword, cerrarTodasLasSesiones, confirmarGoogle, eliminarCuenta };
+export { login, registro, getMe, loginGoogle, olvidePassword, revisarLink, restablecerPassword, getNotificaciones, guardarNotificaciones, revisarBaja, confirmarBaja, enviarVerificacion, verificarEmail, aceptarTerminos, editarMisDatos, cambiarPassword, cerrarTodasLasSesiones, confirmarGoogle, eliminarCuenta };
