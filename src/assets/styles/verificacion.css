@@ -1,0 +1,44 @@
+/* Email sin verificar: barra debajo del header (AvisoVerificacion.js) y estado en "Editar mis datos" */
+
+.verificacion {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    max-width: 1100px;
+    margin: 12px auto 0;
+    padding: 12px 44px 12px 16px;
+    background: var(--amber-soft);
+    border: 1px solid color-mix(in srgb, var(--amber) 40%, transparent);
+    border-radius: var(--radius);
+    color: var(--text);
+    font-size: .92rem;
+}
+
+.verificacion p { margin: 0; line-height: 1.5; }
+
+.verificacion__cerrar {
+    position: absolute;
+    top: 6px;
+    right: 8px;
+    width: 30px;
+    height: 30px;
+    padding: 0;
+    font-size: 1.3rem;
+    line-height: 1;
+    color: var(--muted);
+    background: none;
+    border: 0;
+    border-radius: var(--radius);
+    cursor: pointer;
+}
+
+.verificacion__cerrar:hover { color: var(--text); }
+
+.verificacion__ok { color: var(--accent); font-size: .85rem; font-weight: 600; }
+.verificacion__error { color: var(--danger); font-size: .85rem; }
+.verificacion__linea { display: flex; flex-wrap: wrap; gap: 4px 6px; align-items: baseline; font-size: .85rem; }
+
+@media (max-width: 1140px) {
+    .verificacion { margin-left: 16px; margin-right: 16px; }
+}

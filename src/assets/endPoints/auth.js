@@ -22,6 +22,10 @@ const restablecerPassword = (token, nueva) => apiPOST(API_BASEURL + '/restablece
 const getNotificaciones = () => apiGET(API_BASEURL + '/notificaciones');
 const guardarNotificaciones = (body) => apiPUT(API_BASEURL + '/notificaciones', body);
 
+// Verificar el email: reenviar el link (con sesión; { ok, email } | { yaVerificado }) y usarlo (desde el mail: { ok, email } | { error })
+const enviarVerificacion = () => apiPOST(API_BASEURL + '/verificar/enviar', {});
+const verificarEmail = (token) => apiPOST(API_BASEURL + '/verificar', { token });
+
 // Darse de baja de un aviso desde el link del mail (sin sesión). datos: { u, a, f } (los parámetros del link)
 const revisarBaja = (datos) => apiPOST(API_BASEURL + '/baja/revisar', datos);
 const confirmarBaja = (datos) => apiPOST(API_BASEURL + '/baja', datos);
@@ -36,4 +40,4 @@ const confirmarGoogle = (credential) => apiPOST(API_BASEURL + '/confirmar-google
 // confirmacion: { password } o, si la cuenta entra solo con Google, { credential }
 const eliminarCuenta = (confirmacion) => apiDELETE(API_BASEURL + '/me', confirmacion);
 
-export { login, registro, getMe, loginGoogle, olvidePassword, revisarLink, restablecerPassword, getNotificaciones, guardarNotificaciones, revisarBaja, confirmarBaja, editarMisDatos, cambiarPassword, cerrarTodasLasSesiones, confirmarGoogle, eliminarCuenta };
+export { login, registro, getMe, loginGoogle, olvidePassword, revisarLink, restablecerPassword, getNotificaciones, guardarNotificaciones, revisarBaja, confirmarBaja, enviarVerificacion, verificarEmail, editarMisDatos, cambiarPassword, cerrarTodasLasSesiones, confirmarGoogle, eliminarCuenta };

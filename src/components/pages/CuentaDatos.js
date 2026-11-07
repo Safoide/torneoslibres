@@ -4,6 +4,7 @@ import { useAuth } from '../../context/AuthContext';
 import { editarMisDatos, cambiarPassword } from '../../assets/endPoints/auth.js';
 import '../../assets/styles/formularios.css';
 import { SkeletonFormulario } from '../Skeleton';
+import AvisoVerificacion from '../AvisoVerificacion';
 
 const ROL_LABEL = { capitan: 'Capitán', organizador: 'Organizador' };
 
@@ -81,6 +82,9 @@ const CuentaDatos = () => {
                 <input id='email' name='email' type='email' required autoComplete='email' value={datos.email} onChange={onDatos} disabled={!user.tienePassword} />
                 {/* Cambiar el email pide la contraseña: una cuenta de Google sin contraseña primero tiene que crear una */}
                 {!user.tienePassword && <span className='muted'>Para cambiar el email, primero creá una contraseña (más abajo).</span>}
+                {/* Estado del email guardado (mientras escribe uno nuevo no aplica) */}
+                {!cambiaEmail && <AvisoVerificacion enLinea />}
+                {cambiaEmail && <span className='muted'>Al guardar te mandamos un link al email nuevo para verificarlo.</span>}
 
                 {conWhatsapp && (
                     <>

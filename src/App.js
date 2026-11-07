@@ -14,6 +14,8 @@ import Auth from './components/pages/Auth';
 import OlvidePassword from './components/pages/OlvidePassword';
 import RestablecerPassword from './components/pages/RestablecerPassword';
 import BajaAviso from './components/pages/BajaAviso';
+import VerificarEmail from './components/pages/VerificarEmail';
+import AvisoVerificacion from './components/AvisoVerificacion';
 import OrganizacionForm from './components/pages/OrganizacionForm';
 import CrearTorneo from './components/pages/CrearTorneo';
 import Partidos from './components/pages/Partidos';
@@ -36,6 +38,7 @@ function App() {
         <AuthProvider>
             <BrowserRouter>
                 <Header />
+                <AvisoVerificacion />
                 <Pagina>
                     <Routes>
                         <Route path='/' element={<Inicio />} />
@@ -53,6 +56,7 @@ function App() {
                         <Route path='/olvide' element={<OlvidePassword />} />
                         <Route path='/restablecer' element={<RestablecerPassword />} />
                         <Route path='/baja' element={<BajaAviso />} />
+                        <Route path='/verificar' element={<VerificarEmail />} />
                         <Route path='/partidos/:torneo' element={<Partidos />} />
                         <Route path='/equipo/:teamId' element={<Equipo />} />
                         <Route path='/equipos/nuevo' element={<EquipoForm modo='crear' />} />

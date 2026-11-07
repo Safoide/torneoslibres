@@ -93,9 +93,11 @@ export const AuthProvider = ({ children }) => {
         return data || { error: 'No pudimos conectar con el servidor' };
     };
     const aplicarSesion = (data) => { writeToken(data.token); setUser(data.user); };
+    // Vuelve a pedir la cuenta (por ejemplo después de verificar el email)
+    const refrescarUsuario = () => getMe().then(data => { if (data && !data.error) setUser(data); });
     const logout = () => { writeToken(null); setUser(null); };
 
-    return <AuthContext.Provider value={{ user, setUser, guardarToken: writeToken, loading, organizacion, setOrganizacion, equipo, setEquipo, login, registro, loginGoogle, aplicarSesion, logout }}>{children}</AuthContext.Provider>;
+    return <AuthContext.Provider value={{ user, setUser, guardarToken: writeToken, loading, organizacion, setOrganizacion, equipo, setEquipo, login, registro, loginGoogle, aplicarSesion, refrescarUsuario, logout }}>{children}</AuthContext.Provider>;
 };
 
 export const useAuth = () => useContext(AuthContext);
