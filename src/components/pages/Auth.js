@@ -152,6 +152,7 @@ const Auth = ({ modo }) => {
                         <label htmlFor='password'>Contraseña{esRegistro ? ' (mínimo 8 caracteres)' : ''}</label>
                         <input id='password' name='password' type='password' required minLength={esRegistro ? 8 : undefined}
                             autoComplete={esRegistro ? 'new-password' : 'current-password'} value={form.password} onChange={onChange} />
+                        {!esRegistro && <Link className='auth-olvide' to={`/olvide${emailParam ? '?' + emailParam : ''}`}>¿Olvidaste tu contraseña?</Link>}
                     </>
                 )}
 
@@ -161,6 +162,8 @@ const Auth = ({ modo }) => {
                         {/* El email no tiene cuenta: ofrecer crearla con ese email */}
                         {error.sinCuenta && <Link className='btn btn--secundario btn--chico' to={`/registro?${emailParam}`} state={location.state}>Crear cuenta con este email</Link>}
                         {/* Ya existe una cuenta con ese email: ir al login con el email cargado */}
+                        {/* La cuenta entra solo con Google: puede crear una contraseña con el link por mail */}
+                        {error.soloGoogle && <Link className='btn btn--secundario btn--chico' to={`/olvide?${emailParam}`}>Crear una contraseña por mail</Link>}
                         {error.yaExiste && <Link className='btn btn--secundario btn--chico' to={`/login?${emailParam}`} state={location.state}>Iniciar sesión con este email</Link>}
                     </div>
                 )}

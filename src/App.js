@@ -11,6 +11,8 @@ import Torneo from './components/pages/Torneo';
 import Inscripcion from './components/pages/Inscripcion';
 import Organizador from './components/pages/Organizador';
 import Auth from './components/pages/Auth';
+import OlvidePassword from './components/pages/OlvidePassword';
+import RestablecerPassword from './components/pages/RestablecerPassword';
 import OrganizacionForm from './components/pages/OrganizacionForm';
 import CrearTorneo from './components/pages/CrearTorneo';
 import Partidos from './components/pages/Partidos';
@@ -47,6 +49,8 @@ function App() {
                         <Route path='/organizacion/torneo/nuevo' element={<CrearTorneo />} />
                         <Route path='/login' element={<Auth key='login' modo='login' />} />
                         <Route path='/registro' element={<Auth key='registro' modo='registro' />} />
+                        <Route path='/olvide' element={<OlvidePassword />} />
+                        <Route path='/restablecer' element={<RestablecerPassword />} />
                         <Route path='/partidos/:torneo' element={<Partidos />} />
                         <Route path='/equipo/:teamId' element={<Equipo />} />
                         <Route path='/equipos/nuevo' element={<EquipoForm modo='crear' />} />

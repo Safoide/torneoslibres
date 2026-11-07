@@ -206,3 +206,7 @@
 
 /* Cuenta vinculada con Google (Editar mis datos) */
 .cuenta-google { display: flex; align-items: center; gap: 8px; font-size: .9rem; color: var(--text-soft); }
+
+/* Recuperar contraseña */
+.form .auth-olvide { align-self: flex-end; margin-top: -2px; font-size: .82rem; }
+.recuperar__email { word-break: break-all; }
